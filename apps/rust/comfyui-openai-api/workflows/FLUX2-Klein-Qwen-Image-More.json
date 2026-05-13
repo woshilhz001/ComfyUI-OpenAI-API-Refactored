@@ -1,0 +1,500 @@
+{
+  "76": {
+    "inputs": {
+      "image": "placeholder_3x3.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 1"
+    }
+  },
+  "81": {
+    "inputs": {
+      "image": "placeholder_3x3.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 2"
+    }
+  },
+  "94": {
+    "inputs": {
+      "filename_prefix": "Image/Klein",
+      "images": [
+        "164",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "131": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "K采样器选择"
+    }
+  },
+  "132": {
+    "inputs": {
+      "noise": [
+        "134",
+        0
+      ],
+      "guider": [
+        "144",
+        0
+      ],
+      "sampler": [
+        "131",
+        0
+      ],
+      "sigmas": [
+        "145",
+        0
+      ],
+      "latent_image": [
+        "138",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "自定义采样器（高级）"
+    }
+  },
+  "133": {
+    "inputs": {
+      "samples": [
+        "132",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "134": {
+    "inputs": {
+      "noise_seed": 1023845481079907
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "135": {
+    "inputs": {
+      "unet_name": "FLUX-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "UNet加载器"
+    }
+  },
+  "136": {
+    "inputs": {
+      "vae_name": "FLUX-2-klein-vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "138": {
+    "inputs": {
+      "width": [
+        "152",
+        0
+      ],
+      "height": [
+        "153",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "空Latent图像（Flux2）"
+    }
+  },
+  "139": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "76",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "140": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "155",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "141": {
+    "inputs": {
+      "clip_name": "Qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "加载CLIP"
+    }
+  },
+  "142": {
+    "inputs": {
+      "text": "(masterpiece, best quality, ultra-detailed:1.3), A beautiful Chinese woman in her 20s, with gentle and elegant oriental features, delicate porcelain skin, soft makeup, exuding a serene and graceful temperament, wearing a soft silver-white lace bathrobe, with flowing black long hair, sits on a light-colored rattan chair. A gentle cat. A modern smartphone lies screen-down on the soft pink cushion of the chair, or rests atop the woven wicker basket, subtly integrated into the scene. The background is a textured rose pink wall with an arched niche, flanked by wide dark green leaves (Monstera deliciosa). Only the woman’s beige woven sandals are in the foreground. Soft, translucent window light illuminates the scene, casting gentle shadows and creating a delicate “发光发丝” (hair light) effect on the woman. The lighting is clean and layered. The scene embodies a sense of \"新中式\" (new Chinese style) quiet luxury and life aesthetics. The overall atmosphere is clean, refreshing, warm, healing, and literary, with a focus on tranquil companionship and a moment of disconnect. Professional photography, shot on an 85mm lens, shallow depth of field, extremely detailed textures, film grain.",
+      "clip": [
+        "141",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "143": {
+    "inputs": {
+      "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
+      "clip": [
+        "141",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode ( Negative Prompt)"
+    }
+  },
+  "144": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "166",
+        0
+      ],
+      "positive": [
+        "165",
+        0
+      ],
+      "negative": [
+        "143",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "145": {
+    "inputs": {
+      "steps": 4,
+      "width": [
+        "152",
+        0
+      ],
+      "height": [
+        "153",
+        0
+      ]
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2调度器"
+    }
+  },
+  "147": {
+    "inputs": {
+      "pixels": [
+        "139",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "148": {
+    "inputs": {
+      "conditioning": [
+        "142",
+        0
+      ],
+      "latent": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "150": {
+    "inputs": {
+      "pixels": [
+        "140",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "151": {
+    "inputs": {
+      "conditioning": [
+        "163",
+        0
+      ],
+      "latent": [
+        "150",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "152": {
+    "inputs": {
+      "value": 1280
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "153": {
+    "inputs": {
+      "value": 704
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "154": {
+    "inputs": {
+      "image": "placeholder_3x3.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 3"
+    }
+  },
+  "155": {
+    "inputs": {
+      "image": "placeholder_3x3.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 4"
+    }
+  },
+  "156": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "81",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "158": {
+    "inputs": {
+      "pixels": [
+        "156",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "159": {
+    "inputs": {
+      "conditioning": [
+        "148",
+        0
+      ],
+      "latent": [
+        "158",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "160": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "resolution_steps": 1,
+      "image": [
+        "154",
+        0
+      ]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "缩放图像（像素）"
+    }
+  },
+  "162": {
+    "inputs": {
+      "pixels": [
+        "160",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "163": {
+    "inputs": {
+      "conditioning": [
+        "159",
+        0
+      ],
+      "latent": [
+        "162",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "164": {
+    "inputs": {
+      "method": "rcas",
+      "method.strength": 0.3,
+      "image": [
+        "133",
+        0
+      ]
+    },
+    "class_type": "ImageSharpenKJ",
+    "_meta": {
+      "title": "Image Sharpen KJ"
+    }
+  },
+  "165": {
+    "inputs": {
+      "active_scale": 1.1,
+      "per_token_whiten": 0.12,
+      "norm_equalize": 0.08,
+      "early_layer_scale": 1,
+      "mid_layer_scale": 1,
+      "late_layer_scale": 0.93,
+      "preserve_original": 0,
+      "active_end_override": 0,
+      "device": "auto",
+      "debug": false,
+      "conditioning": [
+        "151",
+        0
+      ]
+    },
+    "class_type": "Flux2KleinEnhancer",
+    "_meta": {
+      "title": "FLUX.2 Klein Enhancer"
+    }
+  },
+  "166": {
+    "inputs": {
+      "mode": "auto",
+      "intensity": 0.8,
+      "model": [
+        "135",
+        0
+      ],
+      "lcs_data": [
+        "167",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "LCSColorAnchor",
+    "_meta": {
+      "title": "LCS Color Anchor"
+    }
+  },
+  "167": {
+    "inputs": {
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "LCSLoadData",
+    "_meta": {
+      "title": "LCS Load Data"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+[package]
+name = "comfyui-openai-api"
+version = "0.2.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.7", features = ["multipart", "http2"] }
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "multipart"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+base64 = "0.22"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# OpenTelemetry
+opentelemetry = "0.24"
+opentelemetry_sdk = { version = "0.24", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.17", features = ["grpc-tonic"] }
+tracing-opentelemetry = "0.25"
+
+anyhow = "1"
+rand = "0.8"
+regex = "1"
+lru = "0.12"
+tower-http = { version = "0.5", features = ["cors", "limit"] }
+futures = "0.3"
+tokio-tungstenite = "0.23"
+uuid = { version = "1", features = ["v4"] }
+prometheus = "0.13"
+lazy_static = "1.4"

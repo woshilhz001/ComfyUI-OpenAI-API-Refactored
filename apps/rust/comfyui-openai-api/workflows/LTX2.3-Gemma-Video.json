@@ -1,0 +1,682 @@
+{
+  "269": {
+    "inputs": {
+      "image": "0001.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image"
+    }
+  },
+  "372": {
+    "inputs": {
+      "filename_prefix": "Video/LTX",
+      "format": "auto",
+      "codec": "auto",
+      "video": [
+        "408",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "保存视频"
+    }
+  },
+  "374": {
+    "inputs": {
+      "noise_seed": 436602271807656
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "375": {
+    "inputs": {
+      "noise_seed": 877946501171240
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "376": {
+    "inputs": {
+      "video_latent": [
+        "386",
+        0
+      ],
+      "audio_latent": [
+        "405",
+        1
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "377": {
+    "inputs": {
+      "ckpt_name": "LTX-2.3-22b-distilled-1.1.safetensors"
+    },
+    "class_type": "LTXVAudioVAELoader",
+    "_meta": {
+      "title": "LTXV音频VAE加载器"
+    }
+  },
+  "378": {
+    "inputs": {
+      "sampler_name": "euler_cfg_pp"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "K采样器选择"
+    }
+  },
+  "379": {
+    "inputs": {
+      "sigmas": "0.78, 0.52, 0.26, 0.08, 0.0"
+    },
+    "class_type": "ManualSigmas",
+    "_meta": {
+      "title": "自定义Sigmas"
+    }
+  },
+  "380": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "383",
+        0
+      ],
+      "positive": [
+        "382",
+        0
+      ],
+      "negative": [
+        "382",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "381": {
+    "inputs": {
+      "noise": [
+        "375",
+        0
+      ],
+      "guider": [
+        "412",
+        0
+      ],
+      "sampler": [
+        "389",
+        0
+      ],
+      "sigmas": [
+        "404",
+        0
+      ],
+      "latent_image": [
+        "416",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "自定义采样器（高级）"
+    }
+  },
+  "382": {
+    "inputs": {
+      "positive": [
+        "402",
+        0
+      ],
+      "negative": [
+        "402",
+        1
+      ],
+      "latent": [
+        "405",
+        0
+      ]
+    },
+    "class_type": "LTXVCropGuides",
+    "_meta": {
+      "title": "LTXV裁剪指导"
+    }
+  },
+  "383": {
+    "inputs": {
+      "lora_name": "xianxia(remove-subtitles)-v0.9.safetensors",
+      "strength_model": 0.5,
+      "model": [
+        "414",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "384": {
+    "inputs": {
+      "longer_edge": 1280,
+      "images": [
+        "388",
+        0
+      ]
+    },
+    "class_type": "ResizeImagesByLongerEdge",
+    "_meta": {
+      "title": "缩放图像（长边）"
+    }
+  },
+  "385": {
+    "inputs": {
+      "samples": [
+        "405",
+        0
+      ],
+      "upscale_model": [
+        "409",
+        0
+      ],
+      "vae": [
+        "414",
+        2
+      ]
+    },
+    "class_type": "LTXVLatentUpsampler",
+    "_meta": {
+      "title": "LTXV潜空间上采样器"
+    }
+  },
+  "386": {
+    "inputs": {
+      "strength": 1,
+      "bypass": [
+        "400",
+        0
+      ],
+      "vae": [
+        "414",
+        2
+      ],
+      "image": [
+        "387",
+        0
+      ],
+      "latent": [
+        "385",
+        0
+      ]
+    },
+    "class_type": "LTXVImgToVideoInplace",
+    "_meta": {
+      "title": "LTXV图像转视频（原地）"
+    }
+  },
+  "387": {
+    "inputs": {
+      "img_compression": 18,
+      "image": [
+        "384",
+        0
+      ]
+    },
+    "class_type": "LTXVPreprocess",
+    "_meta": {
+      "title": "LTXV预处理"
+    }
+  },
+  "388": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "410",
+        0
+      ],
+      "resize_type.height": [
+        "397",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "269",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小"
+    }
+  },
+  "389": {
+    "inputs": {
+      "sampler_name": "euler_cfg_pp"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "K采样器选择"
+    }
+  },
+  "390": {
+    "inputs": {
+      "expression": "a/2",
+      "values.a": [
+        "410",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "数学表达式"
+    }
+  },
+  "392": {
+    "inputs": {
+      "expression": "a/2",
+      "values.a": [
+        "397",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "数学表达式"
+    }
+  },
+  "393": {
+    "inputs": {
+      "width": [
+        "390",
+        1
+      ],
+      "height": [
+        "392",
+        1
+      ],
+      "length": [
+        "418",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLTXVLatentVideo",
+    "_meta": {
+      "title": "空Latent视频（LTXV）"
+    }
+  },
+  "394": {
+    "inputs": {
+      "strength": 0.7,
+      "bypass": [
+        "400",
+        0
+      ],
+      "vae": [
+        "414",
+        2
+      ],
+      "image": [
+        "387",
+        0
+      ],
+      "latent": [
+        "393",
+        0
+      ]
+    },
+    "class_type": "LTXVImgToVideoInplace",
+    "_meta": {
+      "title": "LTXV图像转视频（原地）"
+    }
+  },
+  "395": {
+    "inputs": {
+      "samples": [
+        "407",
+        1
+      ],
+      "audio_vae": [
+        "377",
+        0
+      ]
+    },
+    "class_type": "LTXVAudioVAEDecode",
+    "_meta": {
+      "title": "LTXV音频VAE解码"
+    }
+  },
+  "396": {
+    "inputs": {
+      "expression": "a",
+      "values.a": [
+        "398",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "数学表达式"
+    }
+  },
+  "397": {
+    "inputs": {
+      "value": 288
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "398": {
+    "inputs": {
+      "value": 24
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "FPS"
+    }
+  },
+  "399": {
+    "inputs": {
+      "value": 15
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Duration"
+    }
+  },
+  "400": {
+    "inputs": {
+      "value": false
+    },
+    "class_type": "PrimitiveBoolean",
+    "_meta": {
+      "title": "Switch to Text to Video?"
+    }
+  },
+  "401": {
+    "inputs": {
+      "text": [
+        "417",
+        0
+      ],
+      "clip": [
+        "415",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Positive Prompt"
+    }
+  },
+  "402": {
+    "inputs": {
+      "frame_rate": [
+        "396",
+        0
+      ],
+      "positive": [
+        "401",
+        0
+      ],
+      "negative": [
+        "411",
+        0
+      ]
+    },
+    "class_type": "LTXVConditioning",
+    "_meta": {
+      "title": "LTXV条件"
+    }
+  },
+  "403": {
+    "inputs": {
+      "frames_number": [
+        "418",
+        1
+      ],
+      "frame_rate": [
+        "396",
+        1
+      ],
+      "batch_size": 1,
+      "audio_vae": [
+        "377",
+        0
+      ]
+    },
+    "class_type": "LTXVEmptyLatentAudio",
+    "_meta": {
+      "title": "LTXV 空音频潜空间"
+    }
+  },
+  "404": {
+    "inputs": {
+      "sigmas": "1.0, 0.90, 0.78, 0.65, 0.52, 0.38, 0.24, 0.12, 0.0"
+    },
+    "class_type": "ManualSigmas",
+    "_meta": {
+      "title": "自定义Sigmas"
+    }
+  },
+  "405": {
+    "inputs": {
+      "av_latent": [
+        "381",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXV分离音视频潜空间"
+    }
+  },
+  "406": {
+    "inputs": {
+      "noise": [
+        "374",
+        0
+      ],
+      "guider": [
+        "380",
+        0
+      ],
+      "sampler": [
+        "378",
+        0
+      ],
+      "sigmas": [
+        "379",
+        0
+      ],
+      "latent_image": [
+        "376",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "自定义采样器（高级）"
+    }
+  },
+  "407": {
+    "inputs": {
+      "av_latent": [
+        "406",
+        0
+      ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXV分离音视频潜空间"
+    }
+  },
+  "408": {
+    "inputs": {
+      "fps": [
+        "396",
+        0
+      ],
+      "images": [
+        "413",
+        0
+      ],
+      "audio": [
+        "395",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "创建视频"
+    }
+  },
+  "409": {
+    "inputs": {
+      "model_name": "LTX-2.3-spatial-upscaler-x2-1.1.safetensors"
+    },
+    "class_type": "LatentUpscaleModelLoader",
+    "_meta": {
+      "title": "加载Latent放大模型"
+    }
+  },
+  "410": {
+    "inputs": {
+      "value": 512
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "411": {
+    "inputs": {
+      "text": "(anime, cartoon, cgi, 3d, render, sketch, painting, illustration, vector art, cel shading, plastic, doll-like, wax figure, uncanny valley:1.4),\n(worst quality, low quality, normal quality, jpeg artifacts, blurry, motion blur, noise, grainy, oversharpening, bleeding colors, film grain, analog style:1.4),\n(monochrome, grayscale, oversaturated, underexposed, overexposed, too bright, too dark, bad lighting, harsh shadows, washed out, high contrast, uneven lighting:1.3),\n(frame inconsistency, temporal artifacts, ghosting, double exposure, morphing, face changing, different person, lip sync error:1.4),\n(flickering, jitter, shaky cam, camera shake, warping, stuttering:1.3),\n(text, signature, watermark, username, logo, brand, subtitle, typography, letters, font, UI, label:1.5),\n\n\n(bad anatomy, incorrect anatomy, deformed anatomy, malformed limbs, disproportionate, asymmetrical, fused body parts, extra limbs, floating limbs, disconnected limbs, missing limbs, stump, malformed torso, twisted body, broken limbs:1.3),\n(deformed hands, bad hands, poorly drawn hands, mutated hands, missing fingers, extra fingers, fused fingers, long fingers, fingerless, twisted wrists, club hands, paw hands:1.3),\n(deformed feet, bad feet, missing toes, extra toes, fused toes, club feet, hoof feet, prosthetic mismatch:1.2),\n(deformed breasts, distorted body, unnatural curves, mismatched breasts, uneven breasts, missing breasts, extra breasts:1.3),\n(distorted joints, hyperextended joints, backward knees, uneven shoulders, uneven hips, missing joints, unnatural bending:1.3),\n\n\n(deformed eyes, deformed iris, deformed pupils, crossed eyes, lazy eye, bad eyes, too many eyes, missing eyes, empty eye sockets, glowing eyes, zombie eyes:1.2),\n(distorted face, ugly, poorly drawn face, poorly drawn eyes, deformed, disfigured, disgusting, hideous, bad teeth, missing mouth, blurred face, smudged face, melted face:1.2),\n(stiff expression, emotionless, blank stare, dead eyes, soulless eyes, fake smile, creepy smile, forced smile, unnatural facial expression, facial tic, twitching face, asymmetric expression:1.4),\n\n\n(moving body, changing pose, fidgeting, messy hair, disheveled hair, large head movements, gesturing wildly, puppet-like motion, robotic movement, unnatural motion:1.5),\n(exaggerated facial expressions, shouting, laughing, crying, wide-eyed stare, jaw drop, tongue out:1.4),\n(static pose, frozen, mannequin, mannequin challenge, T-pose, A-pose, stiff body, rigid posture:1.3),\n\n\n(cluttered background, busy composition, messy background, distorted background, simple background, empty scene, blank background, grid pattern, checkerboard:1.2),\n(out of frame, cut off, incomplete, cropped head, cropped limbs, subject cut off, incomplete body, partial view:1.3)\n",
+      "clip": [
+        "415",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative Prompt"
+    }
+  },
+  "412": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "383",
+        0
+      ],
+      "positive": [
+        "402",
+        0
+      ],
+      "negative": [
+        "402",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "413": {
+    "inputs": {
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 32,
+      "temporal_overlap": 8,
+      "samples": [
+        "407",
+        0
+      ],
+      "vae": [
+        "414",
+        2
+      ]
+    },
+    "class_type": "VAEDecodeTiled",
+    "_meta": {
+      "title": "VAE解码（分块）"
+    }
+  },
+  "414": {
+    "inputs": {
+      "ckpt_name": "LTX-2.3-22b-distilled-1.1.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Checkpoint加载器（简易）"
+    }
+  },
+  "415": {
+    "inputs": {
+      "text_encoder": "Gemma_3_12B_it.safetensors",
+      "ckpt_name": "LTX-2.3-22b-distilled-1.1.safetensors",
+      "device": "default"
+    },
+    "class_type": "LTXAVTextEncoderLoader",
+    "_meta": {
+      "title": "LTXV音频文本编码器加载器"
+    }
+  },
+  "416": {
+    "inputs": {
+      "video_latent": [
+        "394",
+        0
+      ],
+      "audio_latent": [
+        "403",
+        0
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "417": {
+    "inputs": {
+      "value": "正向提示词 (Positive Prompt) :\n(masterpiece, best quality, ultra-detailed, photorealistic:1.3),\nbeautiful young Asian woman, (consistent identity across frames:1.2),\n(messy updo hairstyle with loose strands:1.3), (soft natural skin texture:1.1), (calm and wise gaze:1.2), highly detailed eyelashes,\n(voluptuous figure, full bust, ample cleavage:1.2), (upright posture:1.2),\nwearing light cream vintage floral blouse, (deep V-neck:1.3), rolled-up sleeves, intricate fabric texture,\nindoors, nighttime, (large window with heavy rain outside:1.4), (raindrops on glass:1.4), bokeh city lights in the distance,\n(cinematic lighting:1.3), (volumetric lighting:1.2), ( Rembrandt lighting on face:1.1), dramatic shadows,\nprofessional color grading, desaturated blue and warm beige tones,\nsharp focus on face and eyes, stable framing, static subject, frozen pose, pure visual composition, no textual elements,\n(lock camera on subject:1.1), (no body movement:1.3), (micro-expression only:1.2).\n\n[分镜 01]\nDuration Range: 0s - 3s\nDuration: 3 seconds\nCamera: 固定机位，中景（Medium Shot），略微过肩视角。\nEnvironment: 背景为虚化的窗边雨景，雨滴顺着玻璃滑落，窗外是模糊的城市光斑。光线透过带水珠的玻璃打在女主角面部，形成柔和的高光。\nSubject: 女主角直立，目光温柔且坚定地注视着前方的男性。男性背对镜头，作为倾听者存在。\nAudio: “没有人会把你 变得越来越好”\n[Prompt Append]\n[Duration: 3s], [Audio: Clear female speech], static camera, medium shot, over the shoulder shot.\nFemale protagonist stands still, looking gently and firmly at the male figure in front of her. Soft, natural lighting on her face. | [分镜 02]\nDuration Range: 3s - 8s\nDuration: 5 seconds\nCamera: 固定机位，中景（Medium Shot）。\nEnvironment: 背景的光影保持静态，焦点始终聚集在两人的面部表情和眼神交流上。\nSubject: 人物身体和头部绝不转动，始终保持面向前方的男性。女主角眼神深邃平静，仿佛在进行一场重要的自我剖析。\nAudio: “你越来越好的原因，是因为 你一次次的经历，一次次的自救”\n[Prompt Append]\n[Duration: 5s], [Audio: Continuous female speech], static camera, medium shot.\nCRITICAL: She remains absolutely still facing the man. No head movement. Deep, contemplative eyes holding the gaze. The man listens silently. | [分镜 03]\nDuration Range: 8s - 11s\nDuration: 3 seconds\nCamera: 固定机位，中景（Medium Shot）。\nEnvironment: 背景依然保持窗边的朦胧感，光线稳定，突显两人之间的情感张力。\nSubject: 依旧保持静止，维持着眼神接触。女主角嘴角微微上扬，神情变得更加笃定自信。\nAudio: “一次次的放下，又一次次的成长”\n[Prompt Append]\n[Duration: 3s], [Audio: Soft female speech], static camera, medium shot.\nMaintaining eye contact, her expression becomes more determined and confident. A slight, knowing smile forms. She is the speaker. | [分镜 04]\nDuration Range: 11s - 15s\nDuration: 4 seconds\nCamera: 固定机位，中景（Medium Shot）。\nEnvironment: 背景维持不变，整体氛围宁静致远，强调人物间的默契。\nSubject: 人物依然站在原地，不后退。女主角面部表情逐渐舒缓，最终露出释然且鼓励的微笑。\nAudio: “引路靠贵人，走路靠自己”\n[Prompt Append]\n[Duration: 4s], [Audio: Confident female speech], static camera, medium shot.\nShe stays rooted in place, not moving back. Her expression softens into a serene and encouraging smile as she looks at the silent listener."
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Prompt"
+    }
+  },
+  "418": {
+    "inputs": {
+      "expression": "a * b + 1",
+      "values.a": [
+        "399",
+        0
+      ],
+      "values.b": [
+        "398",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression (length)"
+    }
+  }
+}

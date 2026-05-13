@@ -1,0 +1,30 @@
+# Set the loglevel (debug/info/error)
+log_level: "debug"
+
+# Configuration of the server
+server:
+  # Use 0.0.0.0 to expose the app
+  host: "0.0.0.0" 
+  # Port to use 
+  port: 8080
+
+# The configuration of you ComfyUI backend to cover
+comfyui_backend:
+  # Where the ComfyUI is deployed
+  host: "127.0.0.1"
+  port: 8000
+  # Path to folder containing .json workflows files
+  workflows_folder: "./workflows"
+  # Client ID to use (some string)
+  client_id: "comfyui-api"
+  # Whether to use or not WebSockets backend
+  use_ws: true
+  
+
+# This configures the request routing
+routing:
+  # Timeout for the backend
+  timeout_seconds: 600
+  # Max payload to accept/transmit
+  max_payload_size_mb: 10
+

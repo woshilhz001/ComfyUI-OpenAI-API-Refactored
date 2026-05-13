@@ -10,6 +10,16 @@
   "img-1778680144484-64981": {
     "status": "processing"
   },
+  "img-1778680375244-38870": {
+    "status": "completed",
+    "video_url": null,
+    "b64_json": "1446951 bytes"
+  },
+  "img-1778680506866-55183": {
+    "status": "completed",
+    "video_url": null,
+    "b64_json": "1079707 bytes"
+  },
   "vid-1778624741319-25078": {
     "status": "processing"
   }

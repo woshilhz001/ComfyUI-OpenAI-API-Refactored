@@ -225,7 +225,7 @@ pub async fn poll_history_for_images(
                 if let Ok(queue_json) = queue_resp.json::<Value>().await {
                     debug!("poll_history_for_images pid={} queue={:?}", pid, queue_json);
                     let running = queue_json.get("queue_running").and_then(|v| v.as_array()).map(|a| a.len()).unwrap_or(0);
-                    // let pid_found = queue_contains_pid(&queue_json, pid);
+                    //修改 let pid_found = queue_contains_pid(&queue_json, pid);
                     let pid_found = 
                     // json格式检索，
                     queue_json.get("queue_running")

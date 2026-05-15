@@ -5,6 +5,7 @@ use axum::{
 };
 use serde::Serialize;
 use std::fmt;
+use tracing::warn;
 
 #[derive(Debug)]
 pub enum ProxyError {
@@ -86,6 +87,7 @@ impl From<anyhow::Error> for ProxyError {
 }
 
 pub fn handle_request_error(e: reqwest::Error, full_url: &str) -> ProxyError {
+    warn!("HTTP request to {} failed: {}", full_url, e);
     if e.is_timeout() {
         ProxyError::Upstream(format!("Timeout to {}: {}", full_url, e))
     } else if e.is_connect() {

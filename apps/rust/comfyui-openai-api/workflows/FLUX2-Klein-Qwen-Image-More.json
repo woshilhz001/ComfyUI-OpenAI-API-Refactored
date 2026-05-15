@@ -1,7 +1,7 @@
 {
   "76": {
     "inputs": {
-      "image": "placeholder_3x3.png"
+      "image": "5be13767700f1bd9.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -10,29 +10,16 @@
   },
   "81": {
     "inputs": {
-      "image": "placeholder_3x3.png"
+      "image": "57a607ba1399ea2e.png"
     },
     "class_type": "LoadImage",
     "_meta": {
       "title": "Reference Image 2"
     }
   },
-  "94": {
-    "inputs": {
-      "filename_prefix": "Image/Klein",
-      "images": [
-        "164",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "保存图像"
-    }
-  },
   "131": {
     "inputs": {
-      "sampler_name": "euler"
+      "sampler_name": "euler_cfg_pp"
     },
     "class_type": "KSamplerSelect",
     "_meta": {
@@ -85,7 +72,7 @@
   },
   "134": {
     "inputs": {
-      "noise_seed": 1023845481079907
+      "noise_seed": 1031859838680479
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -128,36 +115,6 @@
       "title": "空Latent图像（Flux2）"
     }
   },
-  "139": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "megapixels": 1,
-      "resolution_steps": 1,
-      "image": [
-        "76",
-        0
-      ]
-    },
-    "class_type": "ImageScaleToTotalPixels",
-    "_meta": {
-      "title": "缩放图像（像素）"
-    }
-  },
-  "140": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "megapixels": 1,
-      "resolution_steps": 1,
-      "image": [
-        "155",
-        0
-      ]
-    },
-    "class_type": "ImageScaleToTotalPixels",
-    "_meta": {
-      "title": "缩放图像（像素）"
-    }
-  },
   "141": {
     "inputs": {
       "clip_name": "Qwen_3_8b_fp8mixed.safetensors",
@@ -171,7 +128,7 @@
   },
   "142": {
     "inputs": {
-      "text": "(masterpiece, best quality, ultra-detailed:1.3), A beautiful Chinese woman in her 20s, with gentle and elegant oriental features, delicate porcelain skin, soft makeup, exuding a serene and graceful temperament, wearing a soft silver-white lace bathrobe, with flowing black long hair, sits on a light-colored rattan chair. A gentle cat. A modern smartphone lies screen-down on the soft pink cushion of the chair, or rests atop the woven wicker basket, subtly integrated into the scene. The background is a textured rose pink wall with an arched niche, flanked by wide dark green leaves (Monstera deliciosa). Only the woman’s beige woven sandals are in the foreground. Soft, translucent window light illuminates the scene, casting gentle shadows and creating a delicate “发光发丝” (hair light) effect on the woman. The lighting is clean and layered. The scene embodies a sense of \"新中式\" (new Chinese style) quiet luxury and life aesthetics. The overall atmosphere is clean, refreshing, warm, healing, and literary, with a focus on tranquil companionship and a moment of disconnect. Professional photography, shot on an 85mm lens, shallow depth of field, extremely detailed textures, film grain.",
+      "text": "reference image, A man was catching a bird in front of the house, but the bird didn't catch any feathers on the ground. The woman watched from the side and smiled",
       "clip": [
         "141",
         0
@@ -184,7 +141,7 @@
   },
   "143": {
     "inputs": {
-      "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
+      "text": "worst quality, low quality, blurry, jpeg artifacts, watermark, text, signature, deformed, bad anatomy",
       "clip": [
         "141",
         0
@@ -199,15 +156,15 @@
     "inputs": {
       "cfg": 1,
       "model": [
-        "166",
+        "1597",
         0
       ],
       "positive": [
-        "165",
+        "1589",
         0
       ],
       "negative": [
-        "143",
+        "1577",
         0
       ]
     },
@@ -218,7 +175,7 @@
   },
   "145": {
     "inputs": {
-      "steps": 4,
+      "steps": 8,
       "width": [
         "152",
         0
@@ -236,7 +193,7 @@
   "147": {
     "inputs": {
       "pixels": [
-        "139",
+        "1545",
         0
       ],
       "vae": [
@@ -265,41 +222,9 @@
       "title": "参考Latent"
     }
   },
-  "150": {
-    "inputs": {
-      "pixels": [
-        "140",
-        0
-      ],
-      "vae": [
-        "136",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码"
-    }
-  },
-  "151": {
-    "inputs": {
-      "conditioning": [
-        "163",
-        0
-      ],
-      "latent": [
-        "150",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
   "152": {
     "inputs": {
-      "value": 1280
+      "value": 1024
     },
     "class_type": "PrimitiveInt",
     "_meta": {
@@ -308,7 +233,7 @@
   },
   "153": {
     "inputs": {
-      "value": 704
+      "value": 576
     },
     "class_type": "PrimitiveInt",
     "_meta": {
@@ -317,7 +242,7 @@
   },
   "154": {
     "inputs": {
-      "image": "placeholder_3x3.png"
+      "image": "Klein_00035_.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -326,32 +251,17 @@
   },
   "155": {
     "inputs": {
-      "image": "placeholder_3x3.png"
+      "image": "7c25d1c68bdba1b9.png"
     },
     "class_type": "LoadImage",
     "_meta": {
       "title": "Reference Image 4"
     }
   },
-  "156": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "megapixels": 1,
-      "resolution_steps": 1,
-      "image": [
-        "81",
-        0
-      ]
-    },
-    "class_type": "ImageScaleToTotalPixels",
-    "_meta": {
-      "title": "缩放图像（像素）"
-    }
-  },
   "158": {
     "inputs": {
       "pixels": [
-        "156",
+        "1546",
         0
       ],
       "vae": [
@@ -380,53 +290,6 @@
       "title": "参考Latent"
     }
   },
-  "160": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "megapixels": 1,
-      "resolution_steps": 1,
-      "image": [
-        "154",
-        0
-      ]
-    },
-    "class_type": "ImageScaleToTotalPixels",
-    "_meta": {
-      "title": "缩放图像（像素）"
-    }
-  },
-  "162": {
-    "inputs": {
-      "pixels": [
-        "160",
-        0
-      ],
-      "vae": [
-        "136",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码"
-    }
-  },
-  "163": {
-    "inputs": {
-      "conditioning": [
-        "159",
-        0
-      ],
-      "latent": [
-        "162",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
   "164": {
     "inputs": {
       "method": "rcas",
@@ -441,9 +304,255 @@
       "title": "Image Sharpen KJ"
     }
   },
-  "165": {
+  "168": {
     "inputs": {
-      "active_scale": 1.1,
+      "filename_prefix": "Image/Klein",
+      "images": [
+        "164",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "1510": {
+    "inputs": {
+      "pixels": [
+        "1549",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "1511": {
+    "inputs": {
+      "conditioning": [
+        "159",
+        0
+      ],
+      "latent": [
+        "1510",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1515": {
+    "inputs": {
+      "pixels": [
+        "1551",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "1516": {
+    "inputs": {
+      "conditioning": [
+        "1511",
+        0
+      ],
+      "latent": [
+        "1515",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1545": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "152",
+        0
+      ],
+      "resize_type.height": [
+        "153",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "76",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小"
+    }
+  },
+  "1546": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "152",
+        0
+      ],
+      "resize_type.height": [
+        "153",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "81",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小"
+    }
+  },
+  "1549": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "152",
+        0
+      ],
+      "resize_type.height": [
+        "153",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "154",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小"
+    }
+  },
+  "1551": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "152",
+        0
+      ],
+      "resize_type.height": [
+        "153",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "155",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小"
+    }
+  },
+  "1574": {
+    "inputs": {
+      "conditioning": [
+        "143",
+        0
+      ],
+      "latent": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1575": {
+    "inputs": {
+      "conditioning": [
+        "1574",
+        0
+      ],
+      "latent": [
+        "158",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1576": {
+    "inputs": {
+      "conditioning": [
+        "1575",
+        0
+      ],
+      "latent": [
+        "1510",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1577": {
+    "inputs": {
+      "conditioning": [
+        "1576",
+        0
+      ],
+      "latent": [
+        "1515",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1588": {
+    "inputs": {
+      "reference_latents_method": "index",
+      "conditioning": [
+        "1516",
+        0
+      ]
+    },
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "_meta": {
+      "title": "FluxKontext多参考潜在方法"
+    }
+  },
+  "1589": {
+    "inputs": {
+      "active_scale": 0.8,
       "per_token_whiten": 0.12,
       "norm_equalize": 0.08,
       "early_layer_scale": 1,
@@ -454,7 +563,7 @@
       "device": "auto",
       "debug": false,
       "conditioning": [
-        "151",
+        "1588",
         0
       ]
     },
@@ -463,38 +572,16 @@
       "title": "FLUX.2 Klein Enhancer"
     }
   },
-  "166": {
+  "1597": {
     "inputs": {
-      "mode": "auto",
-      "intensity": 0.8,
       "model": [
         "135",
         0
-      ],
-      "lcs_data": [
-        "167",
-        0
-      ],
-      "vae": [
-        "136",
-        0
       ]
     },
-    "class_type": "LCSColorAnchor",
+    "class_type": "FluxKVCache",
     "_meta": {
-      "title": "LCS Color Anchor"
-    }
-  },
-  "167": {
-    "inputs": {
-      "vae": [
-        "136",
-        0
-      ]
-    },
-    "class_type": "LCSLoadData",
-    "_meta": {
-      "title": "LCS Load Data"
+      "title": "Flux KV 缓存"
     }
   }
 }

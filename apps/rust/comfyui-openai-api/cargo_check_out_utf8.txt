@@ -1,0 +1,352 @@
+﻿cargo : warning: unused import: `axum::http::StatusCode`
+所在位置 行:1 字符: 79
++ ... PI-Refactored\apps\rust\comfyui-openai-api'; cargo check 2>&1 | Out-F ...
++                                                  ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: unused...tp::StatusCode` 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ --> src\proxy.rs:1:5
+  |
+1 | use axum::http::StatusCode;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `axum::response::IntoResponse`
+ --> src\proxy.rs:2:5
+  |
+2 | use axum::response::IntoResponse;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `serde::Serialize`
+ --> src\proxy.rs:4:5
+  |
+4 | use serde::Serialize;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `collections::HashMap`
+ --> src\proxy.rs:5:11
+  |
+5 | use std::{collections::HashMap, sync::Arc};
+  |           ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::workflows::template::PreparedWorkflow`
+ --> src\proxy.rs:8:5
+  |
+8 | use crate::workflows::template::PreparedWorkflow;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+ --> src\seed_tracker.rs:2:5
+  |
+2 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+ --> src\graceful.rs:1:5
+  |
+1 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused imports: `debug` and `warn`
+  --> src\handlers\video.rs:13:15
+   |
+13 | use tracing::{debug, error, info, warn};
+   |               ^^^^^               ^^^^
+
+warning: unused imports: `debug` and `info`
+ --> src\transport\poll.rs:4:15
+  |
+4 | use tracing::{debug, error, info, warn};
+  |               ^^^^^         ^^^^
+
+warning: unused import: `uuid::Uuid`
+ --> src\middleware\idempotency.rs:5:5
+  |
+5 | use uuid::Uuid;
+  |     ^^^^^^^^^^
+
+warning: unused imports: `body::Body` and `delete`
+  --> src\main.rs:17:26
+   |
+17 |     routing::{get, post, delete},
+   |                          ^^^^^^
+...
+20 |     body::Body,
+   |     ^^^^^^^^^^
+
+warning: unused variable: `idx`
+   --> src\handlers\image.rs:215:16
+    |
+215 |         .map(|(idx, (name, bytes))| {
+    |                ^^^ help: if this is intentional, prefix it with an unders
+core: `_idx`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by defau
+lt
+
+warning: field `seed_tracker` is never read
+  --> src\proxy.rs:31:9
+   |
+17 | pub struct ProxyState {
+   |            ---------- field in this struct
+...
+31 |     pub seed_tracker: Arc<SeedTracker>,
+   |         ^^^^^^^^^^^^
+   |
+   = note: `ProxyState` has a derived impl for the trait `Clone`, but this is i
+ntentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `IdempotencyConflict` is never constructed
+  --> src\error.rs:15:5
+   |
+10 | pub enum ProxyError {
+   |          ---------- variant in this enum
+...
+15 |     IdempotencyConflict,
+   |     ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `ProxyError` has a derived impl for the trait `Debug`, but this is i
+ntentionally ignored during dead code analysis
+
+warning: field `seeds` is never read
+ --> src\seed_tracker.rs:7:5
+  |
+6 | pub struct SeedTracker {
+  |            ----------- field in this struct
+7 |     seeds: RwLock<HashMap<String, i64>>,
+  |     ^^^^^
+
+warning: associated items `get_seed`, `update_seed`, and `random_seed` are neve
+r used
+  --> src\seed_tracker.rs:15:18
+   |
+10 | impl SeedTracker {
+   | ---------------- associated items in this implementation
+...
+15 |     pub async fn get_seed(&self, role: &str) -> i64 {
+   |                  ^^^^^^^^
+...
+22 |     pub async fn update_seed(&self, role: &str, seed: i64) {
+   |                  ^^^^^^^^^^^
+...
+26 |     pub fn random_seed() -> i64 {
+   |            ^^^^^^^^^^^
+
+warning: method `acquire` is never used
+  --> src\graceful.rs:28:18
+   |
+14 | impl GracefulShutdown {
+   | --------------------- method in this implementation
+...
+28 |     pub async fn acquire(&self) -> Option<tokio::sync::SemaphorePermit<'_>
+> {
+   |                  ^^^^^^^
+
+warning: fields `lora_nodes`, `reference_latent_nodes`, and `empty_ltxv_latent_
+node` are never read
+  --> src\workflows\registry.rs:18:9
+   |
+10 | pub struct WorkflowTemplate {
+   |            ---------------- fields in this struct
+...
+18 |     pub lora_nodes: Vec<String>,
+   |         ^^^^^^^^^^
+19 |     pub reference_latent_nodes: Vec<String>,
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+20 |     pub empty_ltxv_latent_node: Option<String>,
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `WorkflowTemplate` has a derived impl for the trait `Clone`, but thi
+s is intentionally ignored during dead code analysis
+
+warning: variants `NoiseSeed`, `Seed`, `BatchSize`, `Duration`, and `Fps` are n
+ever constructed
+  --> src\workflows\template.rs:22:5
+   |
+17 | pub enum InjectRole {
+   |          ---------- variants in this enum
+...
+22 |     NoiseSeed,
+   |     ^^^^^^^^^
+23 |     Seed,
+   |     ^^^^
+24 |     BatchSize,
+   |     ^^^^^^^^^
+25 |     Duration,
+   |     ^^^^^^^^
+26 |     Fps,
+   |     ^^^
+   |
+   = note: `InjectRole` has derived impls for the traits `Debug` and `Clone`, b
+ut these are intentionally ignored during dead code analysis
+
+warning: field `name` is never read
+  --> src\handlers\image.rs:43:9
+   |
+42 | pub struct ReferenceImage {
+   |            -------------- field in this struct
+43 |     pub name: Option<String>,
+   |         ^^^^
+   |
+   = note: `ReferenceImage` has derived impls for the traits `Clone` and `Debug
+`, but these are intentionally ignored during dead code analysis
+
+warning: fields `reference_roles` and `segment_lengths` are never read
+  --> src\handlers\video.rs:37:9
+   |
+29 | pub struct VideoGenerationRequest {
+   |            ---------------------- fields in this struct
+...
+37 |     pub reference_roles: Option<Vec<String>>,
+   |         ^^^^^^^^^^^^^^^
+...
+41 |     pub segment_lengths: Option<String>,
+   |         ^^^^^^^^^^^^^^^
+   |
+   = note: `VideoGenerationRequest` has a derived impl for the trait `Debug`, b
+ut this is intentionally ignored during dead code analysis
+
+warning: field `last_check` is never read
+  --> src\backend\pool.rs:11:5
+   |
+ 8 | pub struct BackendState {
+   |            ------------ field in this struct
+...
+11 |     last_check: RwLock<Instant>,
+   |     ^^^^^^^^^^
+
+warning: methods `inc_connections` and `dec_connections` are never used
+  --> src\backend\pool.rs:30:12
+   |
+16 | impl BackendState {
+   | ----------------- methods in this implementation
+...
+30 |     pub fn inc_connections(&self) { self.active_conns.fetch_add(1, Orderin
+g::Relaxed); }
+   |            ^^^^^^^^^^^^^^^
+31 |     pub fn dec_connections(&self) { self.active_conns.fetch_sub(1, Orderin
+g::Relaxed); }
+   |            ^^^^^^^^^^^^^^^
+
+warning: constant `COMPLETED_CAPACITY` is never used
+  --> src\transport\ws.rs:10:7
+   |
+10 | const COMPLETED_CAPACITY: usize = 100;
+   |       ^^^^^^^^^^^^^^^^^^
+
+warning: constant `INITIAL_RECONNECT_DELAY` is never used
+  --> src\transport\ws.rs:11:7
+   |
+11 | const INITIAL_RECONNECT_DELAY: u64 = 2;
+   |       ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `MAX_RECONNECT_DELAY` is never used
+  --> src\transport\ws.rs:12:7
+   |
+12 | const MAX_RECONNECT_DELAY: u64 = 60;
+   |       ^^^^^^^^^^^^^^^^^^^
+
+warning: constant `RECONNECT_MULTIPLIER` is never used
+  --> src\transport\ws.rs:13:7
+   |
+13 | const RECONNECT_MULTIPLIER: f64 = 1.5;
+   |       ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `WsManager` is never constructed
+  --> src\transport\ws.rs:15:12
+   |
+15 | pub struct WsManager {
+   |            ^^^^^^^^^
+
+warning: associated items `connect`, `run_loop`, `listen`, and `wait_for_job` a
+re never used
+  --> src\transport\ws.rs:24:18
+   |
+23 | impl WsManager {
+   | -------------- associated items in this implementation
+24 |     pub async fn connect(backend_url: String, backend_port: String, client
+_id: String) -> Arc<Self> {
+   |                  ^^^^^^^
+...
+37 |     async fn run_loop(&self) {
+   |              ^^^^^^^^
+...
+62 |     async fn listen(
+   |              ^^^^^^
+...
+97 |     pub async fn wait_for_job(&self, prompt_id: &str) -> anyhow::Result<()
+> {
+   |                  ^^^^^^^^^^^^
+
+warning: function `request_id_middleware` is never used
+ --> src\middleware\request_id.rs:9:14
+  |
+9 | pub async fn request_id_middleware(
+  |              ^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `IdempotencyResult` is never used
+ --> src\middleware\idempotency.rs:8:10
+  |
+8 | pub enum IdempotencyResult {
+  |          ^^^^^^^^^^^^^^^^^
+
+warning: struct `IdempotencyStore` is never constructed
+  --> src\middleware\idempotency.rs:16:12
+   |
+16 | pub struct IdempotencyStore {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `check_or_ignore`, and `store` are never used
+  --> src\middleware\idempotency.rs:22:12
+   |
+21 | impl IdempotencyStore {
+   | --------------------- associated items in this implementation
+22 |     pub fn new(ttl_secs: u64) -> Self {
+   |            ^^^
+...
+30 |     pub fn check_or_ignore(&self, key: &str) -> Option<Vec<u8>> {
+   |            ^^^^^^^^^^^^^^^
+...
+43 |     pub fn store(&self, key: &str, data: Vec<u8>) {
+   |            ^^^^^
+
+warning: function `extract_idempotency_key` is never used
+  --> src\middleware\idempotency.rs:52:8
+   |
+52 | pub fn extract_idempotency_key(headers: &HeaderMap) -> Option<String> {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: static `PLACEHOLDER_FILENAME` is never used
+  --> src\cache\image_cache.rs:16:8
+   |
+16 | static PLACEHOLDER_FILENAME: OnceLock<String> = OnceLock::new();
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: static `PLACEHOLDER_3X3_BASE64` is never used
+  --> src\cache\image_cache.rs:17:8
+   |
+17 | static PLACEHOLDER_3X3_BASE64: &str = "iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAY
+AAABWKLW/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZc...
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `init_placeholder` is never used
+   --> src\cache\image_cache.rs:184:14
+    |
+184 | pub async fn init_placeholder(client: &Client) -> Result<()> {
+    |              ^^^^^^^^^^^^^^^^
+
+warning: associated function `new` is never used
+  --> src\task_manager.rs:30:12
+   |
+29 | impl TaskManager {
+   | ---------------- associated function in this implementation
+30 |     pub fn new() -> Self {
+   |            ^^^
+
+warning: `comfyui-openai-api` (bin "comfyui-openai-api") generated 38 warnings 
+(run `cargo fix --bin "comfyui-openai-api" -p comfyui-openai-api` to apply 12 s
+uggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s

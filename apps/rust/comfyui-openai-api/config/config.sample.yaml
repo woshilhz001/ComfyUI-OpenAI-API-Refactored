@@ -43,6 +43,9 @@ routing:
     ttl_secs: 600
     max_entries: 500
 
+  # 是否启用缓存命中（相同提交直接返回缓存结果）
+  enable_response_cache: false
+
   # 幂等键支持
   enable_idempotency: true
 

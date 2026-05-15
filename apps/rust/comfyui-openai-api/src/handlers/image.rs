@@ -8,7 +8,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::sync::Arc;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tokio::time::timeout;
 use rand::Rng;
 use tracing::{info, warn};                 // 只导入 info 和 warn
@@ -83,6 +83,7 @@ pub async fn image_generations_handler(
 
     // 拒绝正在关闭的服务器
     if state.graceful_shutdown.is_shutting_down() {
+        warn!("Image request rejected because server is shutting down");
         return Err(ProxyError::Internal("Server is shutting down".into()));
     }
 
@@ -91,19 +92,23 @@ pub async fn image_generations_handler(
         .get("idempotency-key")
         .and_then(|v| v.to_str().ok())
         .map(|s| s.to_string());
-    if let (true, Some(ref key)) = (state.enable_idempotency, &idempotency_key) {
-        if let Some(cached) = state.response_cache.as_ref().and_then(|c| c.get(key)) {
-            return Ok(AxumResponse::builder()
-                .status(StatusCode::OK)
-                .header("Content-Type", "application/json")
-                .body(Body::from(cached))
-                .unwrap());
+    if state.enable_response_cache {
+        if let (true, Some(ref key)) = (state.enable_idempotency, &idempotency_key) {
+            if let Some(cached) = state.response_cache.as_ref().and_then(|c| c.get(key)) {
+                info!("相同提交结果，已触发缓存命中，不会执行ai生成，如果需要取消缓存命中，请到配置文件config.yaml修改 enable_response_cache 字段值为 false。");
+                return Ok(AxumResponse::builder()
+                    .status(StatusCode::OK)
+                    .header("Content-Type", "application/json")
+                    .body(Body::from(cached))
+                    .unwrap());
+            }
         }
     }
 
     // 限流
     if let Some(limiter) = &state.rate_limiter {
         if !limiter.try_acquire() {
+            warn!("Image request rejected by rate limiter");
             return Err(ProxyError::RateLimited("Too many requests".into()));
         }
     }
@@ -111,10 +116,16 @@ pub async fn image_generations_handler(
     // 选择后端
     let backend_name = params.get("backend").map(|s| s.as_str());
     let backend = state.get_backend(backend_name)?;
+    info!("Selected backend '{}' at {}:{}", backend.name, backend.host, backend.port);
 
     // 解析请求
-    let mut request: OpenAIImageRequest = serde_json::from_str(&body_str)
-        .map_err(|e| ProxyError::Json(format!("Invalid request: {}", e)))?;
+    let mut request: OpenAIImageRequest = match serde_json::from_str(&body_str) {
+        Ok(req) => req,
+        Err(e) => {
+            warn!("Invalid image request JSON: {}", e);
+            return Err(ProxyError::Json(format!("Invalid request: {}", e)));
+        }
+    };
     for img in &request.image {
         request.reference_images.push(ReferenceImage {
             name: None,
@@ -127,11 +138,14 @@ pub async fn image_generations_handler(
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis(),
         rand::random::<u16>()
     );
-    state.task_manager.insert(task_id.clone(), TaskState::Processing).await;
+    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None }).await;
 
     // 获取工作流模板
     let template = state.registry.get(&request.model)
-        .ok_or_else(|| ProxyError::Json(format!("Workflow '{}' not found", request.model)))?;
+        .ok_or_else(|| {
+            warn!("Workflow '{}' not found", request.model);
+            ProxyError::Json(format!("Workflow '{}' not found", request.model))
+        })?;
     let prepared = PreparedWorkflow::from_template(&template);
 
     // 请求级响应缓存（无参考图时可用）
@@ -146,13 +160,16 @@ pub async fn image_generations_handler(
     } else {
         None
     };
-    if let Some(ref key) = cache_key {
-        if let Some(cached) = state.response_cache.as_ref().and_then(|c| c.get(key)) {
-            return Ok(AxumResponse::builder()
-                .status(StatusCode::OK)
-                .header("Content-Type", "application/json")
-                .body(Body::from(cached))
-                .unwrap());
+    if state.enable_response_cache {
+        if let Some(ref key) = cache_key {
+            if let Some(cached) = state.response_cache.as_ref().and_then(|c| c.get(key)) {
+                info!("相同提交结果，已触发缓存命中，不会执行ai生成，如果需要取消缓存命中，请到配置文件config.yaml修改 enable_response_cache 字段值为 false。");
+                return Ok(AxumResponse::builder()
+                    .status(StatusCode::OK)
+                    .header("Content-Type", "application/json")
+                    .body(Body::from(cached))
+                    .unwrap());
+            }
         }
     }
 
@@ -181,9 +198,12 @@ pub async fn image_generations_handler(
     let prompt_id = resp_json["prompt_id"].as_str()
         .ok_or_else(|| ProxyError::Upstream("No prompt_id in response".into()))?
         .to_string();
+    info!("任务生成：{}", prompt_id);
+    state.task_manager.update(&task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()) }).await;
+    let start_time = Instant::now();
 
     // 轮询获取图片
-    let images = timeout(
+    let images = match timeout(
         Duration::from_secs(state.job_timeout_seconds),
         poll_history_for_images(
             &format!("{}:{}", backend.host, backend.port),
@@ -192,10 +212,57 @@ pub async fn image_generations_handler(
             state.job_timeout_seconds,
         ),
     )
-    .await
-    .map_err(|_| ProxyError::Upstream("Job completion timeout".into()))??;
+    .await {
+        Ok(Ok(images)) => images,
+        Ok(Err(e)) => {
+            state.task_manager.update(
+                &task_id,
+                TaskState::Failed {
+                    error: e.to_string(),
+                    comfyui_task_id: Some(prompt_id.clone()),
+                },
+            ).await;
+            return Err(e);
+        }
+        Err(_) => {
+            let err = ProxyError::Upstream("Job completion timeout".into());
+            state.task_manager.update(
+                &task_id,
+                TaskState::Failed {
+                    error: err.to_string(),
+                    comfyui_task_id: Some(prompt_id.clone()),
+                },
+            ).await;
+            return Err(err);
+        }
+    };
 
-    let response_json = build_openai_image_response(images);
+    let result_info: Vec<String> = images
+        .iter()
+        .enumerate()
+        .map(|(idx, (name, bytes))| {
+            let size_kb = (bytes.len() + 1023) / 1024;
+            if name.is_empty() {
+                format!("{}kb", size_kb)
+            } else {
+                format!("{} ({}kb)", name, size_kb)
+            }
+        })
+        .collect();
+    let elapsed = start_time.elapsed();
+    let elapsed_minutes = elapsed.as_secs() / 60;
+    let elapsed_seconds = elapsed.as_secs() % 60;
+    info!(
+        "任务（{}）完成，返回结果：{}，执行时间：{}m{}s",
+        prompt_id,
+        result_info.join(", "),
+        elapsed_minutes,
+        elapsed_seconds
+    );
+
+    let response_json = build_openai_image_response(
+        images.into_iter().map(|(_, bytes)| bytes).collect(),
+    );
     let output_body = serde_json::to_vec(&response_json)?;
 
     // 更新任务状态
@@ -203,7 +270,9 @@ pub async fn image_generations_handler(
         &task_id,
         TaskState::Completed {
             video_url: None,
-            b64_json: Some(format!("{} bytes", output_body.len())),
+            b64_json: Some(result_info.join(", ")),
+            comfyui_task_id: Some(prompt_id.clone()),
+            execution_time: Some(format!("{}m{}s", elapsed_minutes, elapsed_seconds)),
         },
     ).await;
 

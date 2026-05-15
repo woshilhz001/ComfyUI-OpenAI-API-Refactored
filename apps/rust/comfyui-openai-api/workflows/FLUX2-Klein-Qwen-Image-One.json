@@ -1,29 +1,7 @@
 {
-  "192": {
-    "inputs": {
-      "filename_prefix": "Image/Klein",
-      "images": [
-        "208",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "保存图像"
-    }
-  },
-  "193": {
-    "inputs": {
-      "image": "placeholder_3x3.png"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Reference Image 1"
-    }
-  },
   "194": {
     "inputs": {
-      "sampler_name": "euler"
+      "sampler_name": "euler_cfg_pp"
     },
     "class_type": "KSamplerSelect",
     "_meta": {
@@ -77,24 +55,9 @@
       "title": "空Latent图像（Flux2）"
     }
   },
-  "199": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "megapixels": 1,
-      "resolution_steps": 1,
-      "image": [
-        "193",
-        0
-      ]
-    },
-    "class_type": "ImageScaleToTotalPixels",
-    "_meta": {
-      "title": "缩放图像（像素）"
-    }
-  },
   "200": {
     "inputs": {
-      "steps": 4,
+      "steps": 8,
       "width": [
         "213",
         0
@@ -111,7 +74,7 @@
   },
   "201": {
     "inputs": {
-      "text": "(masterpiece, best quality, ultra-detailed, cinematic, photorealistic), 1 male, 32 years old, Chinese, Chen Feng, a former small business owner turned down-and-out delivery man, (thin and weary physique:1.3), (sharp facial features with tired eyes:1.2), (unshaven stubble, pale and slightly bluish skin, heavy dark circles under eyes:1.4), (wet black hair clinging to forehead:1.1), (resigned yet stubborn look in eyes:1.5), wearing a (faded and worn-out black leather jacket:1.3), (torn cuffs, muddy jeans, worn-out sneakers:1.2), soaked to the bone, (standing under a bridge in the pouring rain at night:1.4), (cold autumn rain, dim streetlight, gloomy atmosphere:1.3), (holding a soaked cigarette, expression of bitterness and determination:1.5), dramatic lighting, chiaroscuro, film grain, depth of field, (highly detailed face and textures:1.3)",
+      "text": "reference image, A man was catching a bird in front of the house, but the bird didn't catch any feathers on the ground. The woman watched from the side and smiled",
       "clip": [
         "196",
         0
@@ -157,7 +120,7 @@
   "206": {
     "inputs": {
       "pixels": [
-        "199",
+        "224",
         0
       ],
       "vae": [
@@ -198,7 +161,68 @@
       "title": "自定义采样器（高级）"
     }
   },
-  "208": {
+  "209": {
+    "inputs": {
+      "noise_seed": 1091252525615548
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "210": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "223",
+        0
+      ],
+      "positive": [
+        "221",
+        0
+      ],
+      "negative": [
+        "212",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "212": {
+    "inputs": {
+      "text": "worst quality, low quality, blurry, jpeg artifacts, watermark, text, signature, deformed, bad anatomy",
+      "clip": [
+        "196",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Negative Prompt"
+    }
+  },
+  "213": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "214": {
+    "inputs": {
+      "value": 576
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "217": {
     "inputs": {
       "samples": [
         "207",
@@ -214,65 +238,97 @@
       "title": "VAE解码"
     }
   },
-  "209": {
+  "218": {
     "inputs": {
-      "noise_seed": 1025422467094264
+      "method": "rcas",
+      "method.strength": 0.3,
+      "image": [
+        "217",
+        0
+      ]
     },
-    "class_type": "RandomNoise",
+    "class_type": "ImageSharpenKJ",
     "_meta": {
-      "title": "随机噪波"
+      "title": "Image Sharpen KJ"
     }
   },
-  "210": {
+  "219": {
     "inputs": {
-      "cfg": 1,
+      "filename_prefix": "Image/Klein",
+      "images": [
+        "218",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "221": {
+    "inputs": {
+      "active_scale": 1.2,
+      "per_token_whiten": 0.12,
+      "norm_equalize": 0.08,
+      "early_layer_scale": 1,
+      "mid_layer_scale": 1,
+      "late_layer_scale": 0.93,
+      "preserve_original": 0,
+      "active_end_override": 0,
+      "device": "auto",
+      "debug": false,
+      "conditioning": [
+        "205",
+        0
+      ]
+    },
+    "class_type": "Flux2KleinEnhancer",
+    "_meta": {
+      "title": "FLUX.2 Klein Enhancer"
+    }
+  },
+  "223": {
+    "inputs": {
       "model": [
         "195",
         0
-      ],
-      "positive": [
-        "205",
+      ]
+    },
+    "class_type": "FluxKVCache",
+    "_meta": {
+      "title": "Flux KV 缓存"
+    }
+  },
+  "224": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "213",
         0
       ],
-      "negative": [
-        "203",
+      "resize_type.height": [
+        "214",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "229",
         0
       ]
     },
-    "class_type": "CFGGuider",
+    "class_type": "ResizeImageMaskNode",
     "_meta": {
-      "title": "CFG引导器"
+      "title": "调整图像/掩码大小"
     }
   },
-  "212": {
+  "229": {
     "inputs": {
-      "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
-      "clip": [
-        "196",
-        0
-      ]
+      "image": "5be13767700f1bd9.png"
     },
-    "class_type": "CLIPTextEncode",
+    "class_type": "LoadImage",
     "_meta": {
-      "title": "Negative Prompt"
-    }
-  },
-  "213": {
-    "inputs": {
-      "value": 1280
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Width"
-    }
-  },
-  "214": {
-    "inputs": {
-      "value": 704
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Height"
+      "title": "Reference Image 1"
     }
   }
 }

@@ -28,6 +28,7 @@ pub struct ProxyState {
     pub default_fps: Option<f64>,
     pub free_model_before_video: bool,
     pub response_cache: Option<Arc<ResponseCache>>,
+    pub enable_response_cache: bool,
     pub seed_tracker: Arc<SeedTracker>,
     pub rate_limiter: Option<Arc<RateLimiter>>,
     pub graceful_shutdown: Arc<GracefulShutdown>,

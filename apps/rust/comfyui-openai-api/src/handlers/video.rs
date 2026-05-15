@@ -7,7 +7,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::sync::Arc;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, SystemTime, UNIX_EPOCH, Instant};
 use tokio::time::timeout;
 use rand::Rng;
 use tracing::{debug, error, info, warn};
@@ -67,7 +67,7 @@ pub async fn video_generations_handler(
     body: axum::body::Bytes,
 ) -> Result<AxumResponse, ProxyError> {
     let raw_body = String::from_utf8_lossy(&body);
-    info!("📥 Video request: {}", crate::handlers::image::sanitize_log_body(&raw_body));
+    //info!("📥 Video request: {}", crate::handlers::image::sanitize_log_body(&raw_body));
 
     // 优雅关闭检查
     if state.graceful_shutdown.is_shutting_down() {
@@ -101,7 +101,7 @@ pub async fn video_generations_handler(
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis(),
         rand::random::<u16>()
     );
-    state.task_manager.insert(task_id.clone(), TaskState::Processing).await;
+    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None }).await;
 
     let state_clone = state.clone();
     let tm = state.task_manager.clone();
@@ -120,20 +120,30 @@ pub async fn video_generations_handler(
             height,
             job_timeout,
             backend_for_generation,
+            &task_id_clone,
         ).await;
         match res {
-            Ok(videos) => {
+            Ok((videos, prompt_id, execution_time)) => {
                 let url = videos.first().map(|v| {
                     format!("http://{}:{}/view?filename={}&subfolder={}&type=output",
                         backend_for_result.host, backend_for_result.port, v.filename, v.subfolder)
                 });
-                let b64 = videos.first().map(|v| base64::engine::general_purpose::STANDARD.encode(&v.bytes));
-                tm.update(&task_id_clone, TaskState::Completed { video_url: url, b64_json: b64 }).await;
-                info!("✅ Video task {} completed", task_id_clone);
+                let output_info = videos.first().map(|v| {
+                    let size_kb = (v.bytes.len() + 1023) / 1024;
+                    format!("{} ({}kb)", v.filename, size_kb)
+                });
+                info!("🎬 [异步任务] 更新任务状态: url={:?}, output_info={:?}", url, output_info);
+                tm.update(&task_id_clone, TaskState::Completed {
+                    video_url: url.clone(),
+                    b64_json: output_info.clone(),
+                    comfyui_task_id: prompt_id.clone(),
+                    execution_time: Some(execution_time),
+                }).await;
+                info!("✅ Video task {} completed, url: {:?}, output_info: {:?}", task_id_clone, url, output_info);
             }
             Err(e) => {
-                tm.update(&task_id_clone, TaskState::Failed { error: e.to_string() }).await;
                 error!("❌ Video task {} failed: {}", task_id_clone, e);
+                tm.update(&task_id_clone, TaskState::Failed { error: e.to_string(), comfyui_task_id: None }).await;
             }
         }
     });
@@ -160,7 +170,9 @@ async fn execute_video_generation(
     height: u32,
     job_timeout: u64,
     backend: BackendConfig,
-) -> Result<Vec<VideoOutput>, ProxyError> {
+    task_id: &str,
+) -> Result<(Vec<VideoOutput>, Option<String>, String), ProxyError> {
+    let start_time = Instant::now();
     let target_base = format!("{}:{}", backend.host, backend.port);
 
     if state.free_model_before_video {
@@ -207,6 +219,9 @@ async fn execute_video_generation(
     let prompt_id = resp_json["prompt_id"].as_str()
         .ok_or_else(|| ProxyError::Upstream("No prompt_id in response".into()))?
         .to_string();
+    info!("任务生成：{}", prompt_id);
+
+    state.task_manager.update(task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()) }).await;
 
     let videos = timeout(
         Duration::from_secs(job_timeout),
@@ -215,7 +230,36 @@ async fn execute_video_generation(
     .await
     .map_err(|_| ProxyError::Upstream("Video generation timeout".into()))??;
 
-    Ok(videos)
+    info!("📥 poll_history_for_videos 返回视频数量: {}", videos.len());
+    
+    if videos.is_empty() {
+        warn!("⚠️ 警告：videos 列表为空！prompt_id: {}", prompt_id);
+        return Err(ProxyError::Upstream("No videos returned from poll_history_for_videos".into()));
+    }
+
+    // 计算执行时间
+    let elapsed = start_time.elapsed();
+    let elapsed_minutes = elapsed.as_secs() / 60;
+    let elapsed_seconds = elapsed.as_secs() % 60;
+    let execution_time_str = format!("{}m{}s", elapsed_minutes, elapsed_seconds);
+    
+    // 收集结果信息
+    let result_info: Vec<String> = videos
+        .iter()
+        .map(|v| {
+            let size_kb = (v.bytes.len() + 1023) / 1024;
+            format!("{} ({}kb)", v.filename, size_kb)
+        })
+        .collect();
+    
+    info!(
+        "任务（{}）完成，返回结果：{}，执行时间：{}",
+        prompt_id,
+        result_info.join(", "),
+        execution_time_str
+    );
+
+    Ok((videos, Some(prompt_id), execution_time_str))
 }
 
 async fn create_video_payload(

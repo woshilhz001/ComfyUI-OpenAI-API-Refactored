@@ -86,6 +86,7 @@ async fn main() {
         default_fps: config.routing.fps,
         free_model_before_video: config.routing.free_model_before_video,
         response_cache,
+        enable_response_cache: config.routing.enable_response_cache,
         seed_tracker,
         rate_limiter,
         graceful_shutdown: graceful_shutdown.clone(),

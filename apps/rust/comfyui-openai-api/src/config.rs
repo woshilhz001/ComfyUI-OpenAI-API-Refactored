@@ -106,6 +106,8 @@ pub struct RoutingConfig {
     pub rate_limit: Option<RateLimitConfig>,
     #[serde(default = "default_response_cache")]
     pub response_cache: Option<ResponseCacheConfig>,
+    #[serde(default = "default_true")]
+    pub enable_response_cache: bool,
     #[serde(default = "default_false")]
     pub enable_idempotency: bool,
     #[serde(default = "default_graceful_shutdown_secs")]

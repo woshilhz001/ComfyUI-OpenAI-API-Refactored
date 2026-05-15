@@ -1,2 +1,3 @@
 apps/rust/comfyui-openai-api/tasks.json
 *.png
+*.DS_Store

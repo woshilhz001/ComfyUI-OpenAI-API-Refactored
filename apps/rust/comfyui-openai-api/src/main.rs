@@ -40,6 +40,13 @@ use task_manager::TaskManager;
 use handlers::{metrics, tasks, image, video, models, health, backends};
 use crate::handlers::metrics::init_metrics;
 
+async fn fallback_handler(req: axum::http::Request<axum::body::Body>) -> impl axum::response::IntoResponse {
+    let method = req.method();
+    let uri = req.uri();
+    tracing::warn!("⚠️ 404 Not Found: {} {}", method, uri);
+    (axum::http::StatusCode::NOT_FOUND, "Route not found")
+}
+
 #[tokio::main]
 async fn main() {
     tracing_setup::init_tracing().expect("Tracing init failed");
@@ -102,8 +109,8 @@ async fn main() {
         .route("/v1/videos/generations", post(video::video_generations_handler))
         .route("/v1/images/generations", post(image::image_generations_handler))
         .route("/v1/metrics", get(metrics::metrics_handler))
+        .route("/v1/tasks/:task_id", get(tasks::task_query))
         .route("/v1/tasks", get(tasks::task_list))
-        .route("/v1/tasks/{task_id}", get(tasks::task_query).delete(tasks::task_delete))
         .layer(axum_mw::from_fn(|req, next: axum::middleware::Next| async move {
             metrics::TOTAL_REQUESTS.inc();
             next.run(req).await
@@ -111,6 +118,7 @@ async fn main() {
         .layer(CorsLayer::permissive())
         .layer(DefaultBodyLimit::disable())
         .layer(RequestBodyLimitLayer::new((config.routing.max_payload_size_mb as usize) * 1024 * 1024))
+        .fallback(fallback_handler)
         .with_state(proxy_state);
 
     let addr = format!("{}:{}", config.server.host, config.server.port);

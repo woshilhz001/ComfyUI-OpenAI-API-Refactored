@@ -147,8 +147,9 @@ pub async fn video_generations_handler(
             }
         }
     });
-
+    
     let response = json!({ "task_id": task_id });
+    info!("response: {}", response);
     let body = serde_json::to_vec(&response)?;
     Ok(AxumResponse::builder()
         .status(StatusCode::OK)

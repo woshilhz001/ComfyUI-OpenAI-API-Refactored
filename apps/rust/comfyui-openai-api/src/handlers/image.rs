@@ -104,7 +104,7 @@ pub async fn image_generations_handler(
             }
         }
     }
-
+    
     // 限流
     if let Some(limiter) = &state.rate_limiter {
         if !limiter.try_acquire() {
@@ -131,6 +131,17 @@ pub async fn image_generations_handler(
             name: None,
             data: img.clone(),
         });
+    }
+    
+    // 在解析完 request 并合并 image 字段后（大约原代码第 110 行附近），添加以下代码：
+    info!("📸 Reference images count: {}", request.reference_images.len());
+    for (idx, img) in request.reference_images.iter().enumerate() {
+        let preview = if img.data.len() > 30 {
+            format!("{}...", &img.data[..30])
+        } else {
+            img.data.clone()
+        };
+        info!("  Reference image {}: name={:?}, data={}", idx, img.name, preview);
     }
 
     let task_id = format!(
@@ -366,17 +377,21 @@ async fn create_image_payload(
 
         // 参考图注入
         let ref_count = request.reference_images.len();
+        info!("🖼️ Preparing to inject {} reference images into {} LoadImage nodes", ref_count, prepared.load_image_nodes.len());
         if !prepared.load_image_nodes.is_empty() {
             if ref_count == 0 {
                 let placeholder = image_cache::get_placeholder_filename(http_client, backend).await?;
+                info!("No reference images, using placeholder: {}", placeholder);
                 for nid in &prepared.load_image_nodes {
                     obj[nid]["inputs"]["image"] = json!(placeholder);
+                    info!("  Node {} -> placeholder", nid);
                 }
             } else {
                 for (i, nid) in prepared.load_image_nodes.iter().enumerate() {
                     let idx = if i < ref_count { i } else { ref_count - 1 };
                     let filename = image_cache::cache_image(http_client, backend, &request.reference_images[idx].data).await?;
                     obj[nid]["inputs"]["image"] = json!(filename);
+                    info!("  Node {} -> reference image index {} (filename: {})", nid, idx, filename);
                 }
             }
         }

@@ -28,7 +28,7 @@
   },
   "818": {
     "inputs": {
-      "text": "(anime, cartoon, cgi, 3d, render, sketch, painting, illustration, vector art, cel shading, plastic, doll-like, wax figure, uncanny valley:1.4),\n(worst quality, low quality, normal quality, jpeg artifacts, blurry, motion blur, noise, grainy, oversharpening, bleeding colors, film grain, analog style:1.4),\n(monochrome, grayscale, oversaturated, underexposed, overexposed, too bright, too dark, bad lighting, harsh shadows, washed out, high contrast, uneven lighting:1.3),\n(frame inconsistency, temporal artifacts, ghosting, double exposure, morphing, face changing, different person, lip sync error:1.4),\n(flickering, jitter, shaky cam, camera shake, warping, stuttering:1.3),\n(text, signature, watermark, username, logo, brand, subtitle, typography, letters, font, UI, label:1.5),\n\n\n(bad anatomy, incorrect anatomy, deformed anatomy, malformed limbs, disproportionate, asymmetrical, fused body parts, extra limbs, floating limbs, disconnected limbs, missing limbs, stump, malformed torso, twisted body, broken limbs:1.3),\n(deformed hands, bad hands, poorly drawn hands, mutated hands, missing fingers, extra fingers, fused fingers, long fingers, fingerless, twisted wrists, club hands, paw hands:1.3),\n(deformed feet, bad feet, missing toes, extra toes, fused toes, club feet, hoof feet, prosthetic mismatch:1.2),\n(deformed breasts, distorted body, unnatural curves, mismatched breasts, uneven breasts, missing breasts, extra breasts:1.3),\n(distorted joints, hyperextended joints, backward knees, uneven shoulders, uneven hips, missing joints, unnatural bending:1.3),\n\n\n(deformed eyes, deformed iris, deformed pupils, crossed eyes, lazy eye, bad eyes, too many eyes, missing eyes, empty eye sockets, glowing eyes, zombie eyes:1.2),\n(distorted face, ugly, poorly drawn face, poorly drawn eyes, deformed, disfigured, disgusting, hideous, bad teeth, missing mouth, blurred face, smudged face, melted face:1.2),\n(stiff expression, emotionless, blank stare, dead eyes, soulless eyes, fake smile, creepy smile, forced smile, unnatural facial expression, facial tic, twitching face, asymmetric expression:1.4),\n\n\n(moving body, changing pose, fidgeting, messy hair, disheveled hair, large head movements, gesturing wildly, puppet-like motion, robotic movement, unnatural motion:1.5),\n(exaggerated facial expressions, shouting, laughing, crying, wide-eyed stare, jaw drop, tongue out:1.4),\n(static pose, frozen, mannequin, mannequin challenge, T-pose, A-pose, stiff body, rigid posture:1.3),\n\n\n(cluttered background, busy composition, messy background, distorted background, simple background, empty scene, blank background, grid pattern, checkerboard:1.2),\n(out of frame, cut off, incomplete, cropped head, cropped limbs, subject cut off, incomplete body, partial view:1.3)\n",
+      "text": "(anime, cartoon, cgi, 3d, render, sketch, painting, illustration, vector art, cel shading, plastic, doll-like, wax figure, uncanny valley:1.4),\n﻿\n(worst quality, low quality, normal quality, jpeg artifacts, blurry, motion blur, noise, grainy, oversharpening, bleeding colors, film grain, analog style:1.4),\n﻿\n(monochrome, grayscale, oversaturated, underexposed, overexposed, too bright, too dark, bad lighting, harsh shadows, washed out, high contrast, uneven lighting:1.3),\n﻿\n(frame inconsistency, temporal artifacts, ghosting, double exposure, morphing, face changing, different person, lip sync error, flickering, jitter, shaky cam, camera shake, warping, stuttering, frame jump, sudden cut, abrupt transition, freeze frame, strobing, video compression artifacts, interlacing, pixelation on motion:1.4),\n﻿\n(text, signature, watermark, username, logo, brand, subtitle, typography, letters, font, UI, label, speech bubble, caption, timestamp, channel logo, any readable text on screen:1.5),\n﻿\n(bad anatomy, incorrect anatomy, deformed anatomy, malformed limbs, disproportionate, asymmetrical, fused body parts, extra limbs, floating limbs, disconnected limbs, missing limbs, stump, malformed torso, twisted body, broken limbs:1.3),\n﻿\n(deformed hands, bad hands, poorly drawn hands, mutated hands, missing fingers, extra fingers, fused fingers, long fingers, fingerless, twisted wrists, club hands, paw hands:1.3),\n﻿\n(deformed feet, bad feet, missing toes, extra toes, fused toes, club feet, hoof feet, prosthetic mismatch:1.2),\n﻿\n(deformed face, asymmetric face, cross-eyed, lazy eye, mismatched eye color, missing eye, extra eye, deformed iris, deformed pupil, blurry face, melted face, plastic face, mask-like expression, stiff expression, emotionless, blank stare, dead eyes, soulless eyes:1.2),\n﻿\n(audio-visual mismatch, missing audio, distorted audio, robotic voice, unnatural voice, echo, background noise, crackling sound, silent audio, lip-sync offset, audio delay, audio cutout, volume spikes, muffled sound, wrong language, wrong voice:1.4),\n﻿\n(unnatural motion, robotic movement, jerky movement, sudden pose change, body clipping, object penetration through body, floating objects, gravity-defying motion, impossible pose, morphing between frames, duplication of characters, vanishing objects, inconsistent background across frames:1.4),\n﻿\n(overexposed video, underexposed video, blown highlights, crushed blacks, color shift between frames, white balance flicker, chromatic aberration, lens distortion, vignette, excessive bloom, unrealistic lens flare:1.3)",
       "clip": [
         "1406:1223",
         0
@@ -41,7 +41,7 @@
   },
   "820": {
     "inputs": {
-      "image": "Klein_00035_.png"
+      "image": "1placeholder_3x3.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -50,7 +50,7 @@
   },
   "1072": {
     "inputs": {
-      "image": "Klein_00035_.png"
+      "image": "1placeholder_3x3.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -59,7 +59,7 @@
   },
   "1082": {
     "inputs": {
-      "image": "Klein_00035_.png"
+      "image": "1placeholder_3x3.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -68,7 +68,7 @@
   },
   "1092": {
     "inputs": {
-      "image": "Klein_00035_.png"
+      "image": "1placeholder_3x3.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -263,7 +263,7 @@
         0
       ],
       "loop_count": 0,
-      "filename_prefix": "Video/LTX/2026-05-15",
+      "filename_prefix": "Video/LTX/2026-05-16",
       "format": "video/h264-mp4",
       "pix_fmt": "yuv420p",
       "crf": 15,

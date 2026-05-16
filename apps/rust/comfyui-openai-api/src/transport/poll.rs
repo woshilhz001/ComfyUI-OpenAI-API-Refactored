@@ -312,16 +312,22 @@ pub async fn poll_history_for_videos(
             }
         };
         debug!("poll_history_for_videos attempt={} pid={} history={:?}", attempt, pid, history);
-
+        
         if let Some(job) = get_job_from_history(&history, pid) {
+            //warn!("poll_history_for_videos pid={} job={:?}", pid, job);
             debug!("poll_history_for_videos pid={} job={:?}", pid, job);
             missing_pid_streak = 0;
 
             // 错误检测：检查 status 或 status_str 字段
             let mut has_error = false;
             let mut error_msgs = Vec::new();
-            let status = job.get("status").and_then(|v| v.as_str())
-                .or_else(|| job.get("status_str").and_then(|v| v.as_str()));
+            // let status = job.get("status").and_then(|v| v.as_str())
+            //     .or_else(|| job.get("status_str").and_then(|v| v.as_str()));
+            let status = job.get("status")
+            .and_then(|s| s.get("status_str"))
+            .and_then(|v| v.as_str())
+            .or_else(|| job.get("status_str").and_then(|v| v.as_str()));
+            warn!("读到状态结果:{:?}",status);
             if let Some(status) = status {
                 if matches!(status, "error" | "exception" | "failed" | "aborted" | "canceled" | "cancelled") {
                     has_error = true;

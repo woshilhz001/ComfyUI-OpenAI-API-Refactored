@@ -86,6 +86,13 @@ impl WorkflowTemplate {
         let load_image_nodes: Vec<String> = temp_load_images.into_iter().map(|(id, _)| id).collect();
 
         info!("Parsed workflow '{}': {} LoadImage nodes", name, load_image_nodes.len());
+        info!("Parsed workflow '{}': {} LoadImage nodes", name, load_image_nodes.len());
+        if !load_image_nodes.is_empty() {
+            let details: Vec<String> = load_image_nodes.iter()
+                .map(|id| format!("{} (title: {:?})", id, json.as_object().and_then(|obj| obj.get(id).and_then(|n| n["_meta"]["title"].as_str()))))
+                .collect();
+            info!("  LoadImage nodes: {}", details.join(", "));
+        }
         WorkflowTemplate {
             raw: json,
             positive_prompt_node,

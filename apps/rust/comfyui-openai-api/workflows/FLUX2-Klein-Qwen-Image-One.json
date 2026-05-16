@@ -1,7 +1,7 @@
 {
   "194": {
     "inputs": {
-      "sampler_name": "euler_cfg_pp"
+      "sampler_name": "euler"
     },
     "class_type": "KSamplerSelect",
     "_meta": {
@@ -57,7 +57,7 @@
   },
   "200": {
     "inputs": {
-      "steps": 8,
+      "steps": 5,
       "width": [
         "213",
         0
@@ -74,7 +74,7 @@
   },
   "201": {
     "inputs": {
-      "text": "reference image, A man was catching a bird in front of the house, but the bird didn't catch any feathers on the ground. The woman watched from the side and smiled",
+      "text": "大远景俯拍，深秋雨夜的老旧桥洞下，陈峰蜷缩在两个浸透雨水的蛇皮袋之间，衣衫紧贴身躯，发梢滴落的水珠凝滞在半空，面部被冷蓝逆光勾勒出清晰轮廓，皮肤纹理与每一根湿黏的胡茬纤毫毕现，身后城市霓虹在积水中碎裂成幽蓝光斑，雨幕如银线垂落，车流低鸣的震动隐于空气，整幅画面笼罩在湿冷的寂静中,手里拿着手机，photorealistic, ultra-detailed, 8k uhd, sharp focus, natural lighting, real skin texture, hyperrealism, professional photography, RAW photo\n﻿\n||| The scene may contain natural text on any of the following: signs, billboards, labels, stickers, posters, graffiti, product packaging, paper notes, screens (digital or phone), t-shirts, badges, license plates, chalkboards, banners, or neon displays. All such text must be clearly readable, high-resolution, realistic typography, with every letter or character complete and correctly formed. No gibberish, no missing strokes, no corrupted or unreadable symbols. The text should look authentic to the context (e.g., a shop name, a warning label, a price tag, a slogan).\n﻿\nNo watermarks, no logos, no signatures, no brand names, no captions, no subtitles, no UI text, no timestamp overlays. Surfaces are clean from extraneous artificial markings.",
       "clip": [
         "196",
         0
@@ -88,7 +88,7 @@
   "203": {
     "inputs": {
       "conditioning": [
-        "212",
+        "201",
         0
       ],
       "latent": [
@@ -104,7 +104,7 @@
   "205": {
     "inputs": {
       "conditioning": [
-        "201",
+        "212",
         0
       ],
       "latent": [
@@ -163,7 +163,7 @@
   },
   "209": {
     "inputs": {
-      "noise_seed": 1091252525615548
+      "noise_seed": 889379987244457
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -182,7 +182,7 @@
         0
       ],
       "negative": [
-        "212",
+        "205",
         0
       ]
     },
@@ -193,7 +193,7 @@
   },
   "212": {
     "inputs": {
-      "text": "worst quality, low quality, blurry, jpeg artifacts, watermark, text, signature, deformed, bad anatomy",
+      "text": "All text in the image must be natural, clearly readable, high-resolution, with realistic typography, and perfectly match the context (e.g., sign, label, poster, graffiti). Every letter or character must be complete and correctly formed. There is absolutely no gibberish, no corrupted or mangled characters, no missing strokes or broken parts. No unreadable symbols, alien glyphs, fake text, blurry text, smudged text, distorted typography, or moiré patterns on any letters or words. Additionally, the image has no low quality, no blurriness, no JPEG artifacts, no watermark, no text signature, no deformed or bad anatomy (if any subjects), no distorted perspective, no oversaturation, no unnatural lighting, no pixelation, no noise, no grainy texture, no duplicate elements, no cropping errors, no color banding, no chromatic aberration, no lens flare artifacts, no overexposed highlights, no crushed shadows, no unnatural skin tones (if people), no floating or disconnected body parts (if people), no extra limbs, no weird proportions, no ugly or messy composition. The image must be sharp, high-contrast where appropriate, well-framed, and visually pleasing.",
       "clip": [
         "196",
         0
@@ -265,9 +265,27 @@
       "title": "保存图像"
     }
   },
+  "220": {
+    "inputs": {
+      "mode": "auto",
+      "intensity": 0.8,
+      "model": [
+        "195",
+        0
+      ],
+      "lcs_data": [
+        "222",
+        0
+      ]
+    },
+    "class_type": "LCSColorAnchor",
+    "_meta": {
+      "title": "LCS Color Anchor"
+    }
+  },
   "221": {
     "inputs": {
-      "active_scale": 1.2,
+      "active_scale": 1,
       "per_token_whiten": 0.12,
       "norm_equalize": 0.08,
       "early_layer_scale": 1,
@@ -278,7 +296,7 @@
       "device": "auto",
       "debug": false,
       "conditioning": [
-        "205",
+        "203",
         0
       ]
     },
@@ -287,10 +305,22 @@
       "title": "FLUX.2 Klein Enhancer"
     }
   },
+  "222": {
+    "inputs": {
+      "vae": [
+        "197",
+        0
+      ]
+    },
+    "class_type": "LCSLoadData",
+    "_meta": {
+      "title": "LCS Load Data"
+    }
+  },
   "223": {
     "inputs": {
       "model": [
-        "195",
+        "220",
         0
       ]
     },
@@ -324,7 +354,7 @@
   },
   "229": {
     "inputs": {
-      "image": "5be13767700f1bd9.png"
+      "image": "2.png"
     },
     "class_type": "LoadImage",
     "_meta": {

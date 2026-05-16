@@ -23,8 +23,8 @@ comfyui_backend:
 routing:
   timeout_seconds: 3600
   max_payload_size_mb: 500
-  Image_Width: 512
-  Image_Height: 288
+  Image_Width: 1024
+  Image_Height: 576
   video_Width: 512
   video_Height: 288
   fps: 8

@@ -78,56 +78,53 @@ pub async fn poll_history_for_images(
         debug!("poll_history_for_images attempt={} pid={} history={:?}", attempt, pid, history);
 
         let mut maybe_job = get_job_from_history(&history, pid);
-        if maybe_job.is_none() {
-            if let Ok(queue_resp) = client.get(&queue_url).send().await {
-                if let Ok(queue_json) = queue_resp.json::<Value>().await {
-                    debug!("poll_history_for_images pid={} queue={:?}", pid, queue_json);
-                    // 检查 queue_running（运行） 和 queue_pending（等待）队列是否有对应任务id
-                    let pid_found = 
-                    // json格式检索，
-                    queue_json.get("queue_running")
-                        .and_then(|v| v.as_array())
-                        .map(|arr| arr.iter().any(|item| {
-                            item.as_array()
-                                .and_then(|inner| inner.get(1))          // 取第二个元素，索引 1
-                                .and_then(|uuid_val| uuid_val.as_str())  // 转为 &str
-                                .map(|uuid| uuid == pid)                 // 与 pid 比较（pid 是 &str）
-                                .unwrap_or(false)
-                        }))
-                        .unwrap_or(false)
-                    ||
-                    queue_json.get("queue_pending")
-                        .and_then(|v| v.as_array())
-                        .map(|arr| arr.iter().any(|item| {
-                            item.as_array()
-                                .and_then(|inner| inner.get(1))
-                                .and_then(|uuid_val| uuid_val.as_str())
-                                .map(|uuid| uuid == pid)
-                                .unwrap_or(false)
-                        })).unwrap_or(false);
-                    //debug!("poll_history_for_images pid={} found_in_queue={}", pid, pid_found);
-                    //warn!("pid_found:{}", pid_found);
-                    //如果检索不到任务id
-                    if !pid_found {
-                        warn!("poll_history_for_images pid={} not found in queue, rechecking history", pid);
-                        let recheck_resp = client.get(&history_url).send().await
-                            .map_err(|e| {
-                                warn!("History recheck failed for {}: {}", history_url, e);
-                                ProxyError::Upstream(format!("History fetch: {}", e))
-                            })?;
-                        let history_recheck: Value = recheck_resp.json().await
-                            .map_err(|e| ProxyError::Json(format!("JSON parse: {}", e)))?;
-                        warn!("history_url_recheck:{}", history_recheck);
-                        history = history_recheck;
-                        maybe_job = get_job_from_history(&history, pid);
-                        if maybe_job.is_none() {
-                            error!("ComfyUI job {} 任务超时或被终止！", pid);
-                            return Err(ProxyError::Upstream(format!("ComfyUI task {} 超时或被终止，请重新生成", pid)));
-                        }
-                    }
-                }
-            }
-        }
+        // if maybe_job.is_none() {
+        //     if let Ok(queue_resp) = client.get(&queue_url).send().await {
+        //         if let Ok(queue_json) = queue_resp.json::<Value>().await {
+        //             debug!("poll_history_for_images pid={} queue={:?}", pid, queue_json);
+        //             // 检查 queue_running（运行） 和 queue_pending（等待）队列是否有对应任务id
+        //             let pid_found = 
+        //             // json格式检索，
+        //             queue_json.get("queue_running")
+        //                 .and_then(|v| v.as_array())
+        //                 .map(|arr| arr.iter().any(|item| {
+        //                     item.as_array()
+        //                         .and_then(|inner| inner.get(1))          // 取第二个元素，索引 1
+        //                         .and_then(|uuid_val| uuid_val.as_str())  // 转为 &str
+        //                         .map(|uuid| uuid == pid)                 // 与 pid 比较（pid 是 &str）
+        //                         .unwrap_or(false)
+        //                 }))
+        //                 .unwrap_or(false)
+        //             ||
+        //             queue_json.get("queue_pending")
+        //                 .and_then(|v| v.as_array())
+        //                 .map(|arr| arr.iter().any(|item| {
+        //                     item.as_array()
+        //                         .and_then(|inner| inner.get(1))
+        //                         .and_then(|uuid_val| uuid_val.as_str())
+        //                         .map(|uuid| uuid == pid)
+        //                         .unwrap_or(false)
+        //                 })).unwrap_or(false);
+        //             if !pid_found {
+        //                 warn!("poll_history_for_images pid={} not found in queue, rechecking history", pid);
+        //                 let recheck_resp = client.get(&history_url).send().await
+        //                     .map_err(|e| {
+        //                         warn!("History recheck failed for {}: {}", history_url, e);
+        //                         ProxyError::Upstream(format!("History fetch: {}", e))
+        //                     })?;
+        //                 let history_recheck: Value = recheck_resp.json().await
+        //                     .map_err(|e| ProxyError::Json(format!("JSON parse: {}", e)))?;
+        //                 warn!("history_url_recheck:{}", history_recheck);
+        //                 history = history_recheck;
+        //                 maybe_job = get_job_from_history(&history, pid);
+        //                 if maybe_job.is_none() {
+        //                     error!("ComfyUI job {} 任务超时或被终止！", pid);
+        //                     return Err(ProxyError::Upstream(format!("ComfyUI task {} 超时或被终止，请重新生成", pid)));
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         if let Some(job) = maybe_job {
             debug!("poll_history_for_images pid={} job={:?}", pid, job);

@@ -38,23 +38,6 @@
       "title": "加载VAE"
     }
   },
-  "198": {
-    "inputs": {
-      "width": [
-        "213",
-        0
-      ],
-      "height": [
-        "214",
-        0
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyFlux2LatentImage",
-    "_meta": {
-      "title": "空Latent图像（Flux2）"
-    }
-  },
   "200": {
     "inputs": {
       "steps": 5,
@@ -83,112 +66,6 @@
     "class_type": "CLIPTextEncode",
     "_meta": {
       "title": "Positive Prompt"
-    }
-  },
-  "203": {
-    "inputs": {
-      "conditioning": [
-        "201",
-        0
-      ],
-      "latent": [
-        "206",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "205": {
-    "inputs": {
-      "conditioning": [
-        "212",
-        0
-      ],
-      "latent": [
-        "206",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "206": {
-    "inputs": {
-      "pixels": [
-        "224",
-        0
-      ],
-      "vae": [
-        "197",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码"
-    }
-  },
-  "207": {
-    "inputs": {
-      "noise": [
-        "209",
-        0
-      ],
-      "guider": [
-        "210",
-        0
-      ],
-      "sampler": [
-        "194",
-        0
-      ],
-      "sigmas": [
-        "200",
-        0
-      ],
-      "latent_image": [
-        "198",
-        0
-      ]
-    },
-    "class_type": "SamplerCustomAdvanced",
-    "_meta": {
-      "title": "自定义采样器（高级）"
-    }
-  },
-  "209": {
-    "inputs": {
-      "noise_seed": 889379987244457
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "随机噪波"
-    }
-  },
-  "210": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "223",
-        0
-      ],
-      "positive": [
-        "221",
-        0
-      ],
-      "negative": [
-        "205",
-        0
-      ]
-    },
-    "class_type": "CFGGuider",
-    "_meta": {
-      "title": "CFG引导器"
     }
   },
   "212": {
@@ -225,7 +102,7 @@
   "217": {
     "inputs": {
       "samples": [
-        "207",
+        "279:272",
         0
       ],
       "vae": [
@@ -265,71 +142,30 @@
       "title": "保存图像"
     }
   },
-  "220": {
+  "229": {
     "inputs": {
-      "mode": "auto",
-      "intensity": 0.8,
+      "image": "1.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 1"
+    }
+  },
+  "262": {
+    "inputs": {
+      "lora_name": "f2k_9B_lcs_consist_20260415.safetensors",
+      "strength_model": 1,
       "model": [
         "195",
         0
-      ],
-      "lcs_data": [
-        "222",
-        0
       ]
     },
-    "class_type": "LCSColorAnchor",
+    "class_type": "LoraLoaderModelOnly",
     "_meta": {
-      "title": "LCS Color Anchor"
+      "title": "LoRA加载器（仅模型）"
     }
   },
-  "221": {
-    "inputs": {
-      "active_scale": 1,
-      "per_token_whiten": 0.12,
-      "norm_equalize": 0.08,
-      "early_layer_scale": 1,
-      "mid_layer_scale": 1,
-      "late_layer_scale": 0.93,
-      "preserve_original": 0,
-      "active_end_override": 0,
-      "device": "auto",
-      "debug": false,
-      "conditioning": [
-        "203",
-        0
-      ]
-    },
-    "class_type": "Flux2KleinEnhancer",
-    "_meta": {
-      "title": "FLUX.2 Klein Enhancer"
-    }
-  },
-  "222": {
-    "inputs": {
-      "vae": [
-        "197",
-        0
-      ]
-    },
-    "class_type": "LCSLoadData",
-    "_meta": {
-      "title": "LCS Load Data"
-    }
-  },
-  "223": {
-    "inputs": {
-      "model": [
-        "220",
-        0
-      ]
-    },
-    "class_type": "FluxKVCache",
-    "_meta": {
-      "title": "Flux KV 缓存"
-    }
-  },
-  "224": {
+  "263:224": {
     "inputs": {
       "resize_type": "scale dimensions",
       "resize_type.width": [
@@ -352,13 +188,175 @@
       "title": "调整图像/掩码大小"
     }
   },
-  "229": {
+  "263:206": {
     "inputs": {
-      "image": "2.png"
+      "pixels": [
+        "263:224",
+        0
+      ],
+      "vae": [
+        "197",
+        0
+      ]
     },
-    "class_type": "LoadImage",
+    "class_type": "VAEEncode",
     "_meta": {
-      "title": "Reference Image 1"
+      "title": "VAE编码"
+    }
+  },
+  "263:203": {
+    "inputs": {
+      "conditioning": [
+        "201",
+        0
+      ],
+      "latent": [
+        "263:206",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "279:265": {
+    "inputs": {
+      "vae": [
+        "197",
+        0
+      ]
+    },
+    "class_type": "LCSLoadData",
+    "_meta": {
+      "title": "LCS Load Data"
+    }
+  },
+  "279:269": {
+    "inputs": {
+      "mode": "auto",
+      "intensity": 0.8,
+      "model": [
+        "262",
+        0
+      ],
+      "lcs_data": [
+        "279:265",
+        0
+      ]
+    },
+    "class_type": "LCSColorAnchor",
+    "_meta": {
+      "title": "LCS Color Anchor"
+    }
+  },
+  "279:270": {
+    "inputs": {
+      "model": [
+        "279:269",
+        0
+      ]
+    },
+    "class_type": "FluxKVCache",
+    "_meta": {
+      "title": "Flux KV 缓存"
+    }
+  },
+  "279:271": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "279:270",
+        0
+      ],
+      "positive": [
+        "279:274",
+        0
+      ],
+      "negative": [
+        "212",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "279:272": {
+    "inputs": {
+      "noise": [
+        "279:273",
+        0
+      ],
+      "guider": [
+        "279:271",
+        0
+      ],
+      "sampler": [
+        "194",
+        0
+      ],
+      "sigmas": [
+        "200",
+        0
+      ],
+      "latent_image": [
+        "279:278",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "自定义采样器（高级）"
+    }
+  },
+  "279:273": {
+    "inputs": {
+      "noise_seed": 730841682871796
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "279:274": {
+    "inputs": {
+      "active_scale": 1,
+      "per_token_whiten": 0.2,
+      "norm_equalize": 0.1,
+      "early_layer_scale": 1,
+      "mid_layer_scale": 1,
+      "late_layer_scale": 0.93,
+      "preserve_original": 0,
+      "active_end_override": 0,
+      "device": "auto",
+      "debug": false,
+      "conditioning": [
+        "263:203",
+        0
+      ]
+    },
+    "class_type": "Flux2KleinEnhancer",
+    "_meta": {
+      "title": "FLUX.2 Klein Enhancer"
+    }
+  },
+  "279:278": {
+    "inputs": {
+      "width": [
+        "213",
+        0
+      ],
+      "height": [
+        "214",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "空Latent图像（Flux2）"
     }
   }
 }

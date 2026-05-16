@@ -5,7 +5,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "Reference Image 1"
+      "title": "Reference Image"
     }
   },
   "81": {
@@ -24,7 +24,7 @@
         0
       ],
       "vae": [
-        "136",
+        "1636",
         0
       ]
     },
@@ -33,41 +33,11 @@
       "title": "VAE解码"
     }
   },
-  "135": {
-    "inputs": {
-      "unet_name": "FLUX-2-klein-9b.safetensors",
-      "weight_dtype": "default"
-    },
-    "class_type": "UNETLoader",
-    "_meta": {
-      "title": "UNet加载器"
-    }
-  },
-  "136": {
-    "inputs": {
-      "vae_name": "FLUX-2-klein-vae.safetensors"
-    },
-    "class_type": "VAELoader",
-    "_meta": {
-      "title": "加载VAE"
-    }
-  },
-  "141": {
-    "inputs": {
-      "clip_name": "Qwen_3_8b_fp8mixed.safetensors",
-      "type": "flux2",
-      "device": "default"
-    },
-    "class_type": "CLIPLoader",
-    "_meta": {
-      "title": "加载CLIP"
-    }
-  },
   "142": {
     "inputs": {
       "text": "大远景俯拍，深秋雨夜的老旧桥洞下，陈峰蜷缩在两个浸透雨水的蛇皮袋之间，衣衫紧贴身躯，发梢滴落的水珠凝滞在半空，面部被冷蓝逆光勾勒出清晰轮廓，皮肤纹理与每一根湿黏的胡茬纤毫毕现，身后城市霓虹在积水中碎裂成幽蓝光斑，雨幕如银线垂落，车流低鸣的震动隐于空气，整幅画面笼罩在湿冷的寂静中,手里拿着手机，photorealistic, ultra-detailed, 8k uhd, sharp focus, natural lighting, real skin texture, hyperrealism, professional photography, RAW photo\n﻿\n||| The scene may contain natural text on any of the following: signs, billboards, labels, stickers, posters, graffiti, product packaging, paper notes, screens (digital or phone), t-shirts, badges, license plates, chalkboards, banners, or neon displays. All such text must be clearly readable, high-resolution, realistic typography, with every letter or character complete and correctly formed. No gibberish, no missing strokes, no corrupted or unreadable symbols. The text should look authentic to the context (e.g., a shop name, a warning label, a price tag, a slogan).\n﻿\nNo watermarks, no logos, no signatures, no brand names, no captions, no subtitles, no UI text, no timestamp overlays. Surfaces are clean from extraneous artificial markings.",
       "clip": [
-        "141",
+        "1639",
         0
       ]
     },
@@ -80,31 +50,13 @@
     "inputs": {
       "text": "All text in the image must be natural, clearly readable, high-resolution, with realistic typography, and perfectly match the context (e.g., sign, label, poster, graffiti). Every letter or character must be complete and correctly formed. There is absolutely no gibberish, no corrupted or mangled characters, no missing strokes or broken parts. No unreadable symbols, alien glyphs, fake text, blurry text, smudged text, distorted typography, or moiré patterns on any letters or words. Additionally, the image has no low quality, no blurriness, no JPEG artifacts, no watermark, no text signature, no deformed or bad anatomy (if any subjects), no distorted perspective, no oversaturation, no unnatural lighting, no pixelation, no noise, no grainy texture, no duplicate elements, no cropping errors, no color banding, no chromatic aberration, no lens flare artifacts, no overexposed highlights, no crushed shadows, no unnatural skin tones (if people), no floating or disconnected body parts (if people), no extra limbs, no weird proportions, no ugly or messy composition. The image must be sharp, high-contrast where appropriate, well-framed, and visually pleasing.",
       "clip": [
-        "141",
+        "1639",
         0
       ]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
       "title": "CLIP Text Encode ( Negative Prompt)"
-    }
-  },
-  "152": {
-    "inputs": {
-      "value": 1024
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Width"
-    }
-  },
-  "153": {
-    "inputs": {
-      "value": 576
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Height"
     }
   },
   "154": {
@@ -156,11 +108,11 @@
     "inputs": {
       "steps": 5,
       "width": [
-        "152",
+        "1637",
         0
       ],
       "height": [
-        "153",
+        "1638",
         0
       ]
     },
@@ -169,14 +121,89 @@
       "title": "Flux2调度器"
     }
   },
-  "1605:147": {
+  "1635": {
+    "inputs": {
+      "unet_name": "FLUX-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "UNet加载器"
+    }
+  },
+  "1636": {
+    "inputs": {
+      "vae_name": "FLUX-2-klein-vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "1637": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "1638": {
+    "inputs": {
+      "value": 576
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "1639": {
+    "inputs": {
+      "clip_name": "Qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "加载CLIP"
+    }
+  },
+  "1645": {
+    "inputs": {
+      "lora_name": "f2k_9B_lcs_consist_20260415.safetensors",
+      "strength_model": 1,
+      "model": [
+        "1635",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "LoRA加载器（仅模型）"
+    }
+  },
+  "1665": {
+    "inputs": {
+      "reference_latents_method": "index",
+      "conditioning": [
+        "1674:1657",
+        0
+      ]
+    },
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "_meta": {
+      "title": "FluxKontext多参考潜在方法"
+    }
+  },
+  "1672:1646": {
     "inputs": {
       "pixels": [
-        "1605:1545",
+        "1672:1659",
         0
       ],
       "vae": [
-        "136",
+        "1636",
         0
       ]
     },
@@ -185,14 +212,14 @@
       "title": "VAE编码"
     }
   },
-  "1605:148": {
+  "1672:1647": {
     "inputs": {
       "conditioning": [
         "142",
         0
       ],
       "latent": [
-        "1605:147",
+        "1672:1646",
         0
       ]
     },
@@ -201,79 +228,15 @@
       "title": "参考Latent"
     }
   },
-  "1605:158": {
-    "inputs": {
-      "pixels": [
-        "1605:1546",
-        0
-      ],
-      "vae": [
-        "136",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码"
-    }
-  },
-  "1605:159": {
-    "inputs": {
-      "conditioning": [
-        "1605:148",
-        0
-      ],
-      "latent": [
-        "1605:158",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1605:1510": {
-    "inputs": {
-      "pixels": [
-        "1605:1549",
-        0
-      ],
-      "vae": [
-        "136",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码"
-    }
-  },
-  "1605:1511": {
-    "inputs": {
-      "conditioning": [
-        "1605:159",
-        0
-      ],
-      "latent": [
-        "1605:1510",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1605:1545": {
+  "1672:1659": {
     "inputs": {
       "resize_type": "scale dimensions",
       "resize_type.width": [
-        "152",
+        "1637",
         0
       ],
       "resize_type.height": [
-        "153",
+        "1638",
         0
       ],
       "resize_type.crop": "center",
@@ -288,15 +251,63 @@
       "title": "调整图像/掩码大小"
     }
   },
-  "1605:1546": {
+  "1672:1662": {
+    "inputs": {
+      "conditioning": [
+        "143",
+        0
+      ],
+      "latent": [
+        "1672:1646",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1673:1648": {
+    "inputs": {
+      "pixels": [
+        "1673:1660",
+        0
+      ],
+      "vae": [
+        "1636",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码2"
+    }
+  },
+  "1673:1649": {
+    "inputs": {
+      "conditioning": [
+        "1672:1647",
+        0
+      ],
+      "latent": [
+        "1673:1648",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent2"
+    }
+  },
+  "1673:1660": {
     "inputs": {
       "resize_type": "scale dimensions",
       "resize_type.width": [
-        "152",
+        "1637",
         0
       ],
       "resize_type.height": [
-        "153",
+        "1638",
         0
       ],
       "resize_type.crop": "center",
@@ -308,18 +319,66 @@
     },
     "class_type": "ResizeImageMaskNode",
     "_meta": {
-      "title": "调整图像/掩码大小"
+      "title": "调整图像/掩码大小 2"
     }
   },
-  "1605:1549": {
+  "1673:1663": {
+    "inputs": {
+      "conditioning": [
+        "1672:1662",
+        0
+      ],
+      "latent": [
+        "1673:1648",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent2"
+    }
+  },
+  "1674:1656": {
+    "inputs": {
+      "pixels": [
+        "1674:1661",
+        0
+      ],
+      "vae": [
+        "1636",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码 3"
+    }
+  },
+  "1674:1657": {
+    "inputs": {
+      "conditioning": [
+        "1673:1649",
+        0
+      ],
+      "latent": [
+        "1674:1656",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent3"
+    }
+  },
+  "1674:1661": {
     "inputs": {
       "resize_type": "scale dimensions",
       "resize_type.width": [
-        "152",
+        "1637",
         0
       ],
       "resize_type.height": [
-        "153",
+        "1638",
         0
       ],
       "resize_type.crop": "center",
@@ -331,68 +390,23 @@
     },
     "class_type": "ResizeImageMaskNode",
     "_meta": {
-      "title": "调整图像/掩码大小"
+      "title": "调整图像/掩码大小 3"
     }
   },
-  "1605:1574": {
+  "1674:1664": {
     "inputs": {
       "conditioning": [
-        "143",
+        "1673:1663",
         0
       ],
       "latent": [
-        "1605:147",
+        "1674:1656",
         0
       ]
     },
     "class_type": "ReferenceLatent",
     "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1605:1575": {
-    "inputs": {
-      "conditioning": [
-        "1605:1574",
-        0
-      ],
-      "latent": [
-        "1605:158",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1605:1576": {
-    "inputs": {
-      "conditioning": [
-        "1605:1575",
-        0
-      ],
-      "latent": [
-        "1605:1510",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1605:1588": {
-    "inputs": {
-      "reference_latents_method": "index",
-      "conditioning": [
-        "1605:1511",
-        0
-      ]
-    },
-    "class_type": "FluxKontextMultiReferenceLatentMethod",
-    "_meta": {
-      "title": "FluxKontext多参考潜在方法"
+      "title": "参考Latent3"
     }
   },
   "1623:1609": {
@@ -425,7 +439,7 @@
   },
   "1623:1610": {
     "inputs": {
-      "noise_seed": 225998460373636
+      "noise_seed": 756471424856831
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -435,11 +449,11 @@
   "1623:1611": {
     "inputs": {
       "width": [
-        "152",
+        "1637",
         0
       ],
       "height": [
-        "153",
+        "1638",
         0
       ],
       "batch_size": 1
@@ -461,7 +475,7 @@
         0
       ],
       "negative": [
-        "1605:1576",
+        "1674:1657",
         0
       ]
     },
@@ -473,8 +487,8 @@
   "1623:1618": {
     "inputs": {
       "active_scale": 1,
-      "per_token_whiten": 0.12,
-      "norm_equalize": 0.08,
+      "per_token_whiten": 0.2,
+      "norm_equalize": 0.1,
       "early_layer_scale": 1,
       "mid_layer_scale": 1,
       "late_layer_scale": 0.93,
@@ -483,7 +497,7 @@
       "device": "auto",
       "debug": false,
       "conditioning": [
-        "1605:1588",
+        "1665",
         0
       ]
     },
@@ -497,7 +511,7 @@
       "mode": "auto",
       "intensity": 0.8,
       "model": [
-        "135",
+        "1645",
         0
       ],
       "lcs_data": [
@@ -513,7 +527,7 @@
   "1623:1620": {
     "inputs": {
       "vae": [
-        "136",
+        "1636",
         0
       ]
     },

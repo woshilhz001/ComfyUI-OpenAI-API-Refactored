@@ -111,6 +111,10 @@ impl WorkflowTemplate {
     }
 
     fn extract_reference_index(title: &str) -> Option<u32> {
+        // 精确匹配 "Reference Image"（没有数字）视为第 1 张
+        if title == "Reference Image" {
+            return Some(1);
+        }
         let prefix = "Reference Image ";
         title.find(prefix).map(|pos| {
             title[pos + prefix.len()..]

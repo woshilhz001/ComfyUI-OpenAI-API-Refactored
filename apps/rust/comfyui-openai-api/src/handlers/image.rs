@@ -6,7 +6,7 @@ use axum::body::Body;
 use reqwest::Client;
 use serde::Deserialize;
 use serde_json::{json, Value};
-use std::collections::HashMap;
+//use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tokio::time::timeout;
@@ -22,6 +22,8 @@ use crate::transport::poll::poll_history_for_images;
 use crate::workflows::template::{PreparedWorkflow, InjectRole};
 use crate::config::BackendConfig;
 use crate::utils::format_file_info;
+
+use std::collections::{HashMap, HashSet, VecDeque};
 
 // … 下方的数据结构、handler、create_image_payload、build_openai_image_response 等保持不变 …
 
@@ -196,6 +198,11 @@ pub async fn image_generations_handler(
         backend,
     ).await?;
 
+    // 打印 payload 以便调试
+    //info!("📤 Full payload (pretty): {}", serde_json::to_string_pretty(&payload).unwrap_or_else(|_| "Invalid JSON".to_string()));
+    // 也可以只打印前 2000 字符
+    //info!("📤 Payload (first 2000 chars): {}", serde_json::to_string(&payload).unwrap_or_default());
+
     let target_url = format!("http://{}:{}/prompt", backend.host, backend.port);
     info!("🚀 Submitting to ComfyUI: {}", target_url);
 
@@ -313,16 +320,32 @@ async fn create_image_payload(
 ) -> Result<Value, ProxyError> {
     let mut workflow = prepared.raw.clone();
     let seed_val = request.seed.unwrap_or_else(|| rand::thread_rng().gen_range(0..i64::MAX));
-    let seed_str = seed_val.to_string();
+    let mut reference_count = request.reference_images.len();
+    let mut reference_images = request.reference_images.clone();
 
+    // 如果没有参考图且工作流有 LoadImage 节点，则使用占位符保留一个节点
+    if reference_count == 0 && !prepared.load_image_nodes.is_empty() {
+        reference_count = 1;
+        let placeholder_base64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12NgYAAAAAMAASDVlMcAAAAASUVORK5CYII=";
+        reference_images.push(ReferenceImage {
+            name: Some("placeholder".to_string()),
+            data: placeholder_base64.to_string(),
+        });
+        info!("没有传入参考图, 使用占位符作为参考图，确保工作流中的 LoadImage 节点能够正常工作");
+    }
+
+    // 一次可变借用完成所有修改
     if let Some(obj) = workflow.as_object_mut() {
-        // 注入种子值到 RandomNoise 和 KSampler 节点
+        // 删除多余的参考图分支
+        prune_redundant_reference_branches(obj, &prepared.load_image_nodes, reference_count)?;
+
+        // 注入种子
         for (_, node) in obj.iter_mut() {
-            let class_type = node["class_type"].as_str().unwrap_or("");
-            if class_type == "RandomNoise" {
-                node["inputs"]["noise_seed"] = json!(seed_str);
-            } else if class_type == "KSampler" {
-                node["inputs"]["seed"] = json!(seed_str);
+            let ct = node["class_type"].as_str().unwrap_or("");
+            if ct == "RandomNoise" {
+                node["inputs"]["noise_seed"] = json!(seed_val.to_string());
+            } else if ct == "KSampler" {
+                node["inputs"]["seed"] = json!(seed_val);
             }
         }
 
@@ -338,16 +361,12 @@ async fn create_image_payload(
             }
         }
 
-        // 尺寸计算与注入
+        // 尺寸
         let final_width = config_width.filter(|&w| w > 0)
-            .or_else(|| request.size.as_ref()
-                .and_then(|s| s.split('x').next())
-                .and_then(|v| v.parse().ok()))
+            .or_else(|| request.size.as_ref().and_then(|s| s.split('x').next().and_then(|v| v.parse().ok())))
             .unwrap_or(0);
         let final_height = config_height.filter(|&h| h > 0)
-            .or_else(|| request.size.as_ref()
-                .and_then(|s| s.split('x').nth(1))
-                .and_then(|v| v.parse().ok()))
+            .or_else(|| request.size.as_ref().and_then(|s| s.split('x').nth(1).and_then(|v| v.parse().ok())))
             .unwrap_or(0);
 
         if let Some(width_id) = prepared.inject_points.get(&InjectRole::Width) {
@@ -371,25 +390,11 @@ async fn create_image_payload(
             }
         }
 
-        // 参考图注入
-        let ref_count = request.reference_images.len();
-        info!("🖼️ Preparing to inject {} reference images into {} LoadImage nodes", ref_count, prepared.load_image_nodes.len());
-        if !prepared.load_image_nodes.is_empty() {
-            if ref_count == 0 {
-                let placeholder = image_cache::get_placeholder_filename(http_client, backend).await?;
-                info!("No reference images, using placeholder: {}", placeholder);
-                for nid in &prepared.load_image_nodes {
-                    obj[nid]["inputs"]["image"] = json!(placeholder);
-                    info!("  Node {} -> placeholder", nid);
-                }
-            } else {
-                for (i, nid) in prepared.load_image_nodes.iter().enumerate() {
-                    let idx = if i < ref_count { i } else { ref_count - 1 };
-                    let filename = image_cache::cache_image(http_client, backend, &request.reference_images[idx].data).await?;
-                    obj[nid]["inputs"]["image"] = json!(filename);
-                    info!("  Node {} -> reference image index {} (filename: {})", nid, idx, filename);
-                }
-            }
+        // 注入图片到保留的 LoadImage 节点（注意：多余的节点已经被删除，所以实际保留的数量等于 reference_count）
+        // 我们仍使用 prepared.load_image_nodes 的前 reference_count 个，因为这些节点未被删除
+        for (idx, node_id) in prepared.load_image_nodes.iter().take(reference_count).enumerate() {
+            let filename = image_cache::cache_image(http_client, backend, &reference_images[idx].data).await?;
+            obj[node_id]["inputs"]["image"] = json!(filename);
         }
     }
 
@@ -398,7 +403,6 @@ async fn create_image_payload(
         "client_id": client_id
     }))
 }
-
 fn build_openai_image_response(images: Vec<Vec<u8>>) -> Value {
     let created = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() as i64;
     let data: Vec<Value> = images
@@ -406,4 +410,189 @@ fn build_openai_image_response(images: Vec<Vec<u8>>) -> Value {
         .map(|bytes| json!({ "b64_json": general_purpose::STANDARD.encode(&bytes) }))
         .collect();
     json!({ "created": created, "data": data })
+}
+
+
+
+/// 从起始节点出发，收集所有依赖它的节点（包括间接依赖）
+fn collect_downstream(start_node: &str, rev: &HashMap<String, Vec<String>>) -> HashSet<String> {
+    let mut queue = VecDeque::new();
+    let mut visited = HashSet::new();
+    queue.push_back(start_node.to_string());
+    visited.insert(start_node.to_string());
+    while let Some(node) = queue.pop_front() {
+        if let Some(deps) = rev.get(&node) {
+            for dep in deps {
+                if visited.insert(dep.clone()) {
+                    queue.push_back(dep.clone());
+                }
+            }
+        }
+    }
+    visited
+}
+
+fn prune_redundant_reference_branches(
+    obj: &mut serde_json::Map<String, Value>,
+    load_image_nodes: &[String],
+    reference_count: usize,
+) -> Result<(), ProxyError> {
+    // 如果参考图数量等于或多于 LoadImage 节点数，无需删除
+    if reference_count >= load_image_nodes.len() {
+        return Ok(());
+    }
+    if reference_count == 0 {
+        //return Err(ProxyError::Internal("At least one reference image is required".into()));
+        return Ok(());
+    }
+
+    let (forward, reverse) = build_forward_reverse_graphs(obj);
+
+    // 1. 构建 load_image_nodes 到 ReferenceLatent 的映射（保持原始顺序）
+    let mut load_to_latent = Vec::with_capacity(load_image_nodes.len());
+    for load_id in load_image_nodes {
+        match find_reference_latent_for_load_image(&forward, obj, load_id) {
+            Some(latent_id) => load_to_latent.push((load_id.clone(), latent_id)),
+            None => warn!("No ReferenceLatent found for LoadImage node: {}", load_id),
+        }
+    }
+    if load_to_latent.len() != load_image_nodes.len() {
+        return Err(ProxyError::Internal("Some LoadImage nodes missing ReferenceLatent mapping".into()));
+    }
+
+    // 2. 标记需要删除的节点：从索引 reference_count 开始的所有分支
+    let mut nodes_to_remove = std::collections::HashSet::new();
+    for (load_id, latent_id) in load_to_latent.iter().skip(reference_count) {
+        let mut branch = std::collections::HashSet::new();
+        collect_branch_nodes_forward(&forward, obj, load_id, &mut branch);
+        branch.insert(latent_id.clone());
+        nodes_to_remove.extend(branch);
+    }
+
+    // 3. 保留的 ReferenceLatent 列表（按顺序）
+    let active_latents: Vec<String> = load_to_latent
+        .iter()
+        .take(reference_count)
+        .map(|(_, id)| id.clone())
+        .collect();
+
+    // 4. 修复 conditioning 链：后续的 ReferenceLatent 串联到前一个，第一个保持原样（不修改）
+    for i in 1..active_latents.len() {
+        let prev = &active_latents[i - 1];
+        let curr = &active_latents[i];
+        if let Some(node) = obj.get_mut(curr) {
+            if let Some(inputs) = node.get_mut("inputs").and_then(|v| v.as_object_mut()) {
+                inputs.insert("conditioning".to_string(), json!([prev, 0]));
+                info!("Reconnected conditioning of {} -> {}", curr, prev);
+            }
+        }
+    }
+
+    // 5. 修复外部节点（如 FluxKontextMultiReferenceLatentMethod）的引用，指向最后一个保留的 ReferenceLatent
+    let last_active = active_latents.last().expect("should have at least one");
+    for (_, latent_id) in load_to_latent.iter().skip(reference_count) {
+        if let Some(dependents) = forward.get(latent_id) {
+            for dep_id in dependents {
+                // 跳过将要删除的节点 以及 保留的 ReferenceLatent 节点
+                if nodes_to_remove.contains(dep_id) || active_latents.contains(dep_id) {
+                    continue;
+                }
+                if let Some(dep_node) = obj.get_mut(dep_id) {
+                    if let Some(inputs) = dep_node.get_mut("inputs").and_then(|v| v.as_object_mut()) {
+                        for (_, val) in inputs.iter_mut() {
+                            if let Some(arr) = val.as_array_mut() {
+                                if arr.len() >= 2 && arr[0].as_str() == Some(latent_id) {
+                                    arr[0] = json!(last_active);
+                                    info!("Fixed reference in node {}: {} -> {}", dep_id, latent_id, last_active);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // 6. 删除所有标记的节点
+    for node_id in nodes_to_remove {
+        obj.remove(&node_id);
+    }
+
+    Ok(())
+}
+
+fn build_forward_reverse_graphs(
+    obj: &serde_json::Map<String, Value>,
+) -> (
+    HashMap<String, Vec<String>>, // forward: node -> downstream nodes
+    HashMap<String, Vec<String>>, // reverse: node -> upstream nodes
+) {
+    let mut forward: HashMap<String, Vec<String>> = HashMap::new();
+    let mut reverse: HashMap<String, Vec<String>> = HashMap::new();
+
+    for (node_id, node) in obj {
+        if let Some(inputs) = node.get("inputs").and_then(|v| v.as_object()) {
+            for value in inputs.values() {
+                if let Some(arr) = value.as_array() {
+                    if arr.len() >= 2 {
+                        if let Some(src_id) = arr[0].as_str() {
+                            forward.entry(src_id.to_string()).or_default().push(node_id.clone());
+                            reverse.entry(node_id.clone()).or_default().push(src_id.to_string());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    (forward, reverse)
+}
+
+fn find_reference_latent_for_load_image(
+    forward: &HashMap<String, Vec<String>>,
+    obj: &serde_json::Map<String, Value>,
+    start_node: &str,
+) -> Option<String> {
+    let mut queue = std::collections::VecDeque::new();
+    let mut visited = std::collections::HashSet::new();
+    queue.push_back(start_node.to_string());
+    visited.insert(start_node.to_string());
+
+    while let Some(node_id) = queue.pop_front() {
+        if let Some(node) = obj.get(&node_id) {
+            if node.get("class_type").and_then(|v| v.as_str()) == Some("ReferenceLatent") {
+                return Some(node_id);
+            }
+        }
+        if let Some(downstream) = forward.get(&node_id) {
+            for next in downstream {
+                if visited.insert(next.clone()) {
+                    queue.push_back(next.clone());
+                }
+            }
+        }
+    }
+    None
+}
+
+// 从 start_node 出发，沿 forward 图收集所有节点，直到遇到 ReferenceLatent（包括它）
+fn collect_branch_nodes_forward(
+    forward: &HashMap<String, Vec<String>>,
+    obj: &serde_json::Map<String, Value>,
+    start_node: &str,
+    visited: &mut std::collections::HashSet<String>,
+) {
+    if visited.contains(start_node) {
+        return;
+    }
+    visited.insert(start_node.to_string());
+    if let Some(node) = obj.get(start_node) {
+        if node.get("class_type").and_then(|v| v.as_str()) == Some("ReferenceLatent") {
+            return;
+        }
+    }
+    if let Some(downstream) = forward.get(start_node) {
+        for next in downstream {
+            collect_branch_nodes_forward(forward, obj, next, visited);
+        }
+    }
 }

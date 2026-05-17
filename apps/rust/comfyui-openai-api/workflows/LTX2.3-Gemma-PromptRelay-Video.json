@@ -1,7 +1,7 @@
 {
   "697": {
     "inputs": {
-      "value": 24
+      "value": 8
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -174,7 +174,7 @@
   },
   "1245": {
     "inputs": {
-      "value": 5
+      "value": 3
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -183,7 +183,7 @@
   },
   "1247": {
     "inputs": {
-      "expression": "a * b + 1",
+      "expression": "floor((a * b - 1) / 4) * 4 + 1",
       "values.a": [
         "1245",
         0
@@ -201,7 +201,7 @@
   "1249": {
     "inputs": {
       "global_prompt": "在一个被午后暖阳凝固的静谧书房中，一位女子在书海的包围下，经历了一场无声的内心风暴。镜头从她凝视窗外的侧影，逐渐推近至她柔和而坚定的面庞。逆光勾勒出她的轮廓，空气中的微尘在光束中翻滚，仿佛是她脑海中纷飞思绪的写照。",
-      "local_prompts": "[0.0 - 2.5]\n【镜头】​ 中景。​ 布满书籍的深色木质书架前，午后的阳光斜射入室内，空气中漂浮着微尘。女主角侧身而立，目光从游离逐渐变得深远，仿佛穿透了墙壁，望向了某个遥远的起点。\n【台词】​ 你全力奔跑时\n[2.5 - 5.0]\n【镜头】​ 近景。​ 镜头稳定推进，捕捉她柔和却逐渐绷紧的面部线条。逆光中，她耳畔的发丝仿佛因无形的风而轻微颤动。她的眼神从深邃转为一种锐利的澄明。\n【台词】​ 风声会掩盖所有杂音。",
+      "local_prompts": "Scene 1-3:\n【镜头】​ 中景。​ 布满书籍的深色木质书架前，午后的阳光斜射入室内，空气中漂浮着微尘。女主角侧身而立，目光从游离逐渐变得深远，仿佛穿透了墙壁，望向了某个遥远的起点。\n【台词】​ 你全力奔跑时\nScene 3-5:\n【镜头】​ 近景。​ 镜头稳定推进，捕捉她柔和却逐渐绷紧的面部线条。逆光中，她耳畔的发丝仿佛因无形的风而轻微颤动。她的眼神从深邃转为一种锐利的澄明。\n【台词】​ 风声会掩盖所有杂音。\n",
       "segment_lengths": "",
       "epsilon": 0.001,
       "model": [
@@ -224,7 +224,7 @@
   },
   "1315": {
     "inputs": {
-      "steps": 4,
+      "steps": 6,
       "max_shift": 2.05,
       "base_shift": 0.95,
       "stretch": true,
@@ -241,14 +241,14 @@
   },
   "1321": {
     "inputs": {
-      "preview_rate": 3,
+      "preview_rate": 5,
       "model": [
-        "1249",
+        "1457",
         0
       ],
       "vae": [
-        "1406:1277",
-        0
+        "1456",
+        1
       ]
     },
     "class_type": "LTX2SamplingPreviewOverride",
@@ -283,6 +283,30 @@
     "class_type": "VHS_VideoCombine",
     "_meta": {
       "title": "Video Combine 🎥🅥🅗🅢"
+    }
+  },
+  "1327": {
+    "inputs": {
+      "nag_scale": 6,
+      "nag_alpha": 0.25,
+      "nag_tau": 1,
+      "inplace": true,
+      "model": [
+        "1249",
+        0
+      ],
+      "nag_cond_video": [
+        "1059:1054",
+        1
+      ],
+      "nag_cond_audio": [
+        "1059:1054",
+        1
+      ]
+    },
+    "class_type": "LTX2_NAG",
+    "_meta": {
+      "title": "LTX2 NAG"
     }
   },
   "1373": {
@@ -388,19 +412,19 @@
   "1426": {
     "inputs": {
       "noise": [
-        "1430:1330",
+        "1438:1435",
         0
       ],
       "guider": [
-        "1430:1428",
+        "1438:1436",
         0
       ],
       "sampler": [
-        "1430:1429",
+        "1438:1437",
         0
       ],
       "sigmas": [
-        "1430:1288",
+        "1444",
         0
       ],
       "latent_image": [
@@ -411,6 +435,67 @@
     "class_type": "SamplerCustomAdvanced",
     "_meta": {
       "title": "自定义采样器（高级）"
+    }
+  },
+  "1444": {
+    "inputs": {
+      "steps": 8,
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "stretch": true,
+      "terminal": 0.1
+    },
+    "class_type": "LTXVScheduler",
+    "_meta": {
+      "title": "LTXVScheduler (for more steps)"
+    }
+  },
+  "1456": {
+    "inputs": {
+      "fix_double_dtype": true,
+      "also_fix_clip": true,
+      "model": [
+        "1327",
+        0
+      ],
+      "vae": [
+        "1406:1277",
+        0
+      ]
+    },
+    "class_type": "MPSDeviceFix",
+    "_meta": {
+      "title": "MAC MPS Fix (Device Fix)"
+    }
+  },
+  "1457": {
+    "inputs": {
+      "enable_bf16": false,
+      "enable_attention_slicing": true,
+      "enable_gradient_checkpoint": false,
+      "model": [
+        "1456",
+        0
+      ]
+    },
+    "class_type": "LargeModelMPSOptimizer",
+    "_meta": {
+      "title": "MAC Large Model Optimizer"
+    }
+  },
+  "1464": {
+    "inputs": {
+      "clean_mode": "Standard",
+      "clean_gpu": true,
+      "clean_cpu": true,
+      "force_gc": true,
+      "reduce_worker_count": true,
+      "purge_model_patches": true,
+      "log_memory": true
+    },
+    "class_type": "TorchGC",
+    "_meta": {
+      "title": "MAC TorchGC (Memory Cleaner)"
     }
   },
   "1406:1220": {
@@ -501,19 +586,6 @@
       "title": "加载VAE"
     }
   },
-  "1394:1085": {
-    "inputs": {
-      "longer_edge": 1280,
-      "images": [
-        "1394:1086",
-        0
-      ]
-    },
-    "class_type": "ResizeImagesByLongerEdge",
-    "_meta": {
-      "title": "缩放图像（长边）"
-    }
-  },
   "1394:1086": {
     "inputs": {
       "resize_type": "scale dimensions",
@@ -541,7 +613,7 @@
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1394:1085",
+        "1394:1086",
         0
       ]
     },
@@ -573,43 +645,17 @@
       "title": "调整图像/掩码大小"
     }
   },
-  "1398:1375": {
-    "inputs": {
-      "longer_edge": 1280,
-      "images": [
-        "1398:1376",
-        0
-      ]
-    },
-    "class_type": "ResizeImagesByLongerEdge",
-    "_meta": {
-      "title": "缩放图像（长边）"
-    }
-  },
   "1398:1377": {
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1398:1375",
+        "1398:1376",
         0
       ]
     },
     "class_type": "LTXVPreprocess",
     "_meta": {
       "title": "LTXV预处理"
-    }
-  },
-  "1388:1065": {
-    "inputs": {
-      "longer_edge": 1280,
-      "images": [
-        "1388:1066",
-        0
-      ]
-    },
-    "class_type": "ResizeImagesByLongerEdge",
-    "_meta": {
-      "title": "缩放图像（长边）"
     }
   },
   "1388:1066": {
@@ -639,7 +685,7 @@
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1388:1065",
+        "1388:1066",
         0
       ]
     },
@@ -648,24 +694,11 @@
       "title": "LTXV预处理"
     }
   },
-  "1381:1075": {
-    "inputs": {
-      "longer_edge": 1280,
-      "images": [
-        "1381:1076",
-        0
-      ]
-    },
-    "class_type": "ResizeImagesByLongerEdge",
-    "_meta": {
-      "title": "缩放图像（长边）"
-    }
-  },
   "1381:1077": {
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1381:1075",
+        "1381:1076",
         0
       ]
     },
@@ -699,7 +732,7 @@
   },
   "1423:1419": {
     "inputs": {
-      "noise_seed": 317596023077821
+      "noise_seed": 239732232587091
     },
     "class_type": "RandomNoise",
     "_meta": {
@@ -786,10 +819,10 @@
   },
   "1354:1320": {
     "inputs": {
-      "tile_size": 512,
-      "overlap": 64,
-      "temporal_size": 4096,
-      "temporal_overlap": 76,
+      "tile_size": 256,
+      "overlap": 32,
+      "temporal_size": 128,
+      "temporal_overlap": 64,
       "samples": [
         "1354:1308",
         2
@@ -804,25 +837,16 @@
       "title": "VAE解码（分块）"
     }
   },
-  "1430:1288": {
+  "1438:1435": {
     "inputs": {
-      "sigmas": "0.92, 0.78, 0.55, 0.30, 0.10, 0.0"
-    },
-    "class_type": "ManualSigmas",
-    "_meta": {
-      "title": "自定义Sigmas"
-    }
-  },
-  "1430:1330": {
-    "inputs": {
-      "noise_seed": 158608739401948
+      "noise_seed": 334647468267368
     },
     "class_type": "RandomNoise",
     "_meta": {
       "title": "随机噪波"
     }
   },
-  "1430:1428": {
+  "1438:1436": {
     "inputs": {
       "cfg": 1,
       "model": [
@@ -843,7 +867,7 @@
       "title": "CFG引导器"
     }
   },
-  "1430:1429": {
+  "1438:1437": {
     "inputs": {
       "sampler_name": "euler"
     },

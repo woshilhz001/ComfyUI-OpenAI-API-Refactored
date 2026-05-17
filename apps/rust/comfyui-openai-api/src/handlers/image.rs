@@ -21,6 +21,7 @@ use crate::cache::image_cache;
 use crate::transport::poll::poll_history_for_images;
 use crate::workflows::template::{PreparedWorkflow, InjectRole};
 use crate::config::BackendConfig;
+use crate::utils::format_file_info;
 
 // … 下方的数据结构、handler、create_image_payload、build_openai_image_response 等保持不变 …
 
@@ -251,13 +252,8 @@ pub async fn image_generations_handler(
     let result_info: Vec<String> = images
         .iter()
         .enumerate()
-        .map(|(idx, (name, bytes))| {
-            let size_kb = (bytes.len() + 1023) / 1024;
-            if name.is_empty() {
-                format!("{}kb", size_kb)
-            } else {
-                format!("{} ({}kb)", name, size_kb)
-            }
+        .map(|(_idx, (name, bytes))| {
+            format_file_info(name, bytes.len())
         })
         .collect();
     let elapsed = start_time.elapsed();

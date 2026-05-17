@@ -11,6 +11,7 @@ mod transport;
 mod middleware;
 mod cache;
 mod task_manager;
+mod utils;
 
 use axum::{
     Router,

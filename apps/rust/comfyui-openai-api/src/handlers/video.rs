@@ -20,6 +20,7 @@ use crate::cache::image_cache;
 use crate::transport::poll::{poll_history_for_videos, VideoOutput};
 use crate::workflows::template::{PreparedWorkflow, InjectRole};
 use crate::config::BackendConfig;
+use crate::utils::format_file_info;
 // 在现有 use 下添加：
 use base64::{Engine as _};   // 已经有的话就确保有这一行
 
@@ -129,8 +130,7 @@ pub async fn video_generations_handler(
                         backend_for_result.host, backend_for_result.port, v.filename, v.subfolder)
                 });
                 let output_info = videos.first().map(|v| {
-                    let size_kb = (v.bytes.len() + 1023) / 1024;
-                    format!("{} ({}kb)", v.filename, size_kb)
+                    format_file_info(&v.filename, v.bytes.len())
                 });
                 info!("🎬 [异步任务] 更新任务状态: url={:?}, output_info={:?}", url, output_info);
                 tm.update(&task_id_clone, TaskState::Completed {
@@ -248,8 +248,7 @@ async fn execute_video_generation(
     let result_info: Vec<String> = videos
         .iter()
         .map(|v| {
-            let size_kb = (v.bytes.len() + 1023) / 1024;
-            format!("{} ({}kb)", v.filename, size_kb)
+            format_file_info(&v.filename, v.bytes.len())
         })
         .collect();
     

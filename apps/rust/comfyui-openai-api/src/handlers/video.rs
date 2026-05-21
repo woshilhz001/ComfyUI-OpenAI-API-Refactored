@@ -85,8 +85,13 @@ pub async fn video_generations_handler(
         .and_then(|c| c.text.clone())
         .unwrap_or_default();
 
+    // let reference_urls: Vec<String> = video_req.content.iter()
+    //     .filter(|c| c.item_type == "image_url" && c.role.as_deref() == Some("reference_image"))
+    //     .filter_map(|c| c.image_url.as_ref()?.url.clone())
+    //     .collect();
+    // 上面注释的只接收一张图片，修改为收集所有 image_url 类型的项（无论是 first_frame 还是 reference_image）
     let reference_urls: Vec<String> = video_req.content.iter()
-        .filter(|c| c.item_type == "image_url" && c.role.as_deref() == Some("reference_image"))
+        .filter(|c| c.item_type == "image_url")
         .filter_map(|c| c.image_url.as_ref()?.url.clone())
         .collect();
 
@@ -102,7 +107,7 @@ pub async fn video_generations_handler(
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis(),
         rand::random::<u16>()
     );
-    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None }).await;
+    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None,backend_name: Some(backend.name.clone())  }).await;
 
     let state_clone = state.clone();
     let tm = state.task_manager.clone();
@@ -209,6 +214,8 @@ async fn execute_video_generation(
 
     let target_url = format!("http://{}/prompt", target_base);
     info!("🚀 Submitting video workflow to ComfyUI: {}", target_url);
+    //打印所有传输给comfyui的数据
+    info!("🚀 Submitting payload: {}", payload);
     let response = state.client
         .post(&target_url)
         .json(&payload)
@@ -222,7 +229,7 @@ async fn execute_video_generation(
         .to_string();
     info!("任务生成：{}", prompt_id);
 
-    state.task_manager.update(task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()) }).await;
+    state.task_manager.update(task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()),backend_name: Some(backend.name.clone()) }).await;
 
     let videos = timeout(
         Duration::from_secs(job_timeout),
@@ -326,24 +333,31 @@ async fn create_video_payload(
 
         // 4. 参考图
         let ref_count = reference_urls.len();
+        info!("📸 视频生成参考图数量: {}, 工作流 LoadImage 节点数量: {}", ref_count, prepared.load_image_nodes.len());
         if !prepared.load_image_nodes.is_empty() {
             if ref_count == 0 {
                 let placeholder = image_cache::get_placeholder_filename(http_client, backend).await?;
                 for node_id in &prepared.load_image_nodes {
+                     info!("📌 节点 {}  使用占位符图片: {}", node_id,  placeholder);
                     obj[node_id]["inputs"]["image"] = json!(placeholder);
                 }
             } else {
                 for (i, node_id) in prepared.load_image_nodes.iter().enumerate() {
                     let filename = if i < ref_count {
+                        let url = &reference_urls[i];
+                        info!("📌 节点 {} (索引 {}) 分配参考图 {}: {}", node_id, i, i+1, url);
                         image_cache::cache_image(http_client, backend, &reference_urls[i]).await?
                     } else {
-                        image_cache::get_3x3_placeholder_filename(http_client, backend).await?
+                        let placeholder = image_cache::get_3x3_placeholder_filename(http_client, backend).await?;
+                        info!("📌 节点 {} (索引 {}) 超出参考图数量，使用占位符: {}", node_id, i, placeholder);
+                        //image_cache::get_3x3_placeholder_filename(http_client, backend).await?
+                        placeholder
                     };
                     obj[node_id]["inputs"]["image"] = json!(filename);
                 }
             }
         }
-
+        
         // 5. Duration
         let duration_val = duration;
         if let Some(dur_node) = prepared.duration_node.as_ref() {
@@ -456,6 +470,29 @@ async fn create_video_payload(
                 }
             }
         }
+
+        // why添加：如果传入两张参考图，则根据 duration 和 fps 设置节点 SEGMENT 2 - FRAMES 的值
+        let ref_count = reference_urls.len();
+        if ref_count == 2 {
+            // 查找标题为 "SEGMENT 2 - FRAMES" 的节点
+            for (node_id, node) in obj.iter_mut() {
+                if let Some(title) = node["_meta"]["title"].as_str() {
+                    if title == "SEGMENT 2 - FRAMES" {
+                        let total_frames = duration * fps;
+                        let target_frames = (total_frames / 2.0).round() as i64;
+                        if let Some(inputs) = node.get_mut("inputs") {
+                            if let Some(value_field) = inputs.get_mut("value") {
+                                *value_field = json!(target_frames);
+                                info!("✏️ 修改 SEGMENT 2 - FRAMES 节点 (id={}) 值为 {} (总帧数 {} / 2)", 
+                                    node_id, target_frames, total_frames);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
     Ok(json!({"prompt": workflow, "client_id": client_id}))

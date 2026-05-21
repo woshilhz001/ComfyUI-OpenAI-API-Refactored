@@ -13,6 +13,7 @@ pub enum TaskState {
     #[serde(rename = "processing")]
     Processing {
         comfyui_task_id: Option<String>,
+        backend_name: Option<String>,   // 新增：记录使用的后端名称
     },
     #[serde(rename = "completed")]
     Completed {
@@ -105,10 +106,10 @@ impl TaskManager {
 
     fn preserve_comfyui_id(existing: &TaskState, incoming: TaskState) -> TaskState {
         match (existing, incoming) {
-            (TaskState::Processing { comfyui_task_id: Some(id) }, TaskState::Completed { video_url, b64_json, comfyui_task_id: None, execution_time }) => {
+            (TaskState::Processing { comfyui_task_id: Some(id), backend_name: Some(backend) }, TaskState::Completed { video_url, b64_json, comfyui_task_id: None, execution_time }) => {
                 TaskState::Completed { video_url, b64_json, comfyui_task_id: Some(id.clone()), execution_time }
             }
-            (TaskState::Processing { comfyui_task_id: Some(id) }, TaskState::Failed { error, comfyui_task_id: None }) => {
+            (TaskState::Processing { comfyui_task_id: Some(id), backend_name: Some(backend) }, TaskState::Failed { error, comfyui_task_id: None }) => {
                 TaskState::Failed { error, comfyui_task_id: Some(id.clone()) }
             }
             (_, other) => other,

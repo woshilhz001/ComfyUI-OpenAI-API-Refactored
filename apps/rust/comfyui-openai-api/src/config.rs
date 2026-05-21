@@ -98,6 +98,9 @@ pub struct RoutingConfig {
     pub fps: Option<f64>,
     #[serde(default = "default_true")]
     pub free_model_before_video: bool,
+    // 新增：图片生成前是否清理模型，默认 false
+    #[serde(default = "default_false")]
+    pub free_model_before_image: bool,
 
     // 新增配置项
     #[serde(default = "default_lb_strategy")]

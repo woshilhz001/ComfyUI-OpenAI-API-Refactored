@@ -12,6 +12,7 @@ mod middleware;
 mod cache;
 mod task_manager;
 mod utils;
+mod recovery;
 
 use axum::{
     Router,
@@ -93,6 +94,7 @@ async fn main() {
         video_height: config.routing.video_height,
         default_fps: config.routing.fps,
         free_model_before_video: config.routing.free_model_before_video,
+        free_model_before_image: config.routing.free_model_before_image,  // 新增图片缓存清理配置
         response_cache,
         enable_response_cache: config.routing.enable_response_cache,
         seed_tracker,
@@ -100,7 +102,10 @@ async fn main() {
         graceful_shutdown: graceful_shutdown.clone(),
         enable_idempotency: config.routing.enable_idempotency,
     });
-
+    // why新增：克隆一份用于后台恢复任务
+    let proxy_state_for_recovery = proxy_state.clone();
+    //why添加，服务启动后恢复后台任务（不阻塞）
+    tokio::spawn(recovery::recover_pending_tasks(proxy_state_for_recovery));
     let app = Router::new()
         .route("/v1/help", get(help_handler))
         .route("/v1/models", get(models::models_handler))
@@ -127,6 +132,7 @@ async fn main() {
     tracing::info!("Server listening on {}", addr);
 
     let graceful_shutdown_clone = graceful_shutdown.clone();
+
     axum::serve(listener, app.into_make_service_with_connect_info::<std::net::SocketAddr>())
         .with_graceful_shutdown(async move {
             let _ = tokio::signal::ctrl_c().await;

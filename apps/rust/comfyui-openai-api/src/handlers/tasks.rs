@@ -3,7 +3,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use std::sync::Arc;
-use tracing::{debug, warn};
+use tracing::{debug, warn, info};
 use crate::proxy::ProxyState;
 use crate::task_manager::TaskState;
 
@@ -11,7 +11,7 @@ pub async fn task_query(
     State(state): State<Arc<ProxyState>>,
     Path(task_id): Path<String>,
 ) -> Json<TaskState> {
-    // info!(" 查询任务状态: task_id={}", task_id);
+     info!(" 查询任务状态: task_id={}", task_id);
     let result = state.task_manager.get(&task_id).await;
     match &result {
         Some(state) => debug!("✅ 找到任务: task_id={}, state={:?}", task_id, state),

@@ -17,27 +17,11 @@
       "title": "Reference Image 2"
     }
   },
-  "133": {
-    "inputs": {
-      "samples": [
-        "1623:1609",
-        0
-      ],
-      "vae": [
-        "1636",
-        0
-      ]
-    },
-    "class_type": "VAEDecode",
-    "_meta": {
-      "title": "VAE解码"
-    }
-  },
   "142": {
     "inputs": {
-      "text": "大远景俯拍，深秋雨夜的老旧桥洞下，陈峰蜷缩在两个浸透雨水的蛇皮袋之间，衣衫紧贴身躯，发梢滴落的水珠凝滞在半空，面部被冷蓝逆光勾勒出清晰轮廓，皮肤纹理与每一根湿黏的胡茬纤毫毕现，身后城市霓虹在积水中碎裂成幽蓝光斑，雨幕如银线垂落，车流低鸣的震动隐于空气，整幅画面笼罩在湿冷的寂静中,手里拿着手机，photorealistic, ultra-detailed, 8k uhd, sharp focus, natural lighting, real skin texture, hyperrealism, professional photography, RAW photo\n﻿\n||| The scene may contain natural text on any of the following: signs, billboards, labels, stickers, posters, graffiti, product packaging, paper notes, screens (digital or phone), t-shirts, badges, license plates, chalkboards, banners, or neon displays. All such text must be clearly readable, high-resolution, realistic typography, with every letter or character complete and correctly formed. No gibberish, no missing strokes, no corrupted or unreadable symbols. The text should look authentic to the context (e.g., a shop name, a warning label, a price tag, a slogan).\n﻿\nNo watermarks, no logos, no signatures, no brand names, no captions, no subtitles, no UI text, no timestamp overlays. Surfaces are clean from extraneous artificial markings.",
+      "text": "full body shot，85mm长焦镜头人像摄影，浅景深效果。一位五官精致、皮肤白皙的中国美女在海边，发丝随风飘动，眼神充满憧憬。背景是碧海蓝天，远处依稀可见行驶的游艇和飞翔的海鸥作为环境点缀。唯美梦幻的逆光效果，轮廓光勾勒人物边缘，色彩清新明亮，焦点锐利，8k超清画质。",
       "clip": [
-        "1639",
+        "1676:1639",
         0
       ]
     },
@@ -48,9 +32,9 @@
   },
   "143": {
     "inputs": {
-      "text": "All text in the image must be natural, clearly readable, high-resolution, with realistic typography, and perfectly match the context (e.g., sign, label, poster, graffiti). Every letter or character must be complete and correctly formed. There is absolutely no gibberish, no corrupted or mangled characters, no missing strokes or broken parts. No unreadable symbols, alien glyphs, fake text, blurry text, smudged text, distorted typography, or moiré patterns on any letters or words. Additionally, the image has no low quality, no blurriness, no JPEG artifacts, no watermark, no text signature, no deformed or bad anatomy (if any subjects), no distorted perspective, no oversaturation, no unnatural lighting, no pixelation, no noise, no grainy texture, no duplicate elements, no cropping errors, no color banding, no chromatic aberration, no lens flare artifacts, no overexposed highlights, no crushed shadows, no unnatural skin tones (if people), no floating or disconnected body parts (if people), no extra limbs, no weird proportions, no ugly or messy composition. The image must be sharp, high-contrast where appropriate, well-framed, and visually pleasing.",
+      "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
       "clip": [
-        "1639",
+        "1676:1639",
         0
       ]
     },
@@ -68,25 +52,11 @@
       "title": "Reference Image 3"
     }
   },
-  "164": {
-    "inputs": {
-      "method": "rcas",
-      "method.strength": 0.3,
-      "image": [
-        "133",
-        0
-      ]
-    },
-    "class_type": "ImageSharpenKJ",
-    "_meta": {
-      "title": "Image Sharpen KJ"
-    }
-  },
   "168": {
     "inputs": {
       "filename_prefix": "Image/Klein",
       "images": [
-        "164",
+        "1687:164",
         0
       ]
     },
@@ -95,33 +65,47 @@
       "title": "保存图像"
     }
   },
-  "1608": {
+  "1637": {
     "inputs": {
-      "sampler_name": "euler"
+      "value": 1280
     },
-    "class_type": "KSamplerSelect",
+    "class_type": "PrimitiveInt",
     "_meta": {
-      "title": "K采样器选择"
+      "title": "Width"
     }
   },
-  "1613": {
+  "1638": {
     "inputs": {
-      "steps": 5,
-      "width": [
-        "1637",
-        0
-      ],
-      "height": [
-        "1638",
+      "value": 704
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "1665": {
+    "inputs": {
+      "reference_latents_method": "index",
+      "conditioning": [
+        "1675:1667",
         0
       ]
     },
-    "class_type": "Flux2Scheduler",
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
     "_meta": {
-      "title": "Flux2调度器"
+      "title": "FluxKontext多参考潜在方法"
     }
   },
-  "1635": {
+  "1671": {
+    "inputs": {
+      "image": "4.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Reference Image 4"
+    }
+  },
+  "1676:1635": {
     "inputs": {
       "unet_name": "FLUX-2-klein-9b.safetensors",
       "weight_dtype": "default"
@@ -131,36 +115,9 @@
       "title": "UNet加载器"
     }
   },
-  "1636": {
+  "1676:1639": {
     "inputs": {
-      "vae_name": "FLUX-2-klein-vae.safetensors"
-    },
-    "class_type": "VAELoader",
-    "_meta": {
-      "title": "加载VAE"
-    }
-  },
-  "1637": {
-    "inputs": {
-      "value": 1024
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Width"
-    }
-  },
-  "1638": {
-    "inputs": {
-      "value": 576
-    },
-    "class_type": "PrimitiveInt",
-    "_meta": {
-      "title": "Height"
-    }
-  },
-  "1639": {
-    "inputs": {
-      "clip_name": "Qwen_3_8b_fp8mixed.safetensors",
+      "clip_name": "Qwen_3_8b.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -169,31 +126,13 @@
       "title": "加载CLIP"
     }
   },
-  "1645": {
+  "1676:1636": {
     "inputs": {
-      "lora_name": "f2k_9B_lcs_consist_20260415.safetensors",
-      "strength_model": 1,
-      "model": [
-        "1635",
-        0
-      ]
+      "vae_name": "FLUX-2-klein-vae.safetensors"
     },
-    "class_type": "LoraLoaderModelOnly",
+    "class_type": "VAELoader",
     "_meta": {
-      "title": "LoRA加载器（仅模型）"
-    }
-  },
-  "1665": {
-    "inputs": {
-      "reference_latents_method": "index",
-      "conditioning": [
-        "1674:1657",
-        0
-      ]
-    },
-    "class_type": "FluxKontextMultiReferenceLatentMethod",
-    "_meta": {
-      "title": "FluxKontext多参考潜在方法"
+      "title": "加载VAE"
     }
   },
   "1672:1646": {
@@ -203,7 +142,7 @@
         0
       ],
       "vae": [
-        "1636",
+        "1676:1636",
         0
       ]
     },
@@ -274,7 +213,7 @@
         0
       ],
       "vae": [
-        "1636",
+        "1676:1636",
         0
       ]
     },
@@ -345,7 +284,7 @@
         0
       ],
       "vae": [
-        "1636",
+        "1676:1636",
         0
       ]
     },
@@ -409,26 +348,153 @@
       "title": "参考Latent3"
     }
   },
-  "1623:1609": {
+  "1675:1666": {
+    "inputs": {
+      "pixels": [
+        "1675:1669",
+        0
+      ],
+      "vae": [
+        "1676:1636",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码 4"
+    }
+  },
+  "1675:1667": {
+    "inputs": {
+      "conditioning": [
+        "1674:1657",
+        0
+      ],
+      "latent": [
+        "1675:1666",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent4"
+    }
+  },
+  "1675:1669": {
+    "inputs": {
+      "resize_type": "scale dimensions",
+      "resize_type.width": [
+        "1637",
+        0
+      ],
+      "resize_type.height": [
+        "1638",
+        0
+      ],
+      "resize_type.crop": "center",
+      "scale_method": "lanczos",
+      "input": [
+        "1671",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "调整图像/掩码大小 4"
+    }
+  },
+  "1675:1670": {
+    "inputs": {
+      "conditioning": [
+        "1674:1664",
+        0
+      ],
+      "latent": [
+        "1675:1666",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent4"
+    }
+  },
+  "1687:133": {
+    "inputs": {
+      "samples": [
+        "1687:1677",
+        0
+      ],
+      "vae": [
+        "1676:1636",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "1687:164": {
+    "inputs": {
+      "method": "rcas",
+      "method.strength": 0.3,
+      "image": [
+        "1687:133",
+        0
+      ]
+    },
+    "class_type": "ImageSharpenKJ",
+    "_meta": {
+      "title": "Image Sharpen KJ"
+    }
+  },
+  "1687:1608": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "K采样器选择"
+    }
+  },
+  "1687:1613": {
+    "inputs": {
+      "steps": 4,
+      "width": [
+        "1637",
+        0
+      ],
+      "height": [
+        "1638",
+        0
+      ]
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2调度器"
+    }
+  },
+  "1687:1677": {
     "inputs": {
       "noise": [
-        "1623:1610",
+        "1687:1678",
         0
       ],
       "guider": [
-        "1623:1612",
+        "1687:1680",
         0
       ],
       "sampler": [
-        "1608",
+        "1687:1608",
         0
       ],
       "sigmas": [
-        "1613",
+        "1687:1613",
         0
       ],
       "latent_image": [
-        "1623:1611",
+        "1687:1679",
         0
       ]
     },
@@ -437,16 +503,16 @@
       "title": "自定义采样器（高级）"
     }
   },
-  "1623:1610": {
+  "1687:1678": {
     "inputs": {
-      "noise_seed": 756471424856831
+      "noise_seed": 219632587109124
     },
     "class_type": "RandomNoise",
     "_meta": {
       "title": "随机噪波"
     }
   },
-  "1623:1611": {
+  "1687:1679": {
     "inputs": {
       "width": [
         "1637",
@@ -463,19 +529,19 @@
       "title": "空Latent图像（Flux2）"
     }
   },
-  "1623:1612": {
+  "1687:1680": {
     "inputs": {
       "cfg": 1,
       "model": [
-        "1623:1621",
+        "1687:1685",
         0
       ],
       "positive": [
-        "1623:1618",
+        "1687:1684",
         0
       ],
       "negative": [
-        "1674:1657",
+        "1675:1670",
         0
       ]
     },
@@ -484,14 +550,14 @@
       "title": "CFG引导器"
     }
   },
-  "1623:1618": {
+  "1687:1684": {
     "inputs": {
-      "active_scale": 1,
-      "per_token_whiten": 0.2,
+      "active_scale": 1.1,
+      "per_token_whiten": 0.25,
       "norm_equalize": 0.1,
       "early_layer_scale": 1,
       "mid_layer_scale": 1,
-      "late_layer_scale": 0.93,
+      "late_layer_scale": 1.25,
       "preserve_original": 0,
       "active_end_override": 0,
       "device": "auto",
@@ -506,16 +572,16 @@
       "title": "FLUX.2 Klein Enhancer"
     }
   },
-  "1623:1619": {
+  "1687:1685": {
     "inputs": {
       "mode": "auto",
-      "intensity": 0.8,
+      "intensity": 1,
       "model": [
-        "1645",
+        "1676:1635",
         0
       ],
       "lcs_data": [
-        "1623:1620",
+        "1687:1686",
         0
       ]
     },
@@ -524,28 +590,16 @@
       "title": "LCS Color Anchor"
     }
   },
-  "1623:1620": {
+  "1687:1686": {
     "inputs": {
       "vae": [
-        "1636",
+        "1676:1636",
         0
       ]
     },
     "class_type": "LCSLoadData",
     "_meta": {
       "title": "LCS Load Data"
-    }
-  },
-  "1623:1621": {
-    "inputs": {
-      "model": [
-        "1623:1619",
-        0
-      ]
-    },
-    "class_type": "FluxKVCache",
-    "_meta": {
-      "title": "Flux KV 缓存"
     }
   }
 }

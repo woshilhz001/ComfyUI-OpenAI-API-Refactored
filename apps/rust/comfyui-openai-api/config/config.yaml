@@ -10,8 +10,8 @@ comfyui_backends:
     port: 8000
     default: true
   - name: "backend-b"
-    host: "192.168.50.181"
-    port: 8188
+    host: "192.168.50.152"
+    port: 8000
     default: false
 
 comfyui_backend:
@@ -23,12 +23,13 @@ comfyui_backend:
 routing:
   timeout_seconds: 3600
   max_payload_size_mb: 500
-  Image_Width: 1024
-  Image_Height: 576
+  Image_Width: 1280
+  Image_Height: 704
   video_Width: 512
   video_Height: 288
   fps: 8
   free_model_before_video: true
+  free_model_before_image: false
 
   # 负载均衡策略 (RoundRobin / LeastConnections / Random)
   lb_strategy: "RoundRobin"

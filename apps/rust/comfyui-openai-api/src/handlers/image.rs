@@ -121,6 +121,21 @@ pub async fn image_generations_handler(
     let backend = state.get_backend(backend_name)?;
     info!("Selected backend '{}' at {}:{}", backend.name, backend.host, backend.port);
 
+    // ---------- 新增：图片生成前的模型清理 ----------
+    if state.free_model_before_image {
+        let free_url = format!("http://{}:{}/free", backend.host, backend.port);
+        info!("🧹 Freeing ComfyUI memory before image task...");
+        let resp = state.client
+            .post(&free_url)
+            .json(&serde_json::json!({"unload_models": true, "free_memory": true}))
+            .send()
+            .await
+            .map_err(|e| handle_request_error(e, &free_url))?;
+        if !resp.status().is_success() {
+            return Err(ProxyError::Upstream(format!("ComfyUI /free failed: {}", resp.status())));
+        }
+    }
+
     // 解析请求
     let mut request: OpenAIImageRequest = match serde_json::from_str(&body_str) {
         Ok(req) => req,
@@ -152,7 +167,7 @@ pub async fn image_generations_handler(
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis(),
         rand::random::<u16>()
     );
-    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None }).await;
+    state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None, backend_name: Some(backend.name.clone())  }).await;
 
     // 获取工作流模板
     let template = state.registry.get(&request.model)
@@ -218,7 +233,7 @@ pub async fn image_generations_handler(
         .ok_or_else(|| ProxyError::Upstream("No prompt_id in response".into()))?
         .to_string();
     info!("任务生成：{}", prompt_id);
-    state.task_manager.update(&task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()) }).await;
+    state.task_manager.update(&task_id, TaskState::Processing { comfyui_task_id: Some(prompt_id.clone()),backend_name: Some(backend.name.clone())  }).await;
     let start_time = Instant::now();
 
     // 轮询获取图片
@@ -437,64 +452,101 @@ fn prune_redundant_reference_branches(
     load_image_nodes: &[String],
     reference_count: usize,
 ) -> Result<(), ProxyError> {
-    // 如果参考图数量等于或多于 LoadImage 节点数，无需删除
     if reference_count >= load_image_nodes.len() {
         return Ok(());
     }
     if reference_count == 0 {
-        //return Err(ProxyError::Internal("At least one reference image is required".into()));
         return Ok(());
     }
 
-    let (forward, reverse) = build_forward_reverse_graphs(obj);
+    let (forward, _reverse) = build_forward_reverse_graphs(obj);
 
-    // 1. 构建 load_image_nodes 到 ReferenceLatent 的映射（保持原始顺序）
-    let mut load_to_latent = Vec::with_capacity(load_image_nodes.len());
+    // 1. 收集每个 LoadImage 对应的 positive 和 negative ReferenceLatent
+    let mut load_to_positive = Vec::with_capacity(load_image_nodes.len());
+    let mut load_to_negative = Vec::with_capacity(load_image_nodes.len());
     for load_id in load_image_nodes {
-        match find_reference_latent_for_load_image(&forward, obj, load_id) {
-            Some(latent_id) => load_to_latent.push((load_id.clone(), latent_id)),
-            None => warn!("No ReferenceLatent found for LoadImage node: {}", load_id),
+        let positive = find_reference_latent_for_load_image(&forward, obj, load_id);
+        let negative = find_negative_reference_latent_for_load_image(&forward, obj, load_id, positive.as_ref());
+        match (positive, negative) {
+            (Some(pos), Some(neg)) => {
+                load_to_positive.push((load_id.clone(), pos));
+                load_to_negative.push((load_id.clone(), neg));
+            }
+            _ => {
+                warn!("Missing ReferenceLatent(s) for LoadImage node: {}", load_id);
+                // 如果缺少，则无法安全修剪，直接返回错误
+                return Err(ProxyError::Internal(format!(
+                    "Incomplete ReferenceLatent mapping for LoadImage: {}",
+                    load_id
+                )));
+            }
         }
     }
-    if load_to_latent.len() != load_image_nodes.len() {
-        return Err(ProxyError::Internal("Some LoadImage nodes missing ReferenceLatent mapping".into()));
-    }
 
-    // 2. 标记需要删除的节点：从索引 reference_count 开始的所有分支
+    // 2. 确定需要删除的节点集合（从索引 reference_count 开始的所有分支）
     let mut nodes_to_remove = std::collections::HashSet::new();
-    for (load_id, latent_id) in load_to_latent.iter().skip(reference_count) {
+
+    // 处理 positive 链
+    for (load_id, latent_id) in load_to_positive.iter().skip(reference_count) {
         let mut branch = std::collections::HashSet::new();
         collect_branch_nodes_forward(&forward, obj, load_id, &mut branch);
         branch.insert(latent_id.clone());
         nodes_to_remove.extend(branch);
     }
 
-    // 3. 保留的 ReferenceLatent 列表（按顺序）
-    let active_latents: Vec<String> = load_to_latent
+    // 处理 negative 链
+    for (load_id, latent_id) in load_to_negative.iter().skip(reference_count) {
+        let mut branch = std::collections::HashSet::new();
+        collect_branch_nodes_forward(&forward, obj, load_id, &mut branch);
+        branch.insert(latent_id.clone());
+        nodes_to_remove.extend(branch);
+    }
+
+    // 3. 保留的 positive 和 negative ReferenceLatent 列表（按顺序）
+    let active_positive: Vec<String> = load_to_positive
+        .iter()
+        .take(reference_count)
+        .map(|(_, id)| id.clone())
+        .collect();
+    let active_negative: Vec<String> = load_to_negative
         .iter()
         .take(reference_count)
         .map(|(_, id)| id.clone())
         .collect();
 
-    // 4. 修复 conditioning 链：后续的 ReferenceLatent 串联到前一个，第一个保持原样（不修改）
-    for i in 1..active_latents.len() {
-        let prev = &active_latents[i - 1];
-        let curr = &active_latents[i];
+    // 4. 修复 positive 链内的 conditioning 连接（后一个指向前一个）
+    for i in 1..active_positive.len() {
+        let prev = &active_positive[i - 1];
+        let curr = &active_positive[i];
         if let Some(node) = obj.get_mut(curr) {
             if let Some(inputs) = node.get_mut("inputs").and_then(|v| v.as_object_mut()) {
                 inputs.insert("conditioning".to_string(), json!([prev, 0]));
-                info!("Reconnected conditioning of {} -> {}", curr, prev);
+                info!("Reconnected positive conditioning: {} -> {}", curr, prev);
             }
         }
     }
 
-    // 5. 修复外部节点（如 FluxKontextMultiReferenceLatentMethod）的引用，指向最后一个保留的 ReferenceLatent
-    let last_active = active_latents.last().expect("should have at least one");
-    for (_, latent_id) in load_to_latent.iter().skip(reference_count) {
+    // 修复 negative 链内的 conditioning 连接
+    for i in 1..active_negative.len() {
+        let prev = &active_negative[i - 1];
+        let curr = &active_negative[i];
+        if let Some(node) = obj.get_mut(curr) {
+            if let Some(inputs) = node.get_mut("inputs").and_then(|v| v.as_object_mut()) {
+                inputs.insert("conditioning".to_string(), json!([prev, 0]));
+                info!("Reconnected negative conditioning: {} -> {}", curr, prev);
+            }
+        }
+    }
+
+    // 5. 修复外部节点（如 FluxKontextMulti 和 CFGGuider）的引用
+    let last_positive = active_positive.last().expect("至少有一个 positive latent");
+    let last_negative = active_negative.last().expect("至少有一个 negative latent");
+
+    // 处理被删除的 positive latent 的下游节点
+    for (_, latent_id) in load_to_positive.iter().skip(reference_count) {
         if let Some(dependents) = forward.get(latent_id) {
             for dep_id in dependents {
-                // 跳过将要删除的节点 以及 保留的 ReferenceLatent 节点
-                if nodes_to_remove.contains(dep_id) || active_latents.contains(dep_id) {
+                if nodes_to_remove.contains(dep_id) || active_positive.contains(dep_id) {
                     continue;
                 }
                 if let Some(dep_node) = obj.get_mut(dep_id) {
@@ -502,8 +554,8 @@ fn prune_redundant_reference_branches(
                         for (_, val) in inputs.iter_mut() {
                             if let Some(arr) = val.as_array_mut() {
                                 if arr.len() >= 2 && arr[0].as_str() == Some(latent_id) {
-                                    arr[0] = json!(last_active);
-                                    info!("Fixed reference in node {}: {} -> {}", dep_id, latent_id, last_active);
+                                    arr[0] = json!(last_positive);
+                                    info!("Fixed positive reference in node {}: {} -> {}", dep_id, latent_id, last_positive);
                                 }
                             }
                         }
@@ -512,7 +564,30 @@ fn prune_redundant_reference_branches(
             }
         }
     }
-    
+
+    // 处理被删除的 negative latent 的下游节点
+    for (_, latent_id) in load_to_negative.iter().skip(reference_count) {
+        if let Some(dependents) = forward.get(latent_id) {
+            for dep_id in dependents {
+                if nodes_to_remove.contains(dep_id) || active_negative.contains(dep_id) {
+                    continue;
+                }
+                if let Some(dep_node) = obj.get_mut(dep_id) {
+                    if let Some(inputs) = dep_node.get_mut("inputs").and_then(|v| v.as_object_mut()) {
+                        for (_, val) in inputs.iter_mut() {
+                            if let Some(arr) = val.as_array_mut() {
+                                if arr.len() >= 2 && arr[0].as_str() == Some(latent_id) {
+                                    arr[0] = json!(last_negative);
+                                    info!("Fixed negative reference in node {}: {} -> {}", dep_id, latent_id, last_negative);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // 6. 删除所有标记的节点
     for node_id in nodes_to_remove {
         obj.remove(&node_id);
@@ -561,6 +636,41 @@ fn find_reference_latent_for_load_image(
         if let Some(node) = obj.get(&node_id) {
             if node.get("class_type").and_then(|v| v.as_str()) == Some("ReferenceLatent") {
                 return Some(node_id);
+            }
+        }
+        if let Some(downstream) = forward.get(&node_id) {
+            for next in downstream {
+                if visited.insert(next.clone()) {
+                    queue.push_back(next.clone());
+                }
+            }
+        }
+    }
+    None
+}
+
+/// 从 LoadImage 节点出发，找到属于 negative 链的 ReferenceLatent 节点
+/// 通过排除已知的 positive_latent_id 来区分
+fn find_negative_reference_latent_for_load_image(
+    forward: &HashMap<String, Vec<String>>,
+    obj: &serde_json::Map<String, Value>,
+    start_node: &str,
+    positive_latent_id: Option<&String>,
+) -> Option<String> {
+    let mut queue = std::collections::VecDeque::new();
+    let mut visited = std::collections::HashSet::new();
+    queue.push_back(start_node.to_string());
+    visited.insert(start_node.to_string());
+
+    while let Some(node_id) = queue.pop_front() {
+        if let Some(node) = obj.get(&node_id) {
+            if node.get("class_type").and_then(|v| v.as_str()) == Some("ReferenceLatent") {
+                // 如果是 positive 链的节点，跳过
+                if positive_latent_id == Some(&node_id) {
+                    // 继续搜索，不返回
+                } else {
+                    return Some(node_id);
+                }
             }
         }
         if let Some(downstream) = forward.get(&node_id) {

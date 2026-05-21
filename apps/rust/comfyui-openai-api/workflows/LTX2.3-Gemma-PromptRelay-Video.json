@@ -1,7 +1,7 @@
 {
   "697": {
     "inputs": {
-      "value": 8
+      "value": 24
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -10,7 +10,7 @@
   },
   "699": {
     "inputs": {
-      "value": 1024
+      "value": 1280
     },
     "class_type": "INTConstant",
     "_meta": {
@@ -19,7 +19,7 @@
   },
   "701": {
     "inputs": {
-      "value": 576
+      "value": 704
     },
     "class_type": "INTConstant",
     "_meta": {
@@ -28,7 +28,7 @@
   },
   "818": {
     "inputs": {
-      "text": "(anime, cartoon, cgi, 3d, render, sketch, painting, illustration, vector art, cel shading, plastic, doll-like, wax figure, uncanny valley:1.4),\n﻿\n(worst quality, low quality, normal quality, jpeg artifacts, blurry, motion blur, noise, grainy, oversharpening, bleeding colors, film grain, analog style:1.4),\n﻿\n(monochrome, grayscale, oversaturated, underexposed, overexposed, too bright, too dark, bad lighting, harsh shadows, washed out, high contrast, uneven lighting:1.3),\n﻿\n(frame inconsistency, temporal artifacts, ghosting, double exposure, morphing, face changing, different person, lip sync error, flickering, jitter, shaky cam, camera shake, warping, stuttering, frame jump, sudden cut, abrupt transition, freeze frame, strobing, video compression artifacts, interlacing, pixelation on motion:1.4),\n﻿\n(text, signature, watermark, username, logo, brand, subtitle, typography, letters, font, UI, label, speech bubble, caption, timestamp, channel logo, any readable text on screen:1.5),\n﻿\n(bad anatomy, incorrect anatomy, deformed anatomy, malformed limbs, disproportionate, asymmetrical, fused body parts, extra limbs, floating limbs, disconnected limbs, missing limbs, stump, malformed torso, twisted body, broken limbs:1.3),\n﻿\n(deformed hands, bad hands, poorly drawn hands, mutated hands, missing fingers, extra fingers, fused fingers, long fingers, fingerless, twisted wrists, club hands, paw hands:1.3),\n﻿\n(deformed feet, bad feet, missing toes, extra toes, fused toes, club feet, hoof feet, prosthetic mismatch:1.2),\n﻿\n(deformed face, asymmetric face, cross-eyed, lazy eye, mismatched eye color, missing eye, extra eye, deformed iris, deformed pupil, blurry face, melted face, plastic face, mask-like expression, stiff expression, emotionless, blank stare, dead eyes, soulless eyes:1.2),\n﻿\n(audio-visual mismatch, missing audio, distorted audio, robotic voice, unnatural voice, echo, background noise, crackling sound, silent audio, lip-sync offset, audio delay, audio cutout, volume spikes, muffled sound, wrong language, wrong voice:1.4),\n﻿\n(unnatural motion, robotic movement, jerky movement, sudden pose change, body clipping, object penetration through body, floating objects, gravity-defying motion, impossible pose, morphing between frames, duplication of characters, vanishing objects, inconsistent background across frames:1.4),\n﻿\n(overexposed video, underexposed video, blown highlights, crushed blacks, color shift between frames, white balance flicker, chromatic aberration, lens distortion, vignette, excessive bloom, unrealistic lens flare:1.3)",
+      "text": "(anime, cartoon, cgi, 3d, render, sketch, painting, illustration, vector art, cel shading, plastic, doll-like, wax figure, uncanny valley:1.4),\n(worst quality, low quality, normal quality, jpeg artifacts, blurry, motion blur, noise, grainy, oversharpening, bleeding colors, film grain, analog style:1.4),\n(monochrome, grayscale, oversaturated, underexposed, overexposed, too bright, too dark, bad lighting, harsh shadows, washed out, high contrast, uneven lighting:1.3),\n(frame inconsistency, temporal artifacts, ghosting, double exposure, morphing, face changing, different person, lip sync error:1.4),\n(flickering, jitter, shaky cam, camera shake, warping, stuttering:1.3),\n(text, signature, watermark, username, logo, brand, subtitle, typography, letters, font, UI, label:1.5),\n\n\n(bad anatomy, incorrect anatomy, deformed anatomy, malformed limbs, disproportionate, asymmetrical, fused body parts, extra limbs, floating limbs, disconnected limbs, missing limbs, stump, malformed torso, twisted body, broken limbs:1.3),\n(deformed hands, bad hands, poorly drawn hands, mutated hands, missing fingers, extra fingers, fused fingers, long fingers, fingerless, twisted wrists, club hands, paw hands:1.3),\n(deformed feet, bad feet, missing toes, extra toes, fused toes, club feet, hoof feet, prosthetic mismatch:1.2),\n(deformed breasts, distorted body, unnatural curves, mismatched breasts, uneven breasts, missing breasts, extra breasts:1.3),\n(distorted joints, hyperextended joints, backward knees, uneven shoulders, uneven hips, missing joints, unnatural bending:1.3),\n\n\n(deformed eyes, deformed iris, deformed pupils, crossed eyes, lazy eye, bad eyes, too many eyes, missing eyes, empty eye sockets, glowing eyes, zombie eyes:1.2),\n(distorted face, ugly, poorly drawn face, poorly drawn eyes, deformed, disfigured, disgusting, hideous, bad teeth, missing mouth, blurred face, smudged face, melted face:1.2),\n(stiff expression, emotionless, blank stare, dead eyes, soulless eyes, fake smile, creepy smile, forced smile, unnatural facial expression, facial tic, twitching face, asymmetric expression:1.4),\n\n\n(moving body, changing pose, fidgeting, messy hair, disheveled hair, large head movements, gesturing wildly, puppet-like motion, robotic movement, unnatural motion:1.5),\n(exaggerated facial expressions, shouting, laughing, crying, wide-eyed stare, jaw drop, tongue out:1.4),\n(static pose, frozen, mannequin, mannequin challenge, T-pose, A-pose, stiff body, rigid posture:1.3),\n\n\n(cluttered background, busy composition, messy background, distorted background, simple background, empty scene, blank background, grid pattern, checkerboard:1.2),\n(out of frame, cut off, incomplete, cropped head, cropped limbs, subject cut off, incomplete body, partial view:1.3)\n",
       "clip": [
         "1406:1223",
         0
@@ -41,7 +41,7 @@
   },
   "820": {
     "inputs": {
-      "image": "1placeholder_3x3.png"
+      "image": "1.png"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -50,131 +50,16 @@
   },
   "1072": {
     "inputs": {
-      "image": "1placeholder_3x3.png"
+      "image": "2.png"
     },
     "class_type": "LoadImage",
     "_meta": {
       "title": "Reference Image 2"
     }
   },
-  "1082": {
-    "inputs": {
-      "image": "1placeholder_3x3.png"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Reference Image 3"
-    }
-  },
-  "1092": {
-    "inputs": {
-      "image": "1placeholder_3x3.png"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Reference Image 4"
-    }
-  },
-  "1136": {
-    "inputs": {
-      "width": [
-        "1142",
-        1
-      ],
-      "height": [
-        "1141",
-        1
-      ],
-      "length": [
-        "1247",
-        1
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyLTXVLatentVideo",
-    "_meta": {
-      "title": "空Latent视频（LTXV）"
-    }
-  },
-  "1137": {
-    "inputs": {
-      "frames_number": [
-        "1247",
-        1
-      ],
-      "frame_rate": [
-        "1144",
-        1
-      ],
-      "batch_size": 1,
-      "audio_vae": [
-        "1406:1225",
-        0
-      ]
-    },
-    "class_type": "LTXVEmptyLatentAudio",
-    "_meta": {
-      "title": "LTXV 空音频潜空间"
-    }
-  },
-  "1138": {
-    "inputs": {
-      "video_latent": [
-        "1059:1057",
-        2
-      ],
-      "audio_latent": [
-        "1137",
-        0
-      ]
-    },
-    "class_type": "LTXVConcatAVLatent",
-    "_meta": {
-      "title": "LTXVConcatAVLatent"
-    }
-  },
-  "1141": {
-    "inputs": {
-      "expression": "a/2",
-      "values.a": [
-        "701",
-        0
-      ]
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "数学表达式"
-    }
-  },
-  "1142": {
-    "inputs": {
-      "expression": "a/2",
-      "values.a": [
-        "699",
-        0
-      ]
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "数学表达式"
-    }
-  },
-  "1144": {
-    "inputs": {
-      "expression": "a",
-      "values.a": [
-        "697",
-        0
-      ]
-    },
-    "class_type": "ComfyMathExpression",
-    "_meta": {
-      "title": "数学表达式"
-    }
-  },
   "1245": {
     "inputs": {
-      "value": 3
+      "value": 15
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -183,7 +68,7 @@
   },
   "1247": {
     "inputs": {
-      "expression": "floor((a * b - 1) / 4) * 4 + 1",
+      "expression": "a * b + 1",
       "values.a": [
         "1245",
         0
@@ -200,8 +85,8 @@
   },
   "1249": {
     "inputs": {
-      "global_prompt": "在一个被午后暖阳凝固的静谧书房中，一位女子在书海的包围下，经历了一场无声的内心风暴。镜头从她凝视窗外的侧影，逐渐推近至她柔和而坚定的面庞。逆光勾勒出她的轮廓，空气中的微尘在光束中翻滚，仿佛是她脑海中纷飞思绪的写照。",
-      "local_prompts": "Scene 1-3:\n【镜头】​ 中景。​ 布满书籍的深色木质书架前，午后的阳光斜射入室内，空气中漂浮着微尘。女主角侧身而立，目光从游离逐渐变得深远，仿佛穿透了墙壁，望向了某个遥远的起点。\n【台词】​ 你全力奔跑时\nScene 3-5:\n【镜头】​ 近景。​ 镜头稳定推进，捕捉她柔和却逐渐绷紧的面部线条。逆光中，她耳畔的发丝仿佛因无形的风而轻微颤动。她的眼神从深邃转为一种锐利的澄明。\n【台词】​ 风声会掩盖所有杂音。\n",
+      "global_prompt": "full body shot，85mm长焦镜头人像摄影，浅景深效果。一位五官精致、皮肤白皙的中国美女在海边，发丝随风飘动，眼神充满憧憬。背景是碧海蓝天，远处依稀可见行驶的游艇和飞翔的海鸥作为环境点缀。唯美梦幻的逆光效果，轮廓光勾勒人物边缘，色彩清新明亮，焦点锐利，8k超清画质。",
+      "local_prompts": "Scene 1:\n【镜头】 全景，85mm长焦。一位皮肤白皙的中国美女背对镜头伫立海边，身着简约比基尼。巨大的海风吹得她发丝剧烈向后飞扬，衣物紧贴身体。背景是柔化的碧海蓝天，游艇与海鸥点缀天际。\n【声音】 （强劲而深沉的风声呼啸，夹杂着低频的海浪轰鸣，营造出一种压抑后的爆发感）\n【台词】 所有的束缚，都有迹可循。\nScene 2:\n【镜头】 中近景，侧逆光。画面从她随风舞动的发丝特写拉开，她迎着风缓缓回首。镜头随着她的转头动作顺势推进，金色轮廓光在她下颌线扫过。眼神从迷茫转为坚定，睫毛上的泪珠或水汽在逆光中闪烁。\n【声音】 （风声并未停止，但在她回头的瞬间，混入了一声清晰的、带着回响的钢琴单音。风声开始变得稍微柔和，像是被她的动作切开了一条缝隙）\n【台词】 直到潮汐推着你，\nScene 3:\n【镜头】 特写，焦点在眼部。紧接上一个眼神，她微微眯起双眼，虹膜上倒映着波光粼粼的海面。背景虚化的游艇剪影从左向右滑过，与她的视线形成一条隐形的对角线，动静交织。\n【声音】 （钢琴声延续，旋律变得空灵。远处传来一声海鸥的鸣叫，清脆而辽远，仿佛就在耳边，又仿佛在天际）\n【台词】 驶向那片无人之境。\nScene 4:\n【镜头】 低角度仰拍。镜头从她坚定的眼神快速拉远（Dolly Back），她顺势张开双臂拥抱海风，身体舒展成十字形。上方一只海鸥滑翔而过，与她的手臂形成呼应，下方浪花虚化。\n【声音】 （音乐转为宏大弦乐，风声再次变得强劲，但这次不再是阻碍，而是托举的力量感。衣袂猎猎作响的声音清晰可闻）\n【台词】 那一刻我才明白，\nScene 5:\n【镜头】 大远景，极简构图。镜头从她的面部特写极速拉升至高空俯瞰。人物渺小地缩至右下角，巨大的留白留给天空与海洋。游艇划破水面，在天际线留下一道长长的白色尾迹，直至画面深处。\n【声音】 （音乐推向最高潮后，像潮水般瞬间退去。只留下真实的、立体的海浪拍打岩石声，最后归于一片寂静，只剩风声轻拂）\n【台词】 原来风的方向，就是心的归途。",
       "segment_lengths": "",
       "epsilon": 0.001,
       "model": [
@@ -213,7 +98,7 @@
         0
       ],
       "latent": [
-        "1136",
+        "1460:1457",
         0
       ]
     },
@@ -224,13 +109,13 @@
   },
   "1315": {
     "inputs": {
-      "steps": 6,
+      "steps": 4,
       "max_shift": 2.05,
       "base_shift": 0.95,
       "stretch": true,
       "terminal": 0.1,
       "latent": [
-        "1138",
+        "1460:1459",
         0
       ]
     },
@@ -243,12 +128,12 @@
     "inputs": {
       "preview_rate": 5,
       "model": [
-        "1457",
+        "1327",
         0
       ],
       "vae": [
-        "1456",
-        1
+        "1406:1277",
+        0
       ]
     },
     "class_type": "LTX2SamplingPreviewOverride",
@@ -263,7 +148,7 @@
         0
       ],
       "loop_count": 0,
-      "filename_prefix": "Video/LTX/2026-05-17",
+      "filename_prefix": "LTX-2",
       "format": "video/h264-mp4",
       "pix_fmt": "yuv420p",
       "crf": 15,
@@ -287,7 +172,7 @@
   },
   "1327": {
     "inputs": {
-      "nag_scale": 6,
+      "nag_scale": 4,
       "nag_alpha": 0.25,
       "nag_tau": 1,
       "inplace": true,
@@ -296,11 +181,11 @@
         0
       ],
       "nag_cond_video": [
-        "1059:1054",
+        "1460:1458:1054",
         1
       ],
       "nag_cond_audio": [
-        "1059:1054",
+        "1460:1458:1054",
         1
       ]
     },
@@ -311,7 +196,7 @@
   },
   "1373": {
     "inputs": {
-      "value": 0.3
+      "value": 0.8
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
@@ -327,24 +212,6 @@
       "title": "SEGMENT 1 - FRAMES"
     }
   },
-  "1383": {
-    "inputs": {
-      "value": 2
-    },
-    "class_type": "INTConstant",
-    "_meta": {
-      "title": "SEGMENT 3 - FRAMES"
-    }
-  },
-  "1384": {
-    "inputs": {
-      "value": 0.2
-    },
-    "class_type": "PrimitiveFloat",
-    "_meta": {
-      "title": "IMAGE STRENGTH"
-    }
-  },
   "1389": {
     "inputs": {
       "value": 1
@@ -356,43 +223,60 @@
   },
   "1390": {
     "inputs": {
-      "value": 0.2
+      "value": 0.5
     },
     "class_type": "PrimitiveFloat",
     "_meta": {
       "title": "IMAGE STRENGTH"
     }
   },
-  "1395": {
+  "1434": {
     "inputs": {
-      "value": 3
+      "sampler_name": "euler"
     },
-    "class_type": "INTConstant",
+    "class_type": "KSamplerSelect",
     "_meta": {
-      "title": "SEGMENT 4 - FRAMES"
+      "title": "K采样器选择"
     }
   },
-  "1396": {
+  "1445": {
     "inputs": {
-      "value": 0.2
+      "sampler_name": "euler"
     },
-    "class_type": "PrimitiveFloat",
+    "class_type": "KSamplerSelect",
     "_meta": {
-      "title": "IMAGE STRENGTH"
+      "title": "K采样器选择"
     }
   },
-  "1421": {
+  "1447": {
+    "inputs": {
+      "steps": 4,
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "stretch": true,
+      "terminal": 0.1,
+      "latent": [
+        "1441:1439",
+        0
+      ]
+    },
+    "class_type": "LTXVScheduler",
+    "_meta": {
+      "title": "LTXVScheduler (for more steps)"
+    }
+  },
+  "1466": {
     "inputs": {
       "noise": [
-        "1423:1419",
+        "1467:1464",
         0
       ],
       "guider": [
-        "1423:1420",
+        "1467:1465",
         0
       ],
       "sampler": [
-        "1423:1422",
+        "1434",
         0
       ],
       "sigmas": [
@@ -400,7 +284,7 @@
         0
       ],
       "latent_image": [
-        "1138",
+        "1460:1459",
         0
       ]
     },
@@ -409,93 +293,32 @@
       "title": "自定义采样器（高级）"
     }
   },
-  "1426": {
+  "1473": {
     "inputs": {
       "noise": [
-        "1438:1435",
+        "1474:1472",
         0
       ],
       "guider": [
-        "1438:1436",
+        "1474:1471",
         0
       ],
       "sampler": [
-        "1438:1437",
+        "1445",
         0
       ],
       "sigmas": [
-        "1444",
+        "1447",
         0
       ],
       "latent_image": [
-        "1408:1309",
+        "1441:1439",
         0
       ]
     },
     "class_type": "SamplerCustomAdvanced",
     "_meta": {
       "title": "自定义采样器（高级）"
-    }
-  },
-  "1444": {
-    "inputs": {
-      "steps": 8,
-      "max_shift": 2.05,
-      "base_shift": 0.95,
-      "stretch": true,
-      "terminal": 0.1
-    },
-    "class_type": "LTXVScheduler",
-    "_meta": {
-      "title": "LTXVScheduler (for more steps)"
-    }
-  },
-  "1456": {
-    "inputs": {
-      "fix_double_dtype": true,
-      "also_fix_clip": true,
-      "model": [
-        "1327",
-        0
-      ],
-      "vae": [
-        "1406:1277",
-        0
-      ]
-    },
-    "class_type": "MPSDeviceFix",
-    "_meta": {
-      "title": "MAC MPS Fix (Device Fix)"
-    }
-  },
-  "1457": {
-    "inputs": {
-      "enable_bf16": false,
-      "enable_attention_slicing": true,
-      "enable_gradient_checkpoint": false,
-      "model": [
-        "1456",
-        0
-      ]
-    },
-    "class_type": "LargeModelMPSOptimizer",
-    "_meta": {
-      "title": "MAC Large Model Optimizer"
-    }
-  },
-  "1464": {
-    "inputs": {
-      "clean_mode": "Standard",
-      "clean_gpu": true,
-      "clean_cpu": true,
-      "force_gc": true,
-      "reduce_worker_count": true,
-      "purge_model_patches": true,
-      "log_memory": true
-    },
-    "class_type": "TorchGC",
-    "_meta": {
-      "title": "MAC TorchGC (Memory Cleaner)"
     }
   },
   "1406:1220": {
@@ -503,7 +326,7 @@
       "lora_name": "LTX-2.3-Licon-VBVR-I2V-390K-R32.safetensors",
       "strength_model": 0.4,
       "model": [
-        "1406:1221",
+        "1406:1475",
         0
       ]
     },
@@ -556,7 +379,7 @@
     "inputs": {
       "vae_name": "LTX23_audio_vae_bf16.safetensors",
       "device": "main_device",
-      "weight_dtype": "fp16"
+      "weight_dtype": "bf16"
     },
     "class_type": "VAELoaderKJ",
     "_meta": {
@@ -586,40 +409,285 @@
       "title": "加载VAE"
     }
   },
-  "1394:1086": {
+  "1406:1475": {
     "inputs": {
-      "resize_type": "scale dimensions",
-      "resize_type.width": [
-        "699",
-        0
-      ],
-      "resize_type.height": [
-        "701",
-        0
-      ],
-      "resize_type.crop": "center",
-      "scale_method": "lanczos",
-      "input": [
-        "1092",
+      "lora_name": "LTX-2.3-ID-LoRA-TalkVid-3K.safetensors",
+      "strength_model": 0.8,
+      "model": [
+        "1406:1221",
         0
       ]
     },
-    "class_type": "ResizeImageMaskNode",
+    "class_type": "LoraLoaderModelOnly",
     "_meta": {
-      "title": "调整图像/掩码大小"
+      "title": "LoRA加载器（仅模型）"
     }
   },
-  "1394:1087": {
+  "1460:1453": {
     "inputs": {
-      "img_compression": 18,
-      "image": [
-        "1394:1086",
+      "expression": "a/2",
+      "values.a": [
+        "699",
         0
       ]
     },
-    "class_type": "LTXVPreprocess",
+    "class_type": "ComfyMathExpression",
     "_meta": {
-      "title": "LTXV预处理"
+      "title": "数学表达式"
+    }
+  },
+  "1460:1454": {
+    "inputs": {
+      "expression": "a/2",
+      "values.a": [
+        "701",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "数学表达式"
+    }
+  },
+  "1460:1456": {
+    "inputs": {
+      "frames_number": [
+        "1247",
+        1
+      ],
+      "frame_rate": [
+        "1460:1455",
+        1
+      ],
+      "batch_size": 1,
+      "audio_vae": [
+        "1406:1225",
+        0
+      ]
+    },
+    "class_type": "LTXVEmptyLatentAudio",
+    "_meta": {
+      "title": "LTXV 空音频潜空间"
+    }
+  },
+  "1460:1457": {
+    "inputs": {
+      "width": [
+        "1460:1453",
+        1
+      ],
+      "height": [
+        "1460:1454",
+        1
+      ],
+      "length": [
+        "1247",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLTXVLatentVideo",
+    "_meta": {
+      "title": "空Latent视频（LTXV）"
+    }
+  },
+  "1460:1458:1054": {
+    "inputs": {
+      "frame_rate": [
+        "697",
+        0
+      ],
+      "positive": [
+        "1460:1458:1057",
+        0
+      ],
+      "negative": [
+        "1460:1458:1057",
+        1
+      ]
+    },
+    "class_type": "LTXVConditioning",
+    "_meta": {
+      "title": "LTXV条件"
+    }
+  },
+  "1460:1458:1057": {
+    "inputs": {
+      "num_guides": "2",
+      "num_guides.frame_idx_1": [
+        "1374",
+        0
+      ],
+      "num_guides.strength_1": [
+        "1373",
+        0
+      ],
+      "num_guides.frame_idx_2": [
+        "1389",
+        0
+      ],
+      "num_guides.strength_2": [
+        "1390",
+        0
+      ],
+      "positive": [
+        "1249",
+        1
+      ],
+      "negative": [
+        "818",
+        0
+      ],
+      "vae": [
+        "1406:1224",
+        0
+      ],
+      "latent": [
+        "1460:1457",
+        0
+      ],
+      "num_guides.image_1": [
+        "1398:1377",
+        0
+      ],
+      "num_guides.image_2": [
+        "1388:1067",
+        0
+      ]
+    },
+    "class_type": "LTXVAddGuideMulti",
+    "_meta": {
+      "title": "LTXVAddGuideMulti"
+    }
+  },
+  "1460:1459": {
+    "inputs": {
+      "video_latent": [
+        "1460:1458:1057",
+        2
+      ],
+      "audio_latent": [
+        "1460:1456",
+        0
+      ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
+    }
+  },
+  "1460:1455": {
+    "inputs": {
+      "expression": "a",
+      "values.a": [
+        "697",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "数学表达式"
+    }
+  },
+  "1467:1464": {
+    "inputs": {
+      "noise_seed": 789423368332285
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "1467:1465": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "1467:1480",
+        0
+      ],
+      "positive": [
+        "1467:1480",
+        1
+      ],
+      "negative": [
+        "1460:1458:1054",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "1467:1479": {
+    "inputs": {
+      "audio": "reference_audio.mp3",
+      "audioUI": "/api/view?filename=reference_audio.mp3&type=input&subfolder=&rand=0.07549461944408786"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "加载音频"
+    }
+  },
+  "1467:1480": {
+    "inputs": {
+      "identity_guidance_scale": 3,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "1321",
+        0
+      ],
+      "positive": [
+        "1460:1458:1054",
+        0
+      ],
+      "negative": [
+        "1460:1458:1054",
+        1
+      ],
+      "reference_audio": [
+        "1467:1479",
+        0
+      ],
+      "audio_vae": [
+        "1406:1225",
+        0
+      ]
+    },
+    "class_type": "LTXVReferenceAudio",
+    "_meta": {
+      "title": "LTXV 参考音频（ID-LoRA）"
+    }
+  },
+  "1474:1471": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "1321",
+        0
+      ],
+      "positive": [
+        "1441:1438:1335",
+        0
+      ],
+      "negative": [
+        "1441:1438:1335",
+        1
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFG引导器"
+    }
+  },
+  "1474:1472": {
+    "inputs": {
+      "noise_seed": 895598479108795
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
     }
   },
   "1398:1376": {
@@ -645,17 +713,43 @@
       "title": "调整图像/掩码大小"
     }
   },
+  "1398:1375": {
+    "inputs": {
+      "longer_edge": 1280,
+      "images": [
+        "1398:1376",
+        0
+      ]
+    },
+    "class_type": "ResizeImagesByLongerEdge",
+    "_meta": {
+      "title": "缩放图像（长边）"
+    }
+  },
   "1398:1377": {
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1398:1376",
+        "1398:1375",
         0
       ]
     },
     "class_type": "LTXVPreprocess",
     "_meta": {
       "title": "LTXV预处理"
+    }
+  },
+  "1388:1065": {
+    "inputs": {
+      "longer_edge": 1280,
+      "images": [
+        "1388:1066",
+        0
+      ]
+    },
+    "class_type": "ResizeImagesByLongerEdge",
+    "_meta": {
+      "title": "缩放图像（长边）"
     }
   },
   "1388:1066": {
@@ -685,88 +779,13 @@
     "inputs": {
       "img_compression": 18,
       "image": [
-        "1388:1066",
+        "1388:1065",
         0
       ]
     },
     "class_type": "LTXVPreprocess",
     "_meta": {
       "title": "LTXV预处理"
-    }
-  },
-  "1381:1077": {
-    "inputs": {
-      "img_compression": 18,
-      "image": [
-        "1381:1076",
-        0
-      ]
-    },
-    "class_type": "LTXVPreprocess",
-    "_meta": {
-      "title": "LTXV预处理"
-    }
-  },
-  "1381:1076": {
-    "inputs": {
-      "resize_type": "scale dimensions",
-      "resize_type.width": [
-        "699",
-        0
-      ],
-      "resize_type.height": [
-        "701",
-        0
-      ],
-      "resize_type.crop": "center",
-      "scale_method": "lanczos",
-      "input": [
-        "1082",
-        0
-      ]
-    },
-    "class_type": "ResizeImageMaskNode",
-    "_meta": {
-      "title": "调整图像/掩码大小"
-    }
-  },
-  "1423:1419": {
-    "inputs": {
-      "noise_seed": 239732232587091
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "随机噪波"
-    }
-  },
-  "1423:1420": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "1321",
-        0
-      ],
-      "positive": [
-        "1059:1054",
-        0
-      ],
-      "negative": [
-        "1059:1054",
-        1
-      ]
-    },
-    "class_type": "CFGGuider",
-    "_meta": {
-      "title": "CFG引导器"
-    }
-  },
-  "1423:1422": {
-    "inputs": {
-      "sampler_name": "euler"
-    },
-    "class_type": "KSamplerSelect",
-    "_meta": {
-      "title": "K采样器选择"
     }
   },
   "1354:1303": {
@@ -788,11 +807,11 @@
   "1354:1308": {
     "inputs": {
       "positive": [
-        "1408:1353:1335",
+        "1441:1438:1335",
         0
       ],
       "negative": [
-        "1408:1353:1335",
+        "1441:1438:1335",
         1
       ],
       "latent": [
@@ -808,7 +827,7 @@
   "1354:1312": {
     "inputs": {
       "av_latent": [
-        "1426",
+        "1473",
         0
       ]
     },
@@ -819,10 +838,10 @@
   },
   "1354:1320": {
     "inputs": {
-      "tile_size": 256,
-      "overlap": 32,
-      "temporal_size": 128,
-      "temporal_overlap": 64,
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 4096,
+      "temporal_overlap": 76,
       "samples": [
         "1354:1308",
         2
@@ -837,49 +856,10 @@
       "title": "VAE解码（分块）"
     }
   },
-  "1438:1435": {
-    "inputs": {
-      "noise_seed": 334647468267368
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "随机噪波"
-    }
-  },
-  "1438:1436": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "1321",
-        0
-      ],
-      "positive": [
-        "1408:1353:1335",
-        0
-      ],
-      "negative": [
-        "1408:1353:1335",
-        1
-      ]
-    },
-    "class_type": "CFGGuider",
-    "_meta": {
-      "title": "CFG引导器"
-    }
-  },
-  "1438:1437": {
-    "inputs": {
-      "sampler_name": "euler"
-    },
-    "class_type": "KSamplerSelect",
-    "_meta": {
-      "title": "K采样器选择"
-    }
-  },
-  "1408:1299": {
+  "1441:1436": {
     "inputs": {
       "samples": [
-        "1408:1302",
+        "1441:1437",
         2
       ],
       "upscale_model": [
@@ -896,18 +876,18 @@
       "title": "spatial"
     }
   },
-  "1408:1302": {
+  "1441:1437": {
     "inputs": {
       "positive": [
-        "1059:1054",
+        "1460:1458:1054",
         0
       ],
       "negative": [
-        "1059:1054",
+        "1460:1458:1054",
         1
       ],
       "latent": [
-        "1408:1310",
+        "1441:1440",
         0
       ]
     },
@@ -916,9 +896,9 @@
       "title": "LTXV裁剪指导"
     }
   },
-  "1408:1353:1335": {
+  "1441:1438:1335": {
     "inputs": {
-      "num_guides": "4",
+      "num_guides": "2",
       "num_guides.frame_idx_1": [
         "1374",
         0
@@ -935,28 +915,12 @@
         "1390",
         0
       ],
-      "num_guides.frame_idx_3": [
-        "1383",
-        0
-      ],
-      "num_guides.strength_3": [
-        "1384",
-        0
-      ],
-      "num_guides.frame_idx_4": [
-        "1395",
-        0
-      ],
-      "num_guides.strength_4": [
-        "1396",
-        0
-      ],
       "positive": [
-        "1408:1302",
+        "1441:1437",
         0
       ],
       "negative": [
-        "1408:1302",
+        "1441:1437",
         1
       ],
       "vae": [
@@ -964,7 +928,7 @@
         0
       ],
       "latent": [
-        "1408:1299",
+        "1441:1436",
         0
       ],
       "num_guides.image_1": [
@@ -974,14 +938,6 @@
       "num_guides.image_2": [
         "1388:1067",
         0
-      ],
-      "num_guides.image_3": [
-        "1381:1077",
-        0
-      ],
-      "num_guides.image_4": [
-        "1394:1087",
-        0
       ]
     },
     "class_type": "LTXVAddGuideMulti",
@@ -989,14 +945,14 @@
       "title": "LTXVAddGuideMulti"
     }
   },
-  "1408:1309": {
+  "1441:1439": {
     "inputs": {
       "video_latent": [
-        "1408:1353:1335",
+        "1441:1438:1335",
         2
       ],
       "audio_latent": [
-        "1408:1310",
+        "1441:1440",
         1
       ]
     },
@@ -1005,109 +961,16 @@
       "title": "LTXVConcatAVLatent"
     }
   },
-  "1408:1310": {
+  "1441:1440": {
     "inputs": {
       "av_latent": [
-        "1421",
+        "1466",
         0
       ]
     },
     "class_type": "LTXVSeparateAVLatent",
     "_meta": {
       "title": "LTXV分离音视频潜空间"
-    }
-  },
-  "1059:1054": {
-    "inputs": {
-      "frame_rate": [
-        "697",
-        0
-      ],
-      "positive": [
-        "1059:1057",
-        0
-      ],
-      "negative": [
-        "1059:1057",
-        1
-      ]
-    },
-    "class_type": "LTXVConditioning",
-    "_meta": {
-      "title": "LTXV条件"
-    }
-  },
-  "1059:1057": {
-    "inputs": {
-      "num_guides": "4",
-      "num_guides.frame_idx_1": [
-        "1374",
-        0
-      ],
-      "num_guides.strength_1": [
-        "1373",
-        0
-      ],
-      "num_guides.frame_idx_2": [
-        "1389",
-        0
-      ],
-      "num_guides.strength_2": [
-        "1390",
-        0
-      ],
-      "num_guides.frame_idx_3": [
-        "1383",
-        0
-      ],
-      "num_guides.strength_3": [
-        "1384",
-        0
-      ],
-      "num_guides.frame_idx_4": [
-        "1395",
-        0
-      ],
-      "num_guides.strength_4": [
-        "1396",
-        0
-      ],
-      "positive": [
-        "1249",
-        1
-      ],
-      "negative": [
-        "818",
-        0
-      ],
-      "vae": [
-        "1406:1224",
-        0
-      ],
-      "latent": [
-        "1136",
-        0
-      ],
-      "num_guides.image_1": [
-        "1398:1377",
-        0
-      ],
-      "num_guides.image_2": [
-        "1388:1067",
-        0
-      ],
-      "num_guides.image_3": [
-        "1381:1077",
-        0
-      ],
-      "num_guides.image_4": [
-        "1394:1087",
-        0
-      ]
-    },
-    "class_type": "LTXVAddGuideMulti",
-    "_meta": {
-      "title": "LTXVAddGuideMulti"
     }
   }
 }

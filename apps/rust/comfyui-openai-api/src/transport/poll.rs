@@ -78,6 +78,7 @@ pub async fn poll_history_for_images(
         debug!("poll_history_for_images attempt={} pid={} history={:?}", attempt, pid, history);
 
         let mut maybe_job = get_job_from_history(&history, pid);
+        //warn!("maybe_job={:?}", maybe_job);
         // if maybe_job.is_none() {
         //     if let Ok(queue_resp) = client.get(&queue_url).send().await {
         //         if let Ok(queue_json) = queue_resp.json::<Value>().await {
@@ -133,7 +134,7 @@ pub async fn poll_history_for_images(
             .and_then(|s| s.get("status_str"))
             .and_then(|v| v.as_str())
             .or_else(|| job.get("status_str").and_then(|v| v.as_str()));
-            //warn!("读到状态结果:{:?}",status);
+            warn!("读到状态结果:{:?}",status);
             if let Some(status) = status {
                 if matches!(status, "error" | "failed" | "aborted" | "exception" | "canceled" | "cancelled") {
                     let mut msgs = Vec::new();

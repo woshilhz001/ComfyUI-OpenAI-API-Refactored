@@ -14,7 +14,7 @@
   },
   "212": {
     "inputs": {
-      "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
+      "text": "low quality, blurry, worst quality, jpeg artifacts, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted, gibberish, fake characters, unreadable text, scribble, messy strokes, extra strokes, missing strokes, corrupted text, meaningless symbols, pseudo-chinese, mojibake, random glyphs, illegible writing, typo, broken font, chaotic lines, noise pattern resembling text,\nwrong stroke order, incorrect radicals, malformed Chinese characters, overlapping text, fused characters, fragmented glyphs, semi-script characters, non-standard font distortion, text bleeding, uneven character spacing, mirrored text, upside-down characters, random punctuation mixed with text",
       "clip": [
         "288:283",
         0
@@ -87,7 +87,7 @@
   },
   "288:282": {
     "inputs": {
-      "unet_name": "FLUX-2-klein-9b.safetensors",
+      "unet_name": "FLUX-2-Klein-9b.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader",
@@ -148,18 +148,6 @@
     "class_type": "ResizeImageMaskNode",
     "_meta": {
       "title": "调整图像/掩码大小"
-    }
-  },
-  "308:311": {
-    "inputs": {
-      "images": [
-        "308:310",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "预览图像"
     }
   },
   "309:194": {
@@ -299,7 +287,7 @@
   },
   "309:299": {
     "inputs": {
-      "noise_seed": 22907753600268
+      "noise_seed": 871251014074877
     },
     "class_type": "RandomNoise",
     "_meta": {

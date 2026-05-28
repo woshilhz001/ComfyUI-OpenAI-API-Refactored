@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::time::{Duration, Instant};
 use reqwest::Client;
 use tokio::sync::RwLock;
@@ -34,7 +34,7 @@ impl BackendState {
 pub struct BackendPool {
     backends: Vec<Arc<BackendState>>,
     strategy: LbStrategy,
-    next_index: RwLock<usize>,
+    next_index: AtomicUsize,
     client: Client,
     health_interval: Duration,
     fail_threshold: u32,
@@ -45,7 +45,7 @@ impl BackendPool {
         let pool = Self {
             backends: backends.into_iter().map(|b| Arc::new(BackendState::new(b))).collect(),
             strategy,
-            next_index: RwLock::new(0),
+            next_index: AtomicUsize::new(0),
             client: Client::new(),
             health_interval: Duration::from_secs(health_interval_secs),
             fail_threshold,
@@ -88,9 +88,8 @@ impl BackendPool {
         if healthy.is_empty() { return None; }
         match self.strategy {
             LbStrategy::RoundRobin => {
-                let mut idx = self.next_index.blocking_write();
-                let chosen = healthy[*idx % healthy.len()];
-                *idx = (*idx + 1) % healthy.len();
+                let idx = self.next_index.fetch_add(1, Ordering::Relaxed);
+                let chosen = healthy[idx % healthy.len()];
                 Some(chosen)
             }
             LbStrategy::LeastConnections => {

@@ -1,0 +1,189 @@
+{
+  "1": {
+    "inputs": {
+      "filename_prefix": "Flux2-Klein",
+      "images": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "6": {
+    "inputs": {
+      "samples": [
+        "22",
+        0
+      ],
+      "vae": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "13",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Negative Prompt)"
+    }
+  },
+  "9": {
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "加载CLIP"
+    }
+  },
+  "10": {
+    "inputs": {
+      "vae_name": "full_encoder_small_decoder.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "加载VAE"
+    }
+  },
+  "11": {
+    "inputs": {
+      "text": "in the style of ckpf, 1girl, cuddling colossal protective white lion with glowing blue eyes, ice white theme",
+      "clip": [
+        "13",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "12": {
+    "inputs": {
+      "unet_name": "Flux2-Klein-9B-True-v2-Q6_K.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet 加载器 (GGUF)"
+    }
+  },
+  "13": {
+    "inputs": {
+      "lora_01": "Flux.2.9b\\flux-klein-9b-nineth.safetensors",
+      "strength_01": 0.7,
+      "lora_02": "Flux.2.9b\\Flux2-Klein-9B-consistency-V2.safetensors",
+      "strength_02": 1,
+      "lora_03": "Flux.2.9b\\klein_9B_Turbo_r128.safetensors",
+      "strength_03": 0.25,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "12",
+        0
+      ],
+      "clip": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "LoRA堆加载器"
+    }
+  },
+  "14": {
+    "inputs": {
+      "value": "A vibrant graphic novel-style cinematic illustration of a confident woman standing in the foreground, framed as the commanding heroine of a sci-fi adventure. She has a sleek jet-black bob haircut, bold red lipstick, and an intense, self-assured expression. She wears a striking crimson bomber jacket over a fitted black tactical bodysuit, with black gloves, a utility belt, and subtle futuristic detailing.\n\nBehind her stretches a vast, idealized ancient Egyptian city blended with sci-fi elements. A winding blue river cuts through the golden desert landscape, reflecting the bright sunlight beneath a clear, vivid blue sky. The environment is filled with monumental pharaonic statues, weathered stone columns, ruined temples, ancient obelisks, and partially collapsed structures. In the far distance, majestic pyramids rise against the horizon, surrounded by towering columns and elegant futuristic spires that hint at an advanced lost civilization.\n\nUse clean, bold linework, dynamic composition, rich warm desert tones, deep shadows, and high-contrast colors. The mood should feel epic, adventurous, mysterious, and cinematic, like a premium comic book cover or concept art for a sci-fi Egyptian fantasy film. Emphasize sharp detail, dramatic scale, atmospheric depth, and a polished graphic novel aesthetic."
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "字符串（多行）"
+    }
+  },
+  "15": {
+    "inputs": {
+      "value": ""
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "字符串（多行）"
+    }
+  },
+  "16": {
+    "inputs": {
+      "inputcount": 2,
+      "delimiter": " ",
+      "return_list": false,
+      "Update inputs": null,
+      "string_1": [
+        "15",
+        0
+      ],
+      "string_2": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "JoinStringMulti",
+    "_meta": {
+      "title": "Join String Multi"
+    }
+  },
+  "19": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "空Latent图像"
+    }
+  },
+  "22": {
+    "inputs": {
+      "seed": 637808306982291,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "13",
+        0
+      ],
+      "positive": [
+        "11",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "K采样器"
+    }
+  }
+}

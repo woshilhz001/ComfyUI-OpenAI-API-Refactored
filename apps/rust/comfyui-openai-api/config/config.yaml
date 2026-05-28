@@ -6,13 +6,10 @@ server:
 # 多后端列表
 comfyui_backends:
   - name: "backend-a"
-    host: "127.0.0.1"
-    port: 8000
+    host: "host.docker.internal"
+    port: 8188
     default: true
-  - name: "backend-b"
-    host: "192.168.50.152"
-    port: 8000
-    default: false
+
 
 comfyui_backend:
   client_id: "comfyui-api"

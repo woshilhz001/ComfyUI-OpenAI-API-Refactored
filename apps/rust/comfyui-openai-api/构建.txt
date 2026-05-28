@@ -1,0 +1,6 @@
+cd D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored
+docker build -t comfyui-openai-api -f apps/rust/comfyui-openai-api/Dockerfile .
+
+docker run -p 8080:8080 -v $(pwd)/config:/app/config  -v $(pwd)/workflows:/app/workflows  comfyui-openai-api
+
+docker run -p 8080:8080 -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\config:/app/config" -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\workflows:/app/workflows" comfyui-openai-api

@@ -114,6 +114,7 @@ async fn main() {
         .route("/v1/videos/health", get(video::video_health_handler))
         .route("/v1/videos/generations", post(video::video_generations_handler))
         .route("/v1/images/generations", post(image::image_generations_handler))
+        .route("/v1/images/edits", post(image::image_generations_handler))
         .route("/v1/metrics", get(metrics::metrics_handler))
         .route("/v1/tasks/:task_id", get(tasks::task_query))
         .route("/v1/tasks", get(tasks::task_list))
@@ -176,6 +177,28 @@ async fn help_handler() -> impl IntoResponse {
                     "n": "integer (optional, number of images to generate)",
                     "reference_images": "array of {name, data} (optional)",
                     "image": "array of base64 strings (optional, alternative to reference_images)"
+                },
+                "response": {
+                    "created": "timestamp",
+                    "data": "[ { \"b64_json\": \"base64...\" } ]"
+                }
+            },
+            "/v1/images/edits": {
+                "method": "POST",
+                "description": "OpenAI-compatible image edit endpoint (same semantics as generations)",
+                "query_parameter": {
+                    "name": "backend",
+                    "required": false,
+                    "description": "Name of the ComfyUI backend (uses load balancer if omitted)"
+                },
+                "request_body": {
+                    "model": "string (workflow filename without .json)",
+                    "prompt": "string",
+                    "image": "array of base64 strings (the base image to edit)",
+                    "mask": "array of base64 strings (optional, transparent areas indicate edit regions)",
+                    "size": "string e.g. '1024x1024' (optional)",
+                    "n": "integer (optional, number of images to generate)",
+                    "reference_images": "array of {name, data} (optional)"
                 },
                 "response": {
                     "created": "timestamp",

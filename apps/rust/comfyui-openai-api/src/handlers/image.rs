@@ -25,6 +25,8 @@ use crate::utils::format_file_info;
 
 use std::collections::{HashMap, HashSet, VecDeque};
 
+use multer::Multipart;
+
 // … 下方的数据结构、handler、create_image_payload、build_openai_image_response 等保持不变 …
 
 #[derive(Debug, Deserialize)]
@@ -75,6 +77,132 @@ pub fn sanitize_log_body(body_str: &str) -> String {
     }
 }
 
+/// 解析 multipart/form-data 请求体为 OpenAIImageRequest
+/// 用于处理 OpenAI SDK images.edit() 发送的 multipart 请求
+async fn parse_multipart_request(
+    body: &[u8],
+    content_type: &str,
+) -> Result<OpenAIImageRequest, ProxyError> {
+    // 从 Content-Type 中提取 boundary
+    let boundary = content_type
+        .split(';')
+        .find_map(|part| {
+            let trimmed = part.trim();
+            if trimmed.starts_with("boundary=") {
+                Some(trimmed[9..].trim_matches('"').to_string())
+            } else {
+                None
+            }
+        })
+        .ok_or_else(|| ProxyError::Json("Missing boundary in multipart content-type".into()))?;
+
+    info!("📥 Multipart image request (boundary={})", boundary);
+
+    let mut model = String::new();
+    let mut prompt: Option<String> = None;
+    let mut negative_prompt: Option<String> = None;
+    let mut size: Option<String> = None;
+    let mut n: Option<i64> = None;
+    let mut seed: Option<i64> = None;
+    let mut reference_images: Vec<ReferenceImage> = Vec::new();
+
+    // 将字节转换为 stream 供 multer 使用
+    let body_bytes = bytes::Bytes::copy_from_slice(body);
+    let stream = futures::stream::once(async move {
+        Ok::<bytes::Bytes, multer::Error>(body_bytes)
+    });
+    let mut multipart = Multipart::new(stream, boundary);
+
+    while let Some(mut field) = multipart.next_field().await.map_err(|e| {
+        ProxyError::Json(format!("Multipart parse error: {}", e))
+    })? {
+        let field_name = field.name().map(|n| n.to_string()).unwrap_or_default();
+        let content_type = field.content_type().map(|ct| ct.to_string());
+
+        // 判断是文件字段还是文本字段
+        let is_file = field_name == "image" || field_name == "mask" || content_type.is_some();
+
+        if is_file {
+            // 文件字段：读取字节并 base64 编码
+            let mut data = Vec::new();
+            while let Some(chunk) = field.chunk().await.map_err(|e| {
+                ProxyError::Json(format!("Multipart read error: {}", e))
+            })? {
+                data.extend_from_slice(&chunk);
+            }
+            let b64 = general_purpose::STANDARD.encode(&data);
+            let img_name = if field_name == "mask" {
+                Some("mask".to_string())
+            } else {
+                field.file_name().map(|f| f.to_string())
+            };
+            reference_images.push(ReferenceImage {
+                name: img_name,
+                data: b64,
+            });
+            info!(
+                "  Multipart file field '{}': {} bytes (name={:?})",
+                field_name,
+                data.len(),
+                reference_images.last().unwrap().name
+            );
+        } else {
+            // 文本字段
+            let text = field.text().await.map_err(|e| {
+                ProxyError::Json(format!("Multipart text read error: {}", e))
+            })?;
+            let text_trimmed = text.trim().to_string();
+            if text_trimmed.is_empty() {
+                continue;
+            }
+            info!("  Multipart field '{}': {}", field_name, text_trimmed);
+            match field_name.as_str() {
+                "model" => model = text_trimmed,
+                "prompt" => prompt = Some(text_trimmed),
+                "negative_prompt" => negative_prompt = Some(text_trimmed),
+                "size" => size = Some(text_trimmed),
+                "n" => {
+                    n = text_trimmed.parse().ok();
+                    if n.is_none() {
+                        warn!("Invalid multipart 'n' value: {}", text_trimmed);
+                    }
+                }
+                "seed" => {
+                    seed = text_trimmed.parse().ok();
+                    if seed.is_none() {
+                        warn!("Invalid multipart 'seed' value: {}", text_trimmed);
+                    }
+                }
+                "response_format" => {
+                    // OpenAI 的 response_format，忽略即可
+                    info!("  Multipart response_format: {}", text_trimmed);
+                }
+                _ => {
+                    info!("  Multipart unknown field '{}': {}", field_name, text_trimmed);
+                }
+            }
+        }
+    }
+
+    if model.is_empty() {
+        return Err(ProxyError::Json("Missing 'model' field in multipart request".into()));
+    }
+
+    info!("📸 Multipart: model={}, prompt={:?}, reference_images={}",
+        model, prompt.as_deref().unwrap_or("(none)"), reference_images.len());
+
+    Ok(OpenAIImageRequest {
+        model,
+        prompt,
+        negative_prompt,
+        size,
+        seed,
+        n,
+        reference_images,
+        image: Vec::new(), // 已合并到 reference_images
+    })
+}
+
 pub async fn image_generations_handler(
     State(state): State<Arc<ProxyState>>,
     Query(params): Query<HashMap<String, String>>,
@@ -82,7 +210,6 @@ pub async fn image_generations_handler(
     body: axum::body::Bytes,
 ) -> Result<AxumResponse, ProxyError> {
     let body_str = String::from_utf8_lossy(&body);
-    info!("📥 Image request: {}", sanitize_log_body(&body_str));
 
     // 拒绝正在关闭的服务器
     if state.graceful_shutdown.is_shutting_down() {
@@ -136,12 +263,22 @@ pub async fn image_generations_handler(
         }
     }
 
-    // 解析请求
-    let mut request: OpenAIImageRequest = match serde_json::from_str(&body_str) {
-        Ok(req) => req,
-        Err(e) => {
-            warn!("Invalid image request JSON: {}", e);
-            return Err(ProxyError::Json(format!("Invalid request: {}", e)));
+    // 解析请求：支持 multipart/form-data 和 application/json
+    let content_type = headers
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+
+    let mut request: OpenAIImageRequest = if content_type.starts_with("multipart/form-data") {
+        parse_multipart_request(&body, content_type).await?
+    } else {
+        info!("📥 Image request: {}", sanitize_log_body(&body_str));
+        match serde_json::from_str(&body_str) {
+            Ok(req) => req,
+            Err(e) => {
+                warn!("Invalid image request JSON: {}", e);
+                return Err(ProxyError::Json(format!("Invalid request: {}", e)));
+            }
         }
     };
     for img in &request.image {

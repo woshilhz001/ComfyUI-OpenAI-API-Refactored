@@ -21,7 +21,7 @@
     "inputs": {
       "text": "full body shot，85mm长焦镜头人像摄影，浅景深效果。一位五官精致、皮肤白皙的中国美女在海边，发丝随风飘动，眼神充满憧憬。背景是碧海蓝天，远处依稀可见行驶的游艇和飞翔的海鸥作为环境点缀。唯美梦幻的逆光效果，轮廓光勾勒人物边缘，色彩清新明亮，焦点锐利，8k超清画质。",
       "clip": [
-        "1676:1639",
+        "1674",
         0
       ]
     },
@@ -34,7 +34,7 @@
     "inputs": {
       "text": "low quality, blurry, worst quality, jpeg artifacts, watermark, text, signature, deformed, bad anatomy, extra fingers, mutated hands, cropped, out of frame, ugly, distorted",
       "clip": [
-        "1676:1639",
+        "1674",
         0
       ]
     },
@@ -105,19 +105,9 @@
       "title": "Reference Image 4"
     }
   },
-  "1676:1635": {
+  "1674": {
     "inputs": {
-      "unet_name": "FLUX-2-klein-9b.safetensors",
-      "weight_dtype": "default"
-    },
-    "class_type": "UNETLoader",
-    "_meta": {
-      "title": "UNet加载器"
-    }
-  },
-  "1676:1639": {
-    "inputs": {
-      "clip_name": "Qwen_3_8b.safetensors",
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -126,45 +116,85 @@
       "title": "加载CLIP"
     }
   },
-  "1676:1636": {
+  "1675": {
     "inputs": {
-      "vae_name": "FLUX-2-klein-vae.safetensors"
+      "vae_name": "full_encoder_small_decoder.safetensors"
     },
     "class_type": "VAELoader",
     "_meta": {
       "title": "加载VAE"
     }
   },
-  "1672:1646": {
+  "1677": {
     "inputs": {
-      "pixels": [
-        "1672:1659",
+      "lora_01": "Flux.2.9b\\flux-klein-9b-nineth.safetensors",
+      "strength_01": 0.7,
+      "lora_02": "Flux.2.9b\\Flux2-Klein-9B-consistency-V2.safetensors",
+      "strength_02": 1,
+      "lora_03": "Flux.2.9b\\klein_9B_Turbo_r128.safetensors",
+      "strength_03": 0.25,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "1681",
         0
       ],
-      "vae": [
-        "1676:1636",
+      "clip": [
+        "1674",
         0
       ]
     },
-    "class_type": "VAEEncode",
+    "class_type": "Lora Loader Stack (rgthree)",
     "_meta": {
-      "title": "VAE编码"
+      "title": "LoRA堆加载器"
     }
   },
-  "1672:1647": {
+  "1678": {
     "inputs": {
-      "conditioning": [
-        "142",
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "K采样器选择"
+    }
+  },
+  "1679": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "1677",
         0
       ],
-      "latent": [
-        "1672:1646",
+      "positive": [
+        "1665",
+        0
+      ],
+      "negative": [
+        "1675:1670",
         0
       ]
     },
-    "class_type": "ReferenceLatent",
+    "class_type": "CFGGuider",
     "_meta": {
-      "title": "参考Latent"
+      "title": "CFG引导器"
+    }
+  },
+  "1680": {
+    "inputs": {
+      "noise_seed": 0
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "随机噪波"
+    }
+  },
+  "1681": {
+    "inputs": {
+      "unet_name": "Flux2-Klein-9B-True-v2-Q6_K.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
     }
   },
   "1672:1659": {
@@ -190,54 +220,6 @@
       "title": "调整图像/掩码大小"
     }
   },
-  "1672:1662": {
-    "inputs": {
-      "conditioning": [
-        "143",
-        0
-      ],
-      "latent": [
-        "1672:1646",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent"
-    }
-  },
-  "1673:1648": {
-    "inputs": {
-      "pixels": [
-        "1673:1660",
-        0
-      ],
-      "vae": [
-        "1676:1636",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码2"
-    }
-  },
-  "1673:1649": {
-    "inputs": {
-      "conditioning": [
-        "1672:1647",
-        0
-      ],
-      "latent": [
-        "1673:1648",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent2"
-    }
-  },
   "1673:1660": {
     "inputs": {
       "resize_type": "scale dimensions",
@@ -259,54 +241,6 @@
     "class_type": "ResizeImageMaskNode",
     "_meta": {
       "title": "调整图像/掩码大小 2"
-    }
-  },
-  "1673:1663": {
-    "inputs": {
-      "conditioning": [
-        "1672:1662",
-        0
-      ],
-      "latent": [
-        "1673:1648",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent2"
-    }
-  },
-  "1674:1656": {
-    "inputs": {
-      "pixels": [
-        "1674:1661",
-        0
-      ],
-      "vae": [
-        "1676:1636",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码 3"
-    }
-  },
-  "1674:1657": {
-    "inputs": {
-      "conditioning": [
-        "1673:1649",
-        0
-      ],
-      "latent": [
-        "1674:1656",
-        0
-      ]
-    },
-    "class_type": "ReferenceLatent",
-    "_meta": {
-      "title": "参考Latent3"
     }
   },
   "1674:1661": {
@@ -332,52 +266,38 @@
       "title": "调整图像/掩码大小 3"
     }
   },
-  "1674:1664": {
+  "1687:1613": {
     "inputs": {
-      "conditioning": [
-        "1673:1663",
+      "steps": 4,
+      "width": [
+        "1637",
         0
       ],
-      "latent": [
-        "1674:1656",
+      "height": [
+        "1638",
         0
       ]
     },
-    "class_type": "ReferenceLatent",
+    "class_type": "Flux2Scheduler",
     "_meta": {
-      "title": "参考Latent3"
+      "title": "Flux2调度器"
     }
   },
-  "1675:1666": {
+  "1687:1679": {
     "inputs": {
-      "pixels": [
-        "1675:1669",
+      "width": [
+        "1637",
         0
       ],
-      "vae": [
-        "1676:1636",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE编码 4"
-    }
-  },
-  "1675:1667": {
-    "inputs": {
-      "conditioning": [
-        "1674:1657",
+      "height": [
+        "1638",
         0
       ],
-      "latent": [
-        "1675:1666",
-        0
-      ]
+      "batch_size": 1
     },
-    "class_type": "ReferenceLatent",
+    "class_type": "EmptyFlux2LatentImage",
     "_meta": {
-      "title": "参考Latent4"
+      "title": "空Latent图像（Flux2）"
     }
   },
   "1675:1669": {
@@ -403,6 +323,182 @@
       "title": "调整图像/掩码大小 4"
     }
   },
+  "1672:1646": {
+    "inputs": {
+      "pixels": [
+        "1672:1659",
+        0
+      ],
+      "vae": [
+        "1675",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "1673:1648": {
+    "inputs": {
+      "pixels": [
+        "1673:1660",
+        0
+      ],
+      "vae": [
+        "1675",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码2"
+    }
+  },
+  "1674:1656": {
+    "inputs": {
+      "pixels": [
+        "1674:1661",
+        0
+      ],
+      "vae": [
+        "1675",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码 3"
+    }
+  },
+  "1675:1666": {
+    "inputs": {
+      "pixels": [
+        "1675:1669",
+        0
+      ],
+      "vae": [
+        "1675",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码 4"
+    }
+  },
+  "1672:1647": {
+    "inputs": {
+      "conditioning": [
+        "142",
+        0
+      ],
+      "latent": [
+        "1672:1646",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1672:1662": {
+    "inputs": {
+      "conditioning": [
+        "143",
+        0
+      ],
+      "latent": [
+        "1672:1646",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent"
+    }
+  },
+  "1673:1649": {
+    "inputs": {
+      "conditioning": [
+        "1672:1647",
+        0
+      ],
+      "latent": [
+        "1673:1648",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent2"
+    }
+  },
+  "1673:1663": {
+    "inputs": {
+      "conditioning": [
+        "1672:1662",
+        0
+      ],
+      "latent": [
+        "1673:1648",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent2"
+    }
+  },
+  "1674:1657": {
+    "inputs": {
+      "conditioning": [
+        "1673:1649",
+        0
+      ],
+      "latent": [
+        "1674:1656",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent3"
+    }
+  },
+  "1674:1664": {
+    "inputs": {
+      "conditioning": [
+        "1673:1663",
+        0
+      ],
+      "latent": [
+        "1674:1656",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent3"
+    }
+  },
+  "1675:1667": {
+    "inputs": {
+      "conditioning": [
+        "1674:1657",
+        0
+      ],
+      "latent": [
+        "1675:1666",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "参考Latent4"
+    }
+  },
   "1675:1670": {
     "inputs": {
       "conditioning": [
@@ -419,6 +515,34 @@
       "title": "参考Latent4"
     }
   },
+  "1687:1677": {
+    "inputs": {
+      "noise": [
+        "1680",
+        0
+      ],
+      "guider": [
+        "1679",
+        0
+      ],
+      "sampler": [
+        "1678",
+        0
+      ],
+      "sigmas": [
+        "1687:1613",
+        0
+      ],
+      "latent_image": [
+        "1687:1679",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "自定义采样器（高级）"
+    }
+  },
   "1687:133": {
     "inputs": {
       "samples": [
@@ -426,7 +550,7 @@
         0
       ],
       "vae": [
-        "1676:1636",
+        "1675",
         0
       ]
     },
@@ -447,159 +571,6 @@
     "class_type": "ImageSharpenKJ",
     "_meta": {
       "title": "Image Sharpen KJ"
-    }
-  },
-  "1687:1608": {
-    "inputs": {
-      "sampler_name": "euler"
-    },
-    "class_type": "KSamplerSelect",
-    "_meta": {
-      "title": "K采样器选择"
-    }
-  },
-  "1687:1613": {
-    "inputs": {
-      "steps": 4,
-      "width": [
-        "1637",
-        0
-      ],
-      "height": [
-        "1638",
-        0
-      ]
-    },
-    "class_type": "Flux2Scheduler",
-    "_meta": {
-      "title": "Flux2调度器"
-    }
-  },
-  "1687:1677": {
-    "inputs": {
-      "noise": [
-        "1687:1678",
-        0
-      ],
-      "guider": [
-        "1687:1680",
-        0
-      ],
-      "sampler": [
-        "1687:1608",
-        0
-      ],
-      "sigmas": [
-        "1687:1613",
-        0
-      ],
-      "latent_image": [
-        "1687:1679",
-        0
-      ]
-    },
-    "class_type": "SamplerCustomAdvanced",
-    "_meta": {
-      "title": "自定义采样器（高级）"
-    }
-  },
-  "1687:1678": {
-    "inputs": {
-      "noise_seed": 219632587109124
-    },
-    "class_type": "RandomNoise",
-    "_meta": {
-      "title": "随机噪波"
-    }
-  },
-  "1687:1679": {
-    "inputs": {
-      "width": [
-        "1637",
-        0
-      ],
-      "height": [
-        "1638",
-        0
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyFlux2LatentImage",
-    "_meta": {
-      "title": "空Latent图像（Flux2）"
-    }
-  },
-  "1687:1680": {
-    "inputs": {
-      "cfg": 1,
-      "model": [
-        "1687:1685",
-        0
-      ],
-      "positive": [
-        "1687:1684",
-        0
-      ],
-      "negative": [
-        "1675:1670",
-        0
-      ]
-    },
-    "class_type": "CFGGuider",
-    "_meta": {
-      "title": "CFG引导器"
-    }
-  },
-  "1687:1684": {
-    "inputs": {
-      "active_scale": 1.1,
-      "per_token_whiten": 0.25,
-      "norm_equalize": 0.1,
-      "early_layer_scale": 1,
-      "mid_layer_scale": 1,
-      "late_layer_scale": 1.25,
-      "preserve_original": 0,
-      "active_end_override": 0,
-      "device": "auto",
-      "debug": false,
-      "conditioning": [
-        "1665",
-        0
-      ]
-    },
-    "class_type": "Flux2KleinEnhancer",
-    "_meta": {
-      "title": "FLUX.2 Klein Enhancer"
-    }
-  },
-  "1687:1685": {
-    "inputs": {
-      "mode": "auto",
-      "intensity": 1,
-      "model": [
-        "1676:1635",
-        0
-      ],
-      "lcs_data": [
-        "1687:1686",
-        0
-      ]
-    },
-    "class_type": "LCSColorAnchor",
-    "_meta": {
-      "title": "LCS Color Anchor"
-    }
-  },
-  "1687:1686": {
-    "inputs": {
-      "vae": [
-        "1676:1636",
-        0
-      ]
-    },
-    "class_type": "LCSLoadData",
-    "_meta": {
-      "title": "LCS Load Data"
     }
   }
 }

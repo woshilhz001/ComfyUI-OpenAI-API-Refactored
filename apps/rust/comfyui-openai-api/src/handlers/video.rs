@@ -296,15 +296,28 @@ async fn create_video_payload(
             }
         }
 
-        // 2. 提示词
-        if let Some(pos_id) = prepared.inject_points.get(&InjectRole::PositivePrompt) {
+        // 2. 提示词 — 优先注入 PrimitiveStringMultiline（inputs.value），否则注入 CLIPTextEncode（inputs.text）
+        if let Some(str_id) = prepared.inject_points.get(&InjectRole::PositivePromptString) {
+            if let Some(node) = obj.get_mut(str_id) {
+                if let Some(inputs) = node["inputs"].as_object_mut() {
+                    inputs.insert("value".to_string(), Value::String(prompt.to_string()));
+                }
+            }
+        } else if let Some(pos_id) = prepared.inject_points.get(&InjectRole::PositivePrompt) {
             if let Some(node) = obj.get_mut(pos_id) {
                 if let Some(inputs) = node["inputs"].as_object_mut() {
                     inputs.insert("text".to_string(), Value::String(prompt.to_string()));
                 }
             }
         }
-        if let Some(neg_id) = prepared.inject_points.get(&InjectRole::NegativePrompt) {
+        if let Some(str_id) = prepared.inject_points.get(&InjectRole::NegativePromptString) {
+            if let Some(node) = obj.get_mut(str_id) {
+                if let Some(inputs) = node["inputs"].as_object_mut() {
+                    inputs.insert("value".to_string(),
+                        Value::String("low quality, blurry, worst quality".to_string()));
+                }
+            }
+        } else if let Some(neg_id) = prepared.inject_points.get(&InjectRole::NegativePrompt) {
             if let Some(node) = obj.get_mut(neg_id) {
                 if let Some(inputs) = node["inputs"].as_object_mut() {
                     inputs.insert("text".to_string(),

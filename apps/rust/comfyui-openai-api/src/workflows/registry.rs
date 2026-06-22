@@ -11,6 +11,8 @@ pub struct WorkflowTemplate {
     pub raw: Value,
     pub positive_prompt_node: Option<String>,
     pub negative_prompt_node: Option<String>,
+    pub positive_string_node: Option<String>,
+    pub negative_string_node: Option<String>,
     pub load_image_nodes: Vec<String>,
     pub width_node: Option<String>,
     pub height_node: Option<String>,
@@ -28,6 +30,8 @@ impl WorkflowTemplate {
         // 保持与原 parse 逻辑一致
         let mut positive_prompt_node = None;
         let mut negative_prompt_node = None;
+        let mut positive_string_node = None;
+        let mut negative_string_node = None;
         let mut width_node = None;
         let mut height_node = None;
         let mut has_prompt_relay = false;
@@ -56,6 +60,10 @@ impl WorkflowTemplate {
                     "PrimitiveFloat" => {
                         if title == "Duration" { duration_node = Some(node_id.clone()); }
                         else if title == "FPS" { fps_node = Some(node_id.clone()); }
+                    }
+                    "PrimitiveStringMultiline" => {
+                        if title.contains("Positive") { positive_string_node = Some(node_id.clone()); }
+                        else if title.contains("Negative") { negative_string_node = Some(node_id.clone()); }
                     }
                     "PromptRelayEncode" => { has_prompt_relay = true; }
                     "LoraLoaderModelOnly" | "LoraLoader" => { lora_nodes.push(node_id.clone()); }
@@ -97,6 +105,8 @@ impl WorkflowTemplate {
             raw: json,
             positive_prompt_node,
             negative_prompt_node,
+            positive_string_node,
+            negative_string_node,
             load_image_nodes,
             width_node,
             height_node,

@@ -501,13 +501,21 @@ async fn create_image_payload(
             }
         }
 
-        // 提示词
-        if let Some(pos_id) = prepared.inject_points.get(&InjectRole::PositivePrompt) {
+        // 提示词 — 优先注入 PrimitiveStringMultiline（inputs.value），否则注入 CLIPTextEncode（inputs.text）
+        if let Some(str_id) = prepared.inject_points.get(&InjectRole::PositivePromptString) {
+            if let Some(prompt) = &request.prompt {
+                obj[str_id]["inputs"]["value"] = json!(prompt);
+            }
+        } else if let Some(pos_id) = prepared.inject_points.get(&InjectRole::PositivePrompt) {
             if let Some(prompt) = &request.prompt {
                 obj[pos_id]["inputs"]["text"] = json!(prompt);
             }
         }
-        if let Some(neg_id) = prepared.inject_points.get(&InjectRole::NegativePrompt) {
+        if let Some(str_id) = prepared.inject_points.get(&InjectRole::NegativePromptString) {
+            if let Some(neg) = &request.negative_prompt {
+                obj[str_id]["inputs"]["value"] = json!(neg);
+            }
+        } else if let Some(neg_id) = prepared.inject_points.get(&InjectRole::NegativePrompt) {
             if let Some(neg) = &request.negative_prompt {
                 obj[neg_id]["inputs"]["text"] = json!(neg);
             }

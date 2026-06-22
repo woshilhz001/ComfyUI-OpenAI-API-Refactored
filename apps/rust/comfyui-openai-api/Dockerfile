@@ -1,40 +1,58 @@
+# ============================================================
+#  Stage 1: Builder — 编译 Rust 二进制
+# ============================================================
 FROM rust:latest AS builder
 
-# Copy only Cargo.toml and Cargo.lock first to leverage Docker cache
-# This ensures dependencies are re-downloaded/recompiled only when they change
+# ----- Cargo 国内镜像加速（rsproxy.cn）-----
+# 写入 CARGO_HOME 下的 config.toml，对 cargo 全局生效
+RUN mkdir -p /usr/local/cargo && \
+    { \
+      echo '[source.crates-io]'; \
+      echo 'replace-with = "rsproxy"'; \
+      echo '[source.rsproxy]'; \
+      echo 'registry = "https://rsproxy.cn/crates.io-index"'; \
+    } > /usr/local/cargo/config.toml
+
+# ----- 网络与并发优化 -----
+ENV CARGO_NET_RETRY=5 \
+    CARGO_NET_TIMEOUT=30 \
+    CARGO_HTTP_MULTIPLEXING=false \
+    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+
+# ----- 缓存依赖层（关键加速）-----
+# 先只复制 Cargo.toml/lock + 骨架代码，构建并缓存所有依赖
 RUN USER=root cargo new --bin comfyui-openai-api
 WORKDIR /comfyui-openai-api
 COPY apps/rust/comfyui-openai-api/Cargo.toml Cargo.toml
 COPY apps/rust/comfyui-openai-api/Cargo.lock Cargo.lock
 
-# This caches the `cargo build --release` step for dependencies
+# 此时只有 hello-world 骨架，构建结果只包含依赖
+# Docker 会缓存这一层，后续只要 Cargo.toml/lock 不变就不重跑
 RUN cargo build --release
 RUN rm -rf src/*.rs
 
-# Copy your actual source code
+# ----- 编译真实代码 -----
 COPY apps/rust/comfyui-openai-api/src src
 
-# Build your release binary
-RUN rm ./target/release/deps/comfyui_openai_api*
-# Use --locked if you want to ensure the exact dependencies from Cargo.lock are used
+# 清除旧二进制缓存，强制重新编译真实代码（依赖层仍从缓存取）
+RUN rm -f ./target/release/deps/comfyui_openai_api*
 RUN cargo install --path .
 
-# Strip the binary to remove debug symbols and further reduce size
+# （可选）去除调试符号，缩小体积
 # RUN strip /usr/local/cargo/bin/comfyui-openai-api
 
-
+# ============================================================
+#  Stage 2: Runtime — 最小运行时镜像
+# ============================================================
 FROM debian:bookworm-slim
 
-# Install any necessary runtime dependencies.
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl nano && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates curl nano && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy the stripped binary from the builder stage
 COPY --from=builder /usr/local/cargo/bin/comfyui-openai-api ./
-
-# Add example workflows
 COPY workflows /app/workflows
 
 CMD ["./comfyui-openai-api"]

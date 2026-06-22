@@ -17,6 +17,8 @@ pub struct PreparedWorkflow {
 pub enum InjectRole {
     PositivePrompt,
     NegativePrompt,
+    PositivePromptString,
+    NegativePromptString,
     Width,
     Height,
     NoiseSeed,
@@ -31,6 +33,8 @@ impl PreparedWorkflow {
         let mut inject = HashMap::new();
         if let Some(id) = &tpl.positive_prompt_node { inject.insert(InjectRole::PositivePrompt, id.clone()); }
         if let Some(id) = &tpl.negative_prompt_node { inject.insert(InjectRole::NegativePrompt, id.clone()); }
+        if let Some(id) = &tpl.positive_string_node { inject.insert(InjectRole::PositivePromptString, id.clone()); }
+        if let Some(id) = &tpl.negative_string_node { inject.insert(InjectRole::NegativePromptString, id.clone()); }
         if let Some(id) = &tpl.width_node { inject.insert(InjectRole::Width, id.clone()); }
         if let Some(id) = &tpl.height_node { inject.insert(InjectRole::Height, id.clone()); }
         // NoiseSeed 和 Seed 在运行时遍历，不在此处固定

@@ -1,6 +1,24 @@
-cd D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored
-docker build -t comfyui-openai-api -f apps/rust/comfyui-openai-api/Dockerfile .
+=======================
+ 构建（手动）
+=======================
+cd /d D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored
+docker build -t comfyui-openai-api -f apps/rust/comfyui-openai-api/Dockerfile --progress=plain .
 
-docker run -p 8080:8080 -v $(pwd)/config:/app/config  -v $(pwd)/workflows:/app/workflows  comfyui-openai-api
+=======================
+ 运行（手动，Windows）
+=======================
+docker run -p 8080:8080 ^
+  -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\config:/app/config" ^
+  -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\workflows:/app/workflows" ^
+  comfyui-openai-api
 
-docker run -p 8080:8080 -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\config:/app/config" -v "D:\ai\comfyui_2025_5\ComfyUI-OpenAI-API-Refactored\apps\rust\comfyui-openai-api\workflows:/app/workflows" comfyui-openai-api
+=======================
+ 加速说明
+=======================
+Dockerfile 已内置：
+  - rsproxy.cn 国内镜像源（crates.io 下载加速）
+  - CARGO_NET_RETRY=5（网络失败自动重试）
+  - CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse（稀疏索引，减少索引下载量）
+  - 依赖分层缓存（Cargo.toml/lock 不变时跳过依赖编译）
+
+首次构建较慢（下载所有依赖），后续仅重新编译改动的源码。

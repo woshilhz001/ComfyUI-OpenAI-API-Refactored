@@ -24,7 +24,7 @@ use axum::{
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 use tower_http::{cors::CorsLayer, limit::RequestBodyLimitLayer};
 
@@ -39,14 +39,78 @@ use seed_tracker::SeedTracker;
 use graceful::GracefulShutdown;
 use task_manager::TaskManager;
 
-use handlers::{metrics, tasks, image, video, models, health, backends};
+use handlers::{metrics, tasks, image, video, models, health, backends, workflows_admin};
 use crate::handlers::metrics::init_metrics;
+use std::path::Path;
 
 async fn fallback_handler(req: axum::http::Request<axum::body::Body>) -> impl axum::response::IntoResponse {
     let method = req.method();
     let uri = req.uri();
     tracing::warn!("⚠️ 404 Not Found: {} {}", method, uri);
     (axum::http::StatusCode::NOT_FOUND, "Route not found")
+}
+
+/// 监听工作流文件夹变化，自动热重载（无需重启服务器）
+fn start_workflow_watcher(folder: String, registry: Arc<RwLock<WorkflowRegistry>>) {
+    use notify::{Config, EventKind, PollWatcher, RecursiveMode, Watcher};
+
+    tokio::spawn(async move {
+        let (tx, mut rx) = tokio::sync::mpsc::channel::<notify::Result<notify::Event>>(128);
+
+        // PollWatcher 通过轮询检测变化，兼容 Docker volume 挂载等场景
+        let watcher = PollWatcher::new(
+            move |res: notify::Result<notify::Event>| {
+                let _ = tx.blocking_send(res);
+            },
+            Config::default().with_poll_interval(Duration::from_secs(2)),
+        );
+
+        let mut watcher = match watcher {
+            Ok(w) => w,
+            Err(e) => {
+                tracing::error!("Failed to create file watcher: {}", e);
+                return;
+            }
+        };
+
+        if let Err(e) = watcher.watch(Path::new(&folder), RecursiveMode::NonRecursive) {
+            tracing::error!("Failed to watch workflows folder '{}': {}", folder, e);
+            return;
+        }
+
+        tracing::info!("🔍 Hot-reload active (polling 2s): watching {}", folder);
+
+        let mut last_reload = tokio::time::Instant::now();
+
+        while let Some(res) = rx.recv().await {
+            let event = match res {
+                Ok(e) => e,
+                Err(_) => continue,
+            };
+
+            // 只关心文件创建/修改/删除
+            let is_relevant = matches!(event.kind,
+                EventKind::Create(_) | EventKind::Modify(_) | EventKind::Remove(_)
+            );
+            if !is_relevant {
+                continue;
+            }
+
+            // 防抖：2 秒内不重复重载
+            if last_reload.elapsed() < Duration::from_secs(2) {
+                continue;
+            }
+
+            tracing::info!("📁 Workflow change detected, hot-reloading...");
+
+            if let Ok(mut reg) = registry.write() {
+                if let Err(e) = reg.reload_from_folder(&folder) {
+                    tracing::error!("Hot-reload failed: {}", e);
+                }
+            }
+            last_reload = tokio::time::Instant::now();
+        }
+    });
 }
 
 #[tokio::main]
@@ -63,7 +127,7 @@ async fn main() {
 
     let mut registry = WorkflowRegistry::new();
     registry.load_from_folder(&config.comfyui_backend.workflows_folder).expect("Failed to load workflows");
-    let registry = Arc::new(registry);
+    let registry = Arc::new(RwLock::new(registry));
 
     let backend_pool = Arc::new(BackendPool::new(
         config.comfyui_backends.clone(),
@@ -84,8 +148,9 @@ async fn main() {
     let proxy_state = Arc::new(ProxyState {
         client,
         backends: backend_pool,
-        client_id: config.comfyui_backend.client_id,
+        client_id: config.comfyui_backend.client_id.clone(),
         registry,
+        workflows_folder: config.comfyui_backend.workflows_folder.clone(),
         job_timeout_seconds: config.routing.timeout_seconds,
         task_manager: task_manager.clone(),
         image_width: config.routing.image_width,
@@ -102,6 +167,11 @@ async fn main() {
         graceful_shutdown: graceful_shutdown.clone(),
         enable_idempotency: config.routing.enable_idempotency,
     });
+    // 启动工作流文件监听（热重载）
+    start_workflow_watcher(
+        proxy_state.workflows_folder.clone(),
+        proxy_state.registry.clone(),
+    );
     // why新增：克隆一份用于后台恢复任务
     let proxy_state_for_recovery = proxy_state.clone();
     //why添加，服务启动后恢复后台任务（不阻塞）
@@ -118,6 +188,7 @@ async fn main() {
         .route("/v1/metrics", get(metrics::metrics_handler))
         .route("/v1/tasks/:task_id", get(tasks::task_query))
         .route("/v1/tasks", get(tasks::task_list))
+        .route("/v1/workflows/reload", post(workflows_admin::reload_workflows_handler))
         .layer(axum_mw::from_fn(|req, next: axum::middleware::Next| async move {
             metrics::TOTAL_REQUESTS.inc();
             next.run(req).await

@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::proxy::ProxyState;
 
 pub async fn models_handler(State(state): State<Arc<ProxyState>>) -> Json<Value> {
-    let models: Vec<Value> = state.registry.list_models()
+    let models: Vec<Value> = state.registry.read().unwrap().list_models()
         .into_iter()
         .map(|name| json!({
             "id": name,

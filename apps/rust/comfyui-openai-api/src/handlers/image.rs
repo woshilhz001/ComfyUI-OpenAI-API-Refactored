@@ -307,7 +307,7 @@ pub async fn image_generations_handler(
     state.task_manager.insert(task_id.clone(), TaskState::Processing { comfyui_task_id: None, backend_name: Some(backend.name.clone())  }).await;
 
     // 获取工作流模板
-    let template = state.registry.get(&request.model)
+    let template = state.registry.read().unwrap().get(&request.model)
         .ok_or_else(|| {
             warn!("Workflow '{}' not found", request.model);
             ProxyError::Json(format!("Workflow '{}' not found", request.model))

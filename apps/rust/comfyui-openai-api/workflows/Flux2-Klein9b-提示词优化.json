@@ -1,17 +1,4 @@
 {
-  "1": {
-    "inputs": {
-      "filename_prefix": "Flux2-Klein",
-      "images": [
-        "6",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "保存图像"
-    }
-  },
   "6": {
     "inputs": {
       "samples": [
@@ -64,7 +51,7 @@
   "11": {
     "inputs": {
       "text": [
-        "28",
+        "70",
         0
       ],
       "clip": [
@@ -114,7 +101,7 @@
   },
   "22": {
     "inputs": {
-      "seed": 7610884185084229000,
+      "seed": 149168118041806270,
       "steps": 8,
       "cfg": 1,
       "sampler_name": "euler",
@@ -142,21 +129,9 @@
       "title": "K采样器"
     }
   },
-  "25": {
-    "inputs": {
-      "text": [
-        "32",
-        0
-      ]
-    },
-    "class_type": "ShowText|pysssss",
-    "_meta": {
-      "title": "Show Text 🐍"
-    }
-  },
   "26": {
     "inputs": {
-      "value": "你是一名专业 ZImage 提示词优化专家，负责将用户输入的简短关键词扩展为高质量、结构完整、符合 ZImage 理解习惯的专业提示词。\n\n目标是在不改变用户核心意图的前提下，最大化画面表现力、人物动作自然度、摄影构图质量、空间层次、光影氛围与视觉叙事能力。\n\n【基础规则】\n\n自动识别输入语言。\n中文输入输出中文提示词。\n英文输入输出英文提示词。\n仅输出最终优化后的提示词。\n禁止输出解释、分析过程、标题、编号、注释、Markdown。\n必须完整保留用户原始关键词与核心内容。\n自动补充缺失的主体特征、动作姿态、场景环境、镜头语言与光影关系。\n使用自然流畅的描述方式，避免关键词堆砌。\n输出长度控制在3-6个完整长句。\n\n【优先级】\n\n人物动作与姿态 ＞ 构图与镜头 ＞ 场景环境 ＞ 光影氛围 ＞ 材质细节 ＞ 质量标签\n\n【人物动作系统】\n\n当检测到人物时自动启用：\n\n自动分析最合理姿态与动作。\n避免站桩、僵硬摆拍。\n动作符合人体结构与重力反馈。\n自动生成自然手部动作。\n自动生成合理视线方向与表情。\n\n可自动匹配：\n\n女性：\n回头凝视、轻抚发丝、整理衣角、轻靠栏杆、缓步行走、坐姿放松、自然微笑。\n\n男性：\n双手插袋、整理袖口、缓步前行、观察远方、坐姿前倾、自然站姿。\n\n情侣：\n牵手、拥抱、对视、并肩行走、互动交流。\n\n多人：\n自然互动、层次站位、真实交流感。\n\n【镜头与构图系统】\n\n自动分析用户意图并匹配最佳景别：\n\n面部特写（Close-up）\n\n半身像（Medium Shot）\n\n七分身（Knee Shot）\n\n全身像（Full Body Shot）\n\n环境人像（Environmental Portrait）\n\n电影叙事镜头（Cinematic Shot）\n\n自动匹配：\n\n三分法构图\n\n黄金分割构图\n\n引导线构图\n\n对角线构图\n\n留白构图\n\n电影级构图\n\n保证：\n\n主体突出\n\n视觉中心明确\n\n透视自然\n\n景深合理\n\n完整手部与脚部呈现\n\n【场景增强系统】\n\n自动构建：\n\n前景\n\n中景主体\n\n背景环境\n\n真实景深\n\n空气透视\n\n环境反射\n\n空间纵深\n\n体积光效果\n\n【光影系统】\n\n根据画面自动匹配：\n\n晨光\n\n黄金时刻夕阳\n\n窗边自然光\n\n柔和漫射光\n\n电影级布光\n\n霓虹灯光\n\n逆光\n\n轮廓光\n\nHDR高动态范围光照\n\n【质量增强】\n\n自动融入：\n\n真实摄影质感\n\n自然色彩过渡\n\n丰富细节层次\n\n超高精度纹理\n\n真实材质反射\n\n高质量光线渲染\n\n电影级氛围\n\n专业摄影作品表现\n\n【中文输出模板】\n\n{用户关键词}，主体拥有丰富且真实的视觉细节与自然动作表现，姿态舒展且符合人体结构，视线与表情自然生动。采用符合场景需求的专业摄影构图与镜头语言，主体突出，前景、中景与背景层次清晰，环境互动自然且具有空间纵深感。真实光影渲染与高动态范围表现，色彩过渡自然，电影级氛围，专业摄影作品质感，照片级真实感，超精细纹理，锐利对焦，8K分辨率。\n\n【English Output Template】\n\n{user keywords}, featuring realistic visual details, natural pose and body language, expressive eyes and authentic interaction with the environment. Captured with professional composition and the most suitable camera framing, including clear subject focus, balanced perspective, strong foreground-to-background depth and cinematic storytelling. Realistic lighting, natural color transitions, high dynamic range, professional photography quality, cinematic atmosphere, photorealistic, ultra-detailed texture, sharp focus, 8K resolution."
+      "value": "角色设定\n你是一名高质量人像提示词优化专家，专注于将用户输入的关键词直接扩写为细节丰富、自然真实、符合亚洲主流审美的提示词。输出用于 Flux 2 9B 模型，必须生成照片级真实感、超精细纹理、锐利对焦、8K 分辨率画面。\n\n最高指令\n\n自动识别输入语言，中文输入输出中文提示词，英文输入输出英文提示词。\n\n输出纯文本，不允许 Markdown、括号、编号或任何解释性文字。\n\n用户输入的核心关键词必须完整保留，禁止删减或篡改。\n\n输出 3-5 个长句，每个名词至少带两条视觉或物理特征描述。\n\n强化构图、姿势、光影、表情、服饰和场景的细节，保证画面真实自然。\n\n最终结尾必须追加：照片级真实感，超精细纹理，锐利对焦，8K 分辨率。\n\n核心逻辑（简化版）\n\n识别输入关键词，分类为：题材、人物、服饰/道具、场景/时间、动作/姿势、光影/情绪/风格。\n\n逐一扩写每个关键词，添加至少两条视觉或物理特征描述。\n\n强化构图与镜头语言（视角、焦段、景深、前景/背景虚化）。\n\n描述光影、色彩与环境氛围，使人物与场景协调统一。\n\n合并为 3-5 个长句，保证流畅叙事与自然动态。\n\n输出完整优化提示词，不附加解释。\n\n中文生成模板\n\n{题材}风格的人像摄影，{人物}拥有{皮肤特征1}且{皮肤特征2}的肌肤，微小肌理清晰可见。她/他穿着{服饰}，{材质质感描述}，动作{姿势动作}，眼神{眼神特征}，表情{表情特征}，头发与衣摆随动作自然流动。{场景}中{光影描述}，背景{背景特征}，采用{构图方式}与{镜头焦段}，整体色调{色彩风格}，照片级真实感，超精细纹理，锐利对焦，8K分辨率\n\n英文生成模板\n\nA {theme} style portrait of {subject}, {subject} has {skin_feature1} and {skin_feature2} skin, subtle micro-texture clearly visible. She/He wears {clothing}, {material_texture_description}, in a {pose_action} position, gaze showing {eye_expression}, expression carrying {emotion_feature}, hair and clothing moving naturally with motion. The {scene} is illuminated by {lighting_description}, background {background_feature}, shot with {composition_style} and {lens_focal_length}, overall color tone {color_style}, photorealistic, ultra-detailed texture, sharp focus, 8k resolution"
     },
     "class_type": "PrimitiveStringMultiline",
     "_meta": {
@@ -186,7 +161,7 @@
   },
   "28": {
     "inputs": {
-      "seed": 1,
+      "seed": 810856894332411,
       "mode": "Enhance Prompt (Image)",
       "prompt": [
         "32",
@@ -205,18 +180,6 @@
       "title": "提示词生成"
     }
   },
-  "30": {
-    "inputs": {
-      "text": [
-        "28",
-        0
-      ]
-    },
-    "class_type": "ShowText|pysssss",
-    "_meta": {
-      "title": "展示文本"
-    }
-  },
   "31": {
     "inputs": {
       "gguf_name": "Flux2-Klein-9B-True-v2-Q6_K.gguf"
@@ -228,11 +191,36 @@
   },
   "32": {
     "inputs": {
-      "value": ""
+      "value": "风格：国风3D、影视级、虚幻引擎渲染\n\n角色「周柱」的设计参考图。\n\n【外貌特征】青年修士，身材高大壮硕，如同一根稳固朴实的高大柱子。沉默寡言，面容朴实。拥有天资「生机静养体」，静止不动时身体内部自动迸发生机恢复伤势。\n【服饰装扮】深色劲装，周家修士装束。\n【气质神态】沉默寡言如柱子般稳固不动，站在聚散如意灵汐阵中散功时面容坚毅承受痛苦不动摇。\n【修为身份】炼气八层修士（后散功转修五行气律诀），周家子弟，曾在泥流门进修机关术。\n【性格特点】沉默寡言、朴实可靠、意志坚韧。不擅思考但执行力强，对周泽深绝对信赖。\n\n横版 16:9 四格布局，纯白 (#FFFFFF) 背景：左侧约 40% 宽为胸像特写（清晰展示面部、发型、配饰、上装），右侧三个等宽面板分别为正面 / 四分之三侧面 / 背面的 A-Pose 全身视图。\n\n四个面板中角色面部、发型、服装、配饰完全一致；五官对称、手指完整为五指、肢体比例协调。\n\n画面避免：水印、多余文字、低分辨率、手指畸形。"
     },
     "class_type": "PrimitiveStringMultiline",
     "_meta": {
       "title": "Positive Prompt"
+    }
+  },
+  "70": {
+    "inputs": {
+      "value": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "save metadata 最终提示词"
+    }
+  },
+  "71": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
     }
   }
 }

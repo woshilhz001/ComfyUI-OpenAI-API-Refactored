@@ -3,14 +3,14 @@
 # ============================================================
 FROM rust:latest AS builder
 
-# ----- Cargo 国内镜像加速（rsproxy.cn）-----
-# 写入 CARGO_HOME 下的 config.toml，对 cargo 全局生效
+# ----- Cargo 国内镜像加速（中科大 USTC）-----
+# 使用稀疏协议（sparse）加速索引更新
 RUN mkdir -p /usr/local/cargo && \
     { \
       echo '[source.crates-io]'; \
-      echo 'replace-with = "rsproxy"'; \
-      echo '[source.rsproxy]'; \
-      echo 'registry = "https://rsproxy.cn/crates.io-index"'; \
+      echo 'replace-with = "ustc"'; \
+      echo '[source.ustc]'; \
+      echo 'registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"'; \
     } > /usr/local/cargo/config.toml
 
 # ----- 网络与并发优化 -----

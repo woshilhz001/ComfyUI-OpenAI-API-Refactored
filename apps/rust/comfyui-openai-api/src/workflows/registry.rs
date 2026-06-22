@@ -144,8 +144,16 @@ impl WorkflowRegistry {
     pub fn new() -> Self { Self { templates: HashMap::new() } }
 
     pub fn load_from_folder(&mut self, folder_path: &str) -> Result<()> {
+        // 首次加载，委托给 reload 逻辑
+        self.reload_from_folder(folder_path)
+    }
+
+    /// 重新扫描工作流文件夹，原子替换所有模板（热重载用）
+    /// 会完全替换当前所有模板，新增/修改/删除的 .json 文件都会生效
+    pub fn reload_from_folder(&mut self, folder_path: &str) -> Result<()> {
         let path = Path::new(folder_path);
         if !path.is_dir() { return Err(anyhow!("Invalid folder: {}", folder_path)); }
+        let mut new_templates: HashMap<String, Arc<WorkflowTemplate>> = HashMap::new();
         for entry in fs::read_dir(path)? {
             let entry = entry?;
             let file_path = entry.path();
@@ -154,10 +162,12 @@ impl WorkflowRegistry {
                 let content = fs::read_to_string(&file_path)?;
                 let json: Value = serde_json::from_str(&content)?;
                 let tpl = WorkflowTemplate::from_json(&name, json);
-                self.templates.insert(name, Arc::new(tpl));
+                new_templates.insert(name, Arc::new(tpl));
             }
         }
-        info!("Loaded {} workflow templates", self.templates.len());
+        let count = new_templates.len();
+        self.templates = new_templates;
+        info!("Reloaded {} workflow templates from '{}'", count, folder_path);
         Ok(())
     }
 

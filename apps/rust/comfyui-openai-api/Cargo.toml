@@ -33,3 +33,4 @@ bytes = "1"
 prometheus = "0.13"
 lazy_static = "1.4"
 indexmap = { version = "2.14.0", features = ["serde"] }
+notify = "8"

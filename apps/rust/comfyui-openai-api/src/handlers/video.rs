@@ -195,7 +195,7 @@ async fn execute_video_generation(
         }
     }
 
-    let template = state.registry.get(&req.model)
+    let template = state.registry.read().unwrap().get(&req.model)
         .ok_or_else(|| ProxyError::Json(format!("Workflow '{}' not found", req.model)))?;
     let prepared = PreparedWorkflow::from_template(&template);
 

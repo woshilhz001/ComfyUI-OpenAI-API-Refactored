@@ -16,7 +16,7 @@ docker run -p 8080:8080 ^
  加速说明
 =======================
 Dockerfile 已内置：
-  - rsproxy.cn 国内镜像源（crates.io 下载加速）
+  - 中科大 USTC 镜像源（sparse+https://mirrors.ustc.edu.cn/crates.io-index/）
   - CARGO_NET_RETRY=5（网络失败自动重试）
   - CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse（稀疏索引，减少索引下载量）
   - 依赖分层缓存（Cargo.toml/lock 不变时跳过依赖编译）

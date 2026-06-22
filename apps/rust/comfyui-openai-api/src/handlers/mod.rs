@@ -5,3 +5,4 @@ pub mod metrics;
 pub mod models;
 pub mod health;
 pub mod backends;
+pub mod workflows_admin;

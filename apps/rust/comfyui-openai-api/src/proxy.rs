@@ -2,7 +2,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use reqwest::Client;
 use serde::Serialize;
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, sync::{Arc, RwLock}};
 use crate::config::BackendConfig;
 use crate::workflows::registry::WorkflowRegistry;
 use crate::workflows::template::PreparedWorkflow;
@@ -18,7 +18,8 @@ pub struct ProxyState {
     pub client: Client,
     pub backends: Arc<BackendPool>,
     pub client_id: String,
-    pub registry: Arc<WorkflowRegistry>,
+    pub registry: Arc<RwLock<WorkflowRegistry>>,
+    pub workflows_folder: String,
     pub job_timeout_seconds: u64,
     pub task_manager: Arc<TaskManager>,
     pub image_width: Option<u32>,
